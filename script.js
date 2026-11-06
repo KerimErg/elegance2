@@ -49,6 +49,12 @@ nav.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false)
 addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
 
 // ===================== Plafond nid d'abeille (accueil) =====================
+// Lettres du nom découpées pour l'apparition une à une
+const word = $(".hero__word");
+word.setAttribute("data-text", word.textContent);
+word.innerHTML = [...word.textContent].map((ch, i) => `<span style="--i:${i}">${ch}</span>`).join("");
+$(".hero__title").setAttribute("aria-label", "Elegance Strasbourg");
+
 const hive = $("#hive"), ctx = hive.getContext("2d");
 let mouse = { x: -999, y: -999 }, cells = [];
 function sizeHive() {
@@ -70,20 +76,30 @@ function hexPath(x, y, R) {
   }
   ctx.closePath();
 }
+// Allumage : chaque néon s'allume à son tour en partant du haut, grésille puis flashe
+const introStart = performance.now();
+const introOn = document.documentElement.classList.contains("intro");
 function drawHive(t) {
   const W = hive.clientWidth, H = hive.clientHeight;
+  const el = introOn ? (t || performance.now()) - introStart : 1e9;
   ctx.clearRect(0, 0, W, H);
   for (const c of cells) {
+    if (c.onAt === undefined) c.onAt = 150 + Math.hypot(c.x - W * .62, c.y + c.R) / Math.hypot(W, H) * 1500 + c.seed * 300;
+    const since = el - c.onAt;
+    if (since < 0) continue;
+    if (since < 240 && Math.sin(since * .11 + c.seed * 40) < 0) continue; // grésillement
+    const flash = Math.max(0, 1 - (since - 240) / 900);
     const near = Math.max(0, 1 - Math.hypot(c.x - mouse.x, c.y - mouse.y) / 260);
     const fadeY = Math.max(0, 1 - c.y / (H * .95)); // plus lumineux en haut, comme un plafond
     const pulse = reduced ? 0 : (Math.sin(t / 1400 + c.seed * 12) + 1) / 2 * .05;
-    const a = (.05 + pulse) * fadeY + near * .55;
+    const a = (.06 + pulse + flash * .7) * fadeY + near * .55;
     if (a < .01) continue;
     hexPath(c.x, c.y, c.R * .94);
     ctx.lineWidth = 1.4;
-    ctx.strokeStyle = `rgba(255,255,255,${a})`;
-    ctx.shadowColor = "rgba(255,255,255,.8)";
-    ctx.shadowBlur = near > .05 ? 14 * near : 0;
+    ctx.strokeStyle = `rgba(255,255,255,${Math.min(a, 1)})`;
+    ctx.shadowColor = "rgba(255,255,255,.85)";
+    const glow = Math.max(near, flash * fadeY);
+    ctx.shadowBlur = glow > .05 ? 16 * glow : 0;
     ctx.stroke();
   }
 }

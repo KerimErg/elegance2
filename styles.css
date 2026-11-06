@@ -236,3 +236,36 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .reel { overflow-x: auto; }
   .reel__track { animation: none; }
 }
+
+/* ---------- Accueil : allumage du salon ---------- */
+.hero__word { position: relative; }
+.hero__word span { display: inline-block; }
+.hero__word::after { content: attr(data-text); position: absolute; inset: 0; color: transparent; pointer-events: none; text-shadow: none;
+  background: linear-gradient(100deg, transparent 42%, rgba(196, 150, 255, .55) 47%, #fff 50%, rgba(196, 150, 255, .55) 53%, transparent 58%) 0 0 / 260% 100% no-repeat;
+  -webkit-background-clip: text; background-clip: text; background-position: 160% 0; animation: shine 7s cubic-bezier(.6, 0, .3, 1) 3.4s infinite; }
+@keyframes shine { 0% { background-position: 160% 0; } 30%, 100% { background-position: -60% 0; } }
+
+.intro .hero__word span { animation: letterOn 1s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(1.05s + var(--i) * 75ms); }
+@keyframes letterOn {
+  0% { opacity: 0; filter: blur(14px); transform: translateY(.3em) scale(1.15); }
+  45% { opacity: 1; text-shadow: 0 0 24px #fff, 0 0 60px var(--led); }
+  100% { opacity: 1; filter: none; transform: none; }
+}
+.intro .hero__script { animation: write 1.3s cubic-bezier(.6, 0, .3, 1) 1.9s both; }
+@keyframes write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 -10% 0 0); } }
+.intro .hero__photo { animation: photoOn 1.4s cubic-bezier(.2, .7, .2, 1) 1.5s both; }
+@keyframes photoOn {
+  0% { opacity: 0; transform: scale(.82) rotate(-6deg); filter: brightness(3) drop-shadow(0 0 0 #fff); }
+  35% { opacity: 1; filter: brightness(1.8) drop-shadow(0 0 40px rgba(255, 255, 255, .8)); }
+  100% { opacity: 1; transform: none; }
+}
+.intro .hero .overline, .intro .hero__lead, .intro .hero__actions, .intro .hero__facts { animation: rise .9s cubic-bezier(.2, .7, .2, 1) both; }
+.intro .hero .overline { animation-delay: .7s; }
+.intro .hero__lead { animation-delay: 2.3s; }
+.intro .hero__actions { animation-delay: 2.45s; }
+.intro .hero__facts { animation-delay: 2.65s; }
+.intro .hero::after { animation: ledOn 1.2s ease 2.2s both; }
+.intro .header { animation: rise .8s ease 2.6s both; }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } }
+@keyframes ledOn { 0% { opacity: 0; transform: scaleX(0); } 60% { opacity: 1; } 100% { opacity: .8; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hero__word::after { animation: none; } }
