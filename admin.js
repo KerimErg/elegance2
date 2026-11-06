@@ -71,7 +71,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
 
   // ---------- Agenda : un jour à la fois (taille de page constante) ----------
   const DOW = ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"];
-  const telOf = (r) => r.client_phone.replace(/[^0-9+]/g, "");
+  const telOf = (r) => (r.client_phone || "").replace(/[^0-9+]/g, "");
 
   function renderAgenda(from, to) {
     const todayIso = iso(new Date());
@@ -121,7 +121,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
         <span>${closed ? "Salon fermé" + (blocked.get(day) ? " · " + esc(blocked.get(day)) : "") : `${confirmed.length} rdv · ${slots.length - confirmed.filter((r) => slots.includes(String(r.slot).slice(0, 5))).length} libres · ${revenue} €`}</span></div>`
       + slots.map((t) => {
           const here = items.filter((r) => String(r.slot).slice(0, 5) === t);
-          return here.length ? here.map((r) => apptRow(r)).join("") : `<div class="a-appt is-free"><span class="a-time">${t}</span><span class="a-freelabel">Libre</span></div>`;
+          return here.length ? here.map((r) => apptRow(r)).join("") : `<div class="a-appt is-free"><span class="a-time">${t}</span><span class="a-freelabel">Libre</span><button class="a-add" data-add="${t}">+ Ajouter</button></div>`;
         }).join("")
       + extra.map((r) => apptRow(r)).join("")
       + (closed && !items.length ? `<p class="a-empty">Aucun rendez-vous ce jour-là.</p>` : "");
@@ -140,7 +140,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
       <div class="a-who">
         <strong>${esc(r.client_name)}</strong>${cancelled ? '<span class="a-badge">Annulé</span>' : ""}
         <span class="a-meta">${esc(r.service)}${r.price ? " · " + esc(r.price) + " €" : ""}</span>
-        <span class="a-meta"><a href="tel:${esc(telOf(r))}">${esc(r.client_phone)}</a>${r.client_email ? ` · <a href="mailto:${esc(r.client_email)}">${esc(r.client_email)}</a>` : ""}</span>
+        <span class="a-meta">${r.client_phone ? `<a href="tel:${esc(telOf(r))}">${esc(r.client_phone)}</a>` : "sans téléphone"}${r.client_email ? ` · <a href="mailto:${esc(r.client_email)}">${esc(r.client_email)}</a>` : ""}</span>
       </div>
       <div class="a-actions">${actions}</div>
     </article>`;
@@ -203,6 +203,43 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
     btn.disabled = true;
     const { error } = await db.from("blocked_days").delete().eq("day", btn.dataset.unblock);
     if (error) { btn.disabled = false; btn.textContent = "Échec"; return; }
+    refresh();
+  });
+
+  // ---------- Ajout manuel ----------
+  const ALL_SERVICES = [...CFG.services, ...(CFG.salonOnlyServices || [])];
+  $("#aService").innerHTML = ALL_SERVICES.map((s) => `<option value="${esc(s.id)}">${esc(s.name)} · ${s.price} €</option>`).join("");
+  $("#aTime").innerHTML = CFG.slots.map((t) => `<option>${t}</option>`).join("");
+  $("#aDay").value = iso(new Date());
+  $("#agenda").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-add]"); if (!b) return;
+    $("#aDay").value = state.selected; $("#aTime").value = b.dataset.add;
+    const card = $("#addCard"); card.scrollIntoView({ behavior: "smooth", block: "center" });
+    card.classList.add("is-flash"); setTimeout(() => card.classList.remove("is-flash"), 1200);
+    $("#aName").focus({ preventScroll: true });
+  });
+  $("#addForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = $("#addMsg"), btn = $("#addBtn");
+    const name = $("#aName").value.trim(), phone = $("#aPhone").value.trim();
+    const svc = ALL_SERVICES.find((s) => s.id === $("#aService").value);
+    msg.className = "a-msg";
+    if (name.length < 2) { msg.textContent = "Indiquez le nom du client."; return; }
+    if (phone && (!/^[0-9 +().-]{8,20}$/.test(phone) || phone.replace(/\D/g, "").length < 9)) { msg.textContent = "Numéro invalide : corrigez-le ou laissez le champ vide."; return; }
+    btn.disabled = true; btn.textContent = "Ajout…";
+    const day = $("#aDay").value, slot = $("#aTime").value;
+    const { error } = await db.from("appointments").insert({ day, slot, service: svc.name, price: svc.price, client_name: name, client_phone: phone || null, note: "Ajouté par le salon" });
+    btn.disabled = false; btn.textContent = "Ajouter";
+    if (error) {
+      msg.textContent = error.code === "23505" ? `Le créneau de ${slot} est déjà pris ce jour-là.`
+        : error.code === "42501" ? "Ajout refusé. Exécutez le fichier supabase/mise-a-jour.sql dans Supabase, puis réessayez."
+        : "L’ajout a échoué. Vérifiez votre connexion et réessayez.";
+      return;
+    }
+    msg.className = "a-msg ok"; msg.textContent = `${name} ajouté le ${fmtLong(day)} à ${slot}.`;
+    $("#aName").value = ""; $("#aPhone").value = "";
+    if (state.range !== "upcoming" && day >= iso(new Date())) state.range = "upcoming";
+    state.selected = day; state.query = ""; $("#search").value = "";
     refresh();
   });
 

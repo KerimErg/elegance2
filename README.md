@@ -7,7 +7,8 @@ Site statique (HTML / CSS / JS) avec réservation en ligne.
 | `index.html`, `styles.css`, `script.js` | Le site public |
 | `config.js` | **À remplir** : prestations, horaires, clés Supabase |
 | `admin.html`, `admin.js` | Espace salon : rendez-vous, annulations, jours fermés |
-| `supabase/schema.sql` | Base de données et règles de sécurité |
+| `supabase/schema.sql` | Base de données et règles de sécurité (installation complète) |
+| `supabase/mise-a-jour.sql` | Mises à jour pour une base déjà installée |
 | `images/` | Photos du salon |
 
 Tant que `config.js` n’a pas ses clés, la réservation fonctionne en **mode démonstration** (rien n’est enregistré).
@@ -44,4 +45,4 @@ Hébergez le dossier tel quel (GitHub Pages, Netlify ou Cloudflare Pages, gratui
 - Seuls les comptes listés dans `admins` voient et gèrent les rendez-vous.
 
 ## Modifier les horaires
-Changez-les à **deux** endroits : `config.js` (affichage) et la fonction `is_bookable` dans `supabase/schema.sql` (à ré-exécuter dans Supabase).
+Changez-les à **deux** endroits : `config.js` (affichage) et la fonction `is_bookable` dans `supabase/mise-a-jour.sql` (à ré-exécuter dans Supabase).

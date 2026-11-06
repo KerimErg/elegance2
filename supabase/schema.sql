@@ -13,7 +13,7 @@ create table if not exists public.appointments (
   service      text not null check (char_length(service) between 1 and 60),
   price        integer,
   client_name  text not null check (char_length(client_name) between 2 and 80),
-  client_phone text not null check (client_phone ~ '^[0-9 +().-]{8,20}$'),
+  client_phone text check (client_phone is null or client_phone ~ '^[0-9 +().-]{8,20}$'),
   client_email text check (client_email is null or client_email ~ '^[^@\s]+@[^@\s]+\.[^@\s]+$'),
   note         text check (note is null or char_length(note) <= 300),
   status       text not null default 'confirmed' check (status in ('confirmed', 'cancelled'))
@@ -72,7 +72,11 @@ alter table public.admins       enable row level security;
 drop policy if exists "public peut réserver" on public.appointments;
 create policy "public peut réserver" on public.appointments
   for insert to anon, authenticated
-  with check (status = 'confirmed' and public.is_bookable(day, slot));
+  with check (status = 'confirmed' and client_phone is not null and public.is_bookable(day, slot));
+
+-- L'admin ajoute des rendez-vous à la main (clients au téléphone ou au salon), à n'importe quelle heure.
+drop policy if exists "admin ajoute" on public.appointments;
+create policy "admin ajoute" on public.appointments for insert to authenticated with check (public.is_admin());
 
 -- L'admin voit, modifie et supprime tout.
 drop policy if exists "admin lit" on public.appointments;

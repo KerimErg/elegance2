@@ -15,6 +15,8 @@ window.ELEGANCE = {
     { id: "barbe", name: "Taillage barbe", price: 10 },
     { id: "soin", name: "Soin visage vapeur", price: 25 },
   ],
+  // Prestations que seul le salon peut saisir (page admin)
+  salonOnlyServices: [{ id: "coloration", name: "Coloration", price: 15 }],
 
   // Dernier créneau par jour d'ouverture (0 = dimanche … 6 = samedi)
   open: { 2: "18:30", 3: "18:30", 4: "18:30", 5: "18:30", 6: "18:30" }, // fermeture 19:00
