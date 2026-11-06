@@ -217,3 +217,28 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ---------- Réalisations : animation ---------- */
+.look { --py: 0px; transform: translateY(var(--py)); will-change: transform; }
+.look__img { position: relative; background: none; }
+.look__img img { clip-path: inset(0 0 0 0); }
+.look__img::after { content: ""; position: absolute; left: 0; right: 0; top: -2px; height: 2px; background: var(--led); box-shadow: 0 0 14px 2px var(--led); opacity: 0; pointer-events: none; }
+.look figcaption { transition: opacity .8s ease calc(var(--d, 0s) + .7s), transform .8s cubic-bezier(.2, .7, .2, 1) calc(var(--d, 0s) + .7s); }
+.look figcaption b { position: relative; }
+.look figcaption b::before { content: ""; position: absolute; left: 0; top: -.7rem; width: 2.2rem; height: 1px; background: var(--led); transform-origin: left; transition: transform .8s cubic-bezier(.2, .7, .2, 1) calc(var(--d, 0s) + .9s); }
+
+.look.instant, .look.instant *, .look.instant *::before, .look.instant *::after { transition: none !important; }
+.look.will-reveal .look__img img { clip-path: inset(100% 0 0 0); transform: scale(1.12); transform-origin: center bottom; }
+.look.will-reveal figcaption { opacity: 0; transform: translateY(12px); }
+.look.will-reveal figcaption b::before { transform: scaleX(0); }
+.look.will-reveal.is-in .look__img img { clip-path: inset(0 0 0 0); transform: scale(1); transition: clip-path 1.2s cubic-bezier(.7, 0, .2, 1) var(--d, 0s), transform 1.6s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), filter .5s; }
+.look.will-reveal.is-in figcaption { opacity: 1; transform: none; }
+.look.will-reveal.is-in figcaption b::before { transform: scaleX(1); }
+.look.will-reveal .look__img::after { top: calc(100% - 2px); opacity: 1; }
+.look.will-reveal.is-in .look__img::after { top: 0; opacity: 0; transition: top 1.2s cubic-bezier(.7, 0, .2, 1) var(--d, 0s), opacity .4s ease calc(var(--d, 0s) + 1.1s); }
+.look:hover .look__img::after { animation: scan-hover 1s cubic-bezier(.6, 0, .3, 1); }
+.look.will-reveal.is-in:hover .look__img img, .look:hover .look__img img { transform: scale(1.04); }
+@keyframes scan-hover { 0% { top: -2px; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .look { transform: none; }
+}

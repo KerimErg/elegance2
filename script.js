@@ -167,3 +167,33 @@ $("#year").textContent = today.getFullYear();
 const rows = $$(".hours tbody tr");
 rows.forEach((r) => { if (r.cells[1].textContent.trim() === "Fermé") r.classList.add("is-closed"); });
 rows[(today.getDay() + 6) % 7]?.classList.add("is-today");
+
+// ===================== Réalisations : dévoilement + profondeur =====================
+const looks = $$(".look");
+looks.forEach((el, k) => {
+  el.style.setProperty("--d", (k * .18) + "s");
+  // on ne masque que ce qui est hors écran au chargement : la page reste complète sans script
+  if (!reduced && el.getBoundingClientRect().top > innerHeight) {
+    el.classList.add("will-reveal", "instant"); // masquage sans transition
+    void el.offsetHeight;
+    requestAnimationFrame(() => el.classList.remove("instant"));
+  }
+});
+const lookIO = new IntersectionObserver((entries) => entries.forEach((en) => {
+  if (en.isIntersecting) { en.target.classList.add("is-in"); lookIO.unobserve(en.target); }
+}), { threshold: .2 });
+looks.forEach((el) => lookIO.observe(el));
+
+const speeds = [-0.04, 0.03, 0.08];
+const parallax = () => {
+  const off = reduced || innerWidth < 641;
+  looks.forEach((el, k) => {
+    if (off) return el.style.setProperty("--py", "0px");
+    const r = el.parentElement.getBoundingClientRect();
+    const mid = r.top + r.height / 2 - innerHeight / 2;
+    el.style.setProperty("--py", (-mid * speeds[k]).toFixed(1) + "px");
+  });
+};
+addEventListener("scroll", parallax, { passive: true });
+addEventListener("resize", parallax);
+parallax();
