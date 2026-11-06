@@ -304,3 +304,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero__facts dd a { border-bottom: 1px solid var(--line); }
 .hero__facts dd a:hover { border-color: var(--white); }
 @media (max-width: 640px) { .rating { grid-template-columns: 1fr; } .rating__score { justify-self: start; } }
+
+/* ---------- Téléphone : ligne coiffeurs ---------- */
+.phone { aspect-ratio: 330 / 700; }
+.phone__step > *, .phone__status { flex-shrink: 0; }
+.phone__label { margin: .8rem 0 .4rem; }
+.slots { grid-template-columns: repeat(4, 1fr); gap: .35rem; }
+.slot { padding: .5rem 0; font-size: .72rem; }

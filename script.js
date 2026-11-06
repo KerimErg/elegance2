@@ -138,7 +138,10 @@ const fmtLong = (s) => fromIso(s).toLocaleDateString("fr-FR", { weekday: "long",
 const days = [];
 for (let d = new Date(today), n = 0; n < CFG.daysAhead; n++, d.setDate(d.getDate() + 1)) if (OPEN[d.getDay()]) days.push(iso(d));
 
-const book = { service: SERVICES[0].id, date: null, time: null, taken: new Set(), blocked: new Set(), loading: false };
+const BARBERS = CFG.barbers || [], CAP = Math.max(1, BARBERS.length);
+const barberName = (id) => (BARBERS.find((b) => b.id === id) || {}).name;
+// load : "jour|heure" -> { total, barbers:Set } (nombre de rdv et coiffeurs déjà pris)
+const book = { service: SERVICES[0].id, barber: "any", date: null, time: null, load: new Map(), blocked: new Set(), loading: false };
 const el = {
   pick: $("#stepPick"), form: $("#stepForm"), done: $("#stepDone"),
   status: $("#phoneStatus"), statusText: $("#phoneStatusText"),
@@ -156,16 +159,20 @@ async function loadAvailability() {
   book.loading = true; el.loading.hidden = false;
   try {
     if (DEMO) {
-      book.taken = new Set(days.flatMap((d) => SLOT_TIMES.filter((t) => demoTaken(d, t)).map((t) => `${d}|${t}`)));
+      book.load = new Map(days.flatMap((d) => SLOT_TIMES.filter((t) => demoTaken(d, t)).map((t) => [`${d}|${t}`, { total: CAP, barbers: new Set() }])));
     } else {
       const from = days[0], to = days[days.length - 1];
-      const [taken, blocked] = await Promise.all([
-        db.rpc("taken_slots", { from_day: from, to_day: to }),
+      let [load, blocked] = await Promise.all([
+        db.rpc("slot_load", { from_day: from, to_day: to }),
         db.from("blocked_days").select("day").gte("day", from).lte("day", to),
       ]);
-      if (taken.error) throw taken.error;
+      if (load.error) { // base pas encore mise à jour : créneaux complets seulement
+        const t = await db.rpc("taken_slots", { from_day: from, to_day: to });
+        if (t.error) throw t.error;
+        load = { data: t.data.map((r) => ({ ...r, total: CAP, barbers: [] })) };
+      }
       if (blocked.error) throw blocked.error;
-      book.taken = new Set(taken.data.map((r) => `${r.day}|${String(r.slot).slice(0, 5)}`));
+      book.load = new Map(load.data.map((r) => [`${r.day}|${String(r.slot).slice(0, 5)}`, { total: r.total, barbers: new Set(r.barbers || []) }]));
       book.blocked = new Set(blocked.data.map((r) => r.day));
     }
     el.error.textContent = "";
@@ -184,7 +191,10 @@ function slotFree(day, time) {
     const n = new Date(), [hh, mm] = time.split(":").map(Number);
     if (hh * 60 + mm <= n.getHours() * 60 + n.getMinutes() + 30) return false;
   }
-  return !book.taken.has(`${day}|${time}`);
+  const l = book.load.get(`${day}|${time}`);
+  if (!l) return true;
+  if (l.total >= CAP) return false;
+  return book.barber === "any" || !l.barbers.has(book.barber);
 }
 const dayHasSlot = (day) => SLOT_TIMES.some((t) => slotFree(day, t));
 
@@ -193,6 +203,7 @@ const chip = (g, v, label, sub, off) =>
 
 function renderPick() {
   $("#pService").innerHTML = SERVICES.map((s) => chip("service", s.id, s.name, `${s.price} €`)).join("");
+  $("#pBarber").innerHTML = chip("barber", "any", "Sans préférence") + BARBERS.map((b) => chip("barber", b.id, b.name)).join("");
   $("#pDate").innerHTML = days.map((d) => chip("date", d, `${fmtDay(d)} ${fromIso(d).getDate()}`, book.blocked.has(d) ? "fermé" : !dayHasSlot(d) ? "complet" : "", !dayHasSlot(d))).join("");
   if (book.time && !slotFree(book.date, book.time)) book.time = null;
   $("#pSlots").innerHTML = SLOT_TIMES.map((t) => {
@@ -222,7 +233,7 @@ el.pick.addEventListener("click", (e) => {
 el.next.addEventListener("click", () => {
   if (!book.time) return;
   const s = SERVICES.find((x) => x.id === book.service);
-  $("#pRecap").innerHTML = `<b>${s.name}</b> · ${s.price} €<br>${fmtLong(book.date)} à ${book.time}`;
+  $("#pRecap").innerHTML = `<b>${s.name}</b> · ${s.price} €<br>${fmtLong(book.date)} à ${book.time}<br>${book.barber === "any" ? "Premier coiffeur disponible" : "Avec " + barberName(book.barber)}`;
   el.error.textContent = "";
   show("form");
   $("#fName").focus({ preventScroll: true });
@@ -247,14 +258,18 @@ el.form.addEventListener("submit", async (e) => {
     if (DEMO) {
       await new Promise((r) => setTimeout(r, 600));
     } else {
-      const { error } = await db.from("appointments").insert({
+      const row = {
         day: book.date, slot: book.time, service: s.name, price: s.price,
         client_name: data.name, client_phone: data.phone, client_email: data.email || null,
-      });
+        barber: book.barber === "any" ? null : book.barber,
+      };
+      let { error } = await db.from("appointments").insert(row);
+      if (error && error.code === "PGRST204") { delete row.barber; ({ error } = await db.from("appointments").insert(row)); } // base pas encore mise à jour
       if (error) throw error;
     }
-    book.taken.add(`${book.date}|${book.time}`);
-    $("#pDoneText").textContent = `${s.name} · ${fmtLong(book.date)} à ${book.time}. À très vite au salon, ${data.name.split(" ")[0]} !`;
+    const k = `${book.date}|${book.time}`, l = book.load.get(k) || { total: 0, barbers: new Set() };
+    l.total++; if (book.barber !== "any") l.barbers.add(book.barber); book.load.set(k, l);
+    $("#pDoneText").textContent = `${s.name}${book.barber === "any" ? "" : " avec " + barberName(book.barber)} · ${fmtLong(book.date)} à ${book.time}. À très vite au salon, ${data.name.split(" ")[0]} !`;
     el.statusText.textContent = `Rendez-vous confirmé · ${fmtLong(book.date)}, ${book.time}`;
     show("done");
     el.form.reset();

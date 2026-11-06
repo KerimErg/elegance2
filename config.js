@@ -18,6 +18,15 @@ window.ELEGANCE = {
   // Prestations que seul le salon peut saisir (page admin)
   salonOnlyServices: [{ id: "coloration", name: "Coloration", price: 15 }],
 
+  // Coiffeurs (un client par coiffeur et par créneau). Le nombre doit être identique
+  // à slot_capacity() dans Supabase.
+  barbers: [
+    { id: "orhan", name: "Orhan" },
+    { id: "kaan", name: "Kaan" },
+    { id: "taha", name: "Taha" },
+    { id: "omer", name: "Omer" },
+  ],
+
   // Dernier créneau par jour d'ouverture (0 = dimanche … 6 = samedi)
   open: { 2: "18:30", 3: "18:30", 4: "18:30", 5: "18:30", 6: "18:30" }, // fermeture 19:00
   slots: ["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",

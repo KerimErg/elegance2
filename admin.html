@@ -63,6 +63,8 @@
     .a-add { font-size: .78rem; padding: .35rem .7rem; border: 1px dashed rgba(243, 243, 241, .25); color: var(--mute); margin-left: auto; }
     .a-add:hover { border-color: var(--led); color: var(--white); }
     .a-appt.is-free { grid-template-columns: 64px minmax(0, 1fr) auto; }
+    .a-appt.is-sub { min-height: 40px; padding-top: .2rem; }
+    .a-barber { color: var(--led); font-weight: 500; }
     #addCard.is-flash { border-color: var(--led); box-shadow: 0 0 0 1px var(--led); transition: box-shadow .3s; }
     .a-blocked { margin-top: 1.2rem; display: grid; gap: .3rem; }
     .a-blocked li { display: flex; justify-content: space-between; align-items: center; gap: .6rem; font-size: .88rem; padding: .5rem 0; border-bottom: 1px solid var(--line); }
@@ -169,7 +171,10 @@
               <label class="a-field">Date<input id="aDay" type="date" required></label>
               <label class="a-field">Heure<select id="aTime" required></select></label>
             </div>
-            <label class="a-field">Prestation<select id="aService" required></select></label>
+            <div class="a-row2">
+              <label class="a-field">Prestation<select id="aService" required></select></label>
+              <label class="a-field">Coiffeur<select id="aBarber"></select></label>
+            </div>
             <label class="a-field">Nom du client<input id="aName" required minlength="2" maxlength="80" autocomplete="off"></label>
             <label class="a-field">Téléphone (facultatif)<input id="aPhone" type="tel" maxlength="20" autocomplete="off"></label>
             <p class="a-msg" id="addMsg" role="status"></p>

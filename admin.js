@@ -71,6 +71,8 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
 
   // ---------- Agenda : un jour à la fois (taille de page constante) ----------
   const DOW = ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"];
+  const BARBERS = CFG.barbers || [], CAP = Math.max(1, BARBERS.length);
+  const barberName = (id) => (BARBERS.find((b) => b.id === id) || {}).name || id;
   const telOf = (r) => (r.client_phone || "").replace(/[^0-9+]/g, "");
 
   function renderAgenda(from, to) {
@@ -118,10 +120,17 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
     const extra = items.filter((r) => !slots.includes(String(r.slot).slice(0, 5)));
     const revenue = confirmed.reduce((s, r) => s + (r.price || 0), 0);
     $("#agenda").innerHTML = `<div class="a-dayhead${day === todayIso ? " is-today" : ""}"><b>${fmtLong(day)}</b>
-        <span>${closed ? "Salon fermé" + (blocked.get(day) ? " · " + esc(blocked.get(day)) : "") : `${confirmed.length} rdv · ${slots.length - confirmed.filter((r) => slots.includes(String(r.slot).slice(0, 5))).length} libres · ${revenue} €`}</span></div>`
+        <span>${closed ? "Salon fermé" + (blocked.get(day) ? " · " + esc(blocked.get(day)) : "") : `${confirmed.length} rdv · ${slots.length * CAP - confirmed.filter((r) => slots.includes(String(r.slot).slice(0, 5))).length} places libres · ${revenue} €`}</span></div>`
       + slots.map((t) => {
           const here = items.filter((r) => String(r.slot).slice(0, 5) === t);
-          return here.length ? here.map((r) => apptRow(r)).join("") : `<div class="a-appt is-free"><span class="a-time">${t}</span><span class="a-freelabel">Libre</span><button class="a-add" data-add="${t}">+ Ajouter</button></div>`;
+          const busy = here.filter((r) => r.status === "confirmed"), left = CAP - busy.length;
+          const taken = new Set(busy.map((r) => r.barber).filter(Boolean));
+          const anyCount = busy.filter((r) => !r.barber).length;
+          const freeNames = BARBERS.filter((b) => !taken.has(b.id)).map((b) => b.name);
+          const freeLabel = left <= 0 ? "" : here.length === 0 ? "Libre · 4 coiffeurs".replace("4", CAP)
+            : `${left} place${left > 1 ? "s" : ""} · ${anyCount ? "à répartir entre " : ""}${freeNames.join(", ")}`;
+          return here.map((r) => apptRow(r)).join("")
+            + (left > 0 ? `<div class="a-appt is-free${here.length ? " is-sub" : ""}"><span class="a-time">${here.length ? "" : t}</span><span class="a-freelabel">${esc(freeLabel)}</span><button class="a-add" data-add="${t}">+ Ajouter</button></div>` : "");
         }).join("")
       + extra.map((r) => apptRow(r)).join("")
       + (closed && !items.length ? `<p class="a-empty">Aucun rendez-vous ce jour-là.</p>` : "");
@@ -139,7 +148,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
       <span class="a-time">${withDay ? `<small>${esc(fromIso(r.day).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }))}</small>` : ""}${esc(String(r.slot).slice(0, 5))}</span>
       <div class="a-who">
         <strong>${esc(r.client_name)}</strong>${cancelled ? '<span class="a-badge">Annulé</span>' : ""}
-        <span class="a-meta">${esc(r.service)}${r.price ? " · " + esc(r.price) + " €" : ""}</span>
+        <span class="a-meta"><span class="a-barber">${r.barber ? esc(barberName(r.barber)) : "Sans préférence"}</span> · ${esc(r.service)}${r.price ? " · " + esc(r.price) + " €" : ""}</span>
         <span class="a-meta">${r.client_phone ? `<a href="tel:${esc(telOf(r))}">${esc(r.client_phone)}</a>` : "sans téléphone"}${r.client_email ? ` · <a href="mailto:${esc(r.client_email)}">${esc(r.client_email)}</a>` : ""}</span>
       </div>
       <div class="a-actions">${actions}</div>
@@ -162,7 +171,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
     btn.disabled = true;
     if (act === "restore") {
       const { error } = await db.from("appointments").update({ status: "confirmed" }).eq("id", id);
-      if (error) { alertRow(btn, error.code === "23505" ? "Ce créneau a été repris par un autre client." : "Échec, réessayez."); return; }
+      if (error) { alertRow(btn, error.code === "23505" ? "Le créneau ou le coiffeur a été repris entre-temps." : "Échec, réessayez."); return; }
     } else if (act === "cancel") {
       const { error } = await db.from("appointments").update({ status: "cancelled" }).eq("id", id);
       if (error) { alertRow(btn, "Échec, réessayez."); return; }
@@ -210,6 +219,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
   const ALL_SERVICES = [...CFG.services, ...(CFG.salonOnlyServices || [])];
   $("#aService").innerHTML = ALL_SERVICES.map((s) => `<option value="${esc(s.id)}">${esc(s.name)} · ${s.price} €</option>`).join("");
   $("#aTime").innerHTML = CFG.slots.map((t) => `<option>${t}</option>`).join("");
+  $("#aBarber").innerHTML = `<option value="">Sans préférence</option>` + BARBERS.map((b) => `<option value="${esc(b.id)}">${esc(b.name)}</option>`).join("");
   $("#aDay").value = iso(new Date());
   $("#agenda").addEventListener("click", (e) => {
     const b = e.target.closest("[data-add]"); if (!b) return;
@@ -228,10 +238,11 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
     if (phone && (!/^[0-9 +().-]{8,20}$/.test(phone) || phone.replace(/\D/g, "").length < 9)) { msg.textContent = "Numéro invalide : corrigez-le ou laissez le champ vide."; return; }
     btn.disabled = true; btn.textContent = "Ajout…";
     const day = $("#aDay").value, slot = $("#aTime").value;
-    const { error } = await db.from("appointments").insert({ day, slot, service: svc.name, price: svc.price, client_name: name, client_phone: phone || null, note: "Ajouté par le salon" });
+    const { error } = await db.from("appointments").insert({ day, slot, service: svc.name, price: svc.price, client_name: name, client_phone: phone || null, barber: $("#aBarber").value || null, note: "Ajouté par le salon" });
     btn.disabled = false; btn.textContent = "Ajouter";
     if (error) {
-      msg.textContent = error.code === "23505" ? `Le créneau de ${slot} est déjà pris ce jour-là.`
+      msg.textContent = error.code === "23505" ? ($("#aBarber").value ? `${barberName($("#aBarber").value)} est déjà pris à ${slot} ce jour-là, ou le créneau est complet.` : `Le créneau de ${slot} est complet ce jour-là.`)
+        : error.code === "PGRST204" ? "Exécutez le fichier supabase/mise-a-jour-4-coiffeurs.sql dans Supabase, puis réessayez."
         : error.code === "42501" ? "Ajout refusé. Exécutez le fichier supabase/mise-a-jour.sql dans Supabase, puis réessayez."
         : "L’ajout a échoué. Vérifiez votre connexion et réessayez.";
       return;
