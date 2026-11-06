@@ -40,13 +40,12 @@ language sql stable security definer set search_path = public as $$
 $$;
 
 -- ---------- Règles d'ouverture (identiques à config.js) ----------
--- Mardi (2) à samedi (6) ; créneaux d'une heure ; dernier créneau 18:00, 17:00 le samedi.
+-- Mardi (2) à samedi (6), 10:00 – 19:00 ; créneaux d'une heure, dernier créneau 18:00.
 create or replace function public.is_bookable(d date, s time) returns boolean
 language sql stable security definer set search_path = public as $$
   select
         extract(isodow from d) between 2 and 6
-    and s in ('09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00')
-    and not (extract(isodow from d) = 6 and s > '17:00')
+    and s in ('10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00')
     and d <= (now() at time zone 'Europe/Paris')::date + 60
     and (d > (now() at time zone 'Europe/Paris')::date
          or (d = (now() at time zone 'Europe/Paris')::date
