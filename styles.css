@@ -242,3 +242,17 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @media (prefers-reduced-motion: reduce) {
   .look { transform: none; }
 }
+
+/* ---------- Réalisations : boucle automatique ---------- */
+.look.is-in .look__img img { animation: drift 16s ease-in-out infinite alternate; animation-delay: calc(var(--d, 0s) * -20); }
+@keyframes drift { from { scale: 1; translate: 0 0; } to { scale: 1.08; translate: 0 -2%; } }
+.travail__row.is-cycling .look .look__img img { filter: grayscale(.6) brightness(.62); transition: filter .9s ease, clip-path 1.2s cubic-bezier(.7, 0, .2, 1), transform .8s cubic-bezier(.2, .7, .2, 1); }
+.travail__row.is-cycling .look.is-focus .look__img img, .travail__row.is-cycling .look:hover .look__img img { filter: none; }
+.look.is-focus .look__img::after { animation: scan-hover 1.3s cubic-bezier(.6, 0, .3, 1); }
+.look figcaption b { transition: color .6s, text-shadow .6s; }
+.look.is-focus figcaption b { text-shadow: 0 0 12px var(--led); }
+.look.is-focus figcaption { color: var(--white); }
+@media (prefers-reduced-motion: reduce) {
+  .look.is-in .look__img img { animation: none; }
+  .travail__row.is-cycling .look .look__img img { filter: none; }
+}

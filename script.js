@@ -197,3 +197,23 @@ const parallax = () => {
 addEventListener("scroll", parallax, { passive: true });
 addEventListener("resize", parallax);
 parallax();
+
+// ===================== Réalisations : mise en avant automatique en boucle =====================
+const row = $(".travail__row");
+let focusIdx = -1, cycleTimer = null;
+const cycle = () => {
+  looks.forEach((el) => el.classList.remove("is-focus"));
+  focusIdx = (focusIdx + 1) % looks.length;
+  void looks[focusIdx].offsetWidth; // relance le balayage
+  looks[focusIdx].classList.add("is-focus");
+};
+const startCycle = () => {
+  if (reduced || cycleTimer) return;
+  row.classList.add("is-cycling"); cycle();
+  cycleTimer = setInterval(cycle, 2800);
+};
+const stopCycle = () => { clearInterval(cycleTimer); cycleTimer = null; };
+new IntersectionObserver(([en]) => {
+  if (en.isIntersecting) setTimeout(startCycle, 1800); // après le dévoilement
+  else stopCycle();
+}, { threshold: .3 }).observe(row);
