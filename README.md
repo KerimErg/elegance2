@@ -1,6 +1,6 @@
 # Élégance Strasbourg — site vitrine
 
-Site statique (HTML / CSS / JS, sans dépendance) pour le salon de coiffure Élégance à Strasbourg.
+Site statique (HTML / CSS / JS, sans dépendance) pour le salon Élégance à Strasbourg : diaporama plein écran, carte en accordéon, réservation dans un téléphone, réalisations, équipe, avis, contact.
 
 - `index.html` : structure (accueil, réservation, prestations, équipe, galerie, avis, contact)
 - `styles.css` : thème noir & or, responsive
