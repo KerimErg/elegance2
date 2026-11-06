@@ -61,6 +61,35 @@
     .a-blocked { margin-top: 1.2rem; display: grid; gap: .3rem; }
     .a-blocked li { display: flex; justify-content: space-between; align-items: center; gap: .6rem; font-size: .88rem; padding: .5rem 0; border-bottom: 1px solid var(--line); }
     .a-blocked small { color: var(--mute); display: block; }
+    .a-agenda { min-width: 0; display: grid; gap: 1rem; }
+    .a-search { font: inherit; font-size: .95rem; color: var(--white); background: var(--surface); border: 1px solid var(--line); padding: .8rem 1rem; outline: none; width: 100%; }
+    .a-search:focus { border-color: var(--led); }
+    .a-stripwrap { display: grid; grid-template-columns: 36px minmax(0, 1fr) 36px; gap: .4rem; align-items: stretch; }
+    .a-arrow { border: 1px solid var(--line); font-size: 1.3rem; }
+    .a-arrow:hover { border-color: var(--white); }
+    .a-strip { display: flex; gap: .4rem; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; }
+    .a-strip::-webkit-scrollbar { display: none; }
+    .a-chip { flex: 0 0 64px; scroll-snap-align: start; display: grid; justify-items: center; gap: .1rem; padding: .55rem 0; border: 1px solid var(--line); background: var(--surface); transition: border-color .2s; }
+    .a-chip:hover { border-color: rgba(243, 243, 241, .5); }
+    .a-chip small { font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+    .a-chip b { font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .a-chip em { font-style: normal; font-size: .66rem; color: var(--led); white-space: nowrap; }
+    .a-chip.is-closed { opacity: .45; }
+    .a-chip.is-closed em { color: var(--mute); }
+    .a-chip.is-today small { color: var(--led); }
+    .a-chip.is-on { background: var(--white); color: var(--bg); border-color: var(--white); opacity: 1; }
+    .a-chip.is-on small, .a-chip.is-on em { color: #55555b; }
+    .a-daycard { background: var(--surface); border: 1px solid var(--line); padding: .4rem 1.2rem 1rem; }
+    .a-dayhead { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .3rem 1rem; padding: 1rem 0 .8rem; border-bottom: 1px solid var(--line); }
+    .a-dayhead b { font-size: .85rem; letter-spacing: .16em; text-transform: uppercase; }
+    .a-dayhead.is-today b { color: var(--led); }
+    .a-dayhead span { font-size: .85rem; color: var(--mute); }
+    .a-appt { grid-template-columns: 64px minmax(0, 1fr) auto; padding: .55rem 0; min-height: 52px; }
+    .a-time small { display: block; font-family: var(--font); font-size: .68rem; color: var(--mute); letter-spacing: .04em; }
+    .a-who { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .9rem; }
+    .a-meta { font-size: .85rem; color: var(--mute); overflow-wrap: anywhere; }
+    .a-appt.is-free .a-time { color: rgba(243, 243, 241, .35); }
+    .a-freelabel { font-size: .82rem; color: rgba(243, 243, 241, .3); letter-spacing: .06em; }
     @media (max-width: 900px) { .a-grid { grid-template-columns: 1fr; } }
     @media (max-width: 560px) {
       .a-stats { grid-template-columns: 1fr; }
@@ -112,11 +141,19 @@
           <button class="a-tab" data-range="upcoming" aria-pressed="true">À venir</button>
           <button class="a-tab" data-range="past" aria-pressed="false">Passés (30 j)</button>
         </div>
-        <label class="a-field" style="flex-direction:row;align-items:center;gap:.6rem"><input type="checkbox" id="showCancelled"> Afficher les annulés</label>
+        <label class="a-field" style="display:flex;align-items:center;gap:.6rem"><input type="checkbox" id="showCancelled"> Afficher les annulés</label>
       </div>
 
       <div class="a-grid">
-        <div id="agenda"></div>
+        <div class="a-agenda">
+          <input class="a-search" id="search" type="search" placeholder="Rechercher un client : nom, téléphone, e-mail…" aria-label="Rechercher un client">
+          <div class="a-stripwrap">
+            <button class="a-arrow" data-scroll="-1" aria-label="Jours précédents">‹</button>
+            <div class="a-strip" id="strip" role="group" aria-label="Choisir un jour"></div>
+            <button class="a-arrow" data-scroll="1" aria-label="Jours suivants">›</button>
+          </div>
+          <div class="a-daycard" id="agenda"></div>
+        </div>
         <aside class="a-card a-side">
           <h2>Fermer une journée</h2>
           <p>Congés, formation… Plus aucun client ne pourra réserver ce jour-là. Les rendez-vous déjà pris restent à gérer ici.</p>

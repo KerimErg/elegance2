@@ -19,7 +19,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
   show("setup");
 } else {
   const db = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey);
-  const state = { range: "upcoming", showCancelled: false, appts: [], blocked: [], confirming: null, timer: null };
+  const state = { range: "upcoming", showCancelled: false, appts: [], blocked: [], confirming: null, timer: null, selected: null, query: "" };
 
   // ---------- Connexion ----------
   async function enter(session) {
@@ -69,49 +69,90 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
     renderAgenda(from, to); renderBlocked();
   }
 
-  // ---------- Agenda ----------
+  // ---------- Agenda : un jour à la fois (taille de page constante) ----------
+  const DOW = ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"];
+  const telOf = (r) => r.client_phone.replace(/[^0-9+]/g, "");
+
   function renderAgenda(from, to) {
     const todayIso = iso(new Date());
-    const blockedSet = new Map(state.blocked.map((b) => [b.day, b.reason]));
+    const blocked = new Map(state.blocked.map((b) => [b.day, b.reason]));
     const list = state.appts.filter((r) => state.showCancelled || r.status === "confirmed");
-    const dayList = [];
-    for (let d = new Date(from); d <= to; d = addDays(d, 1)) {
-      // seuls les jours utiles : avec rendez-vous, aujourd'hui, ou fermés exceptionnellement
-      const hasItems = list.some((r) => r.day === iso(d));
-      if (!hasItems && !(state.range === "upcoming" && (iso(d) === todayIso || blockedSet.has(iso(d))))) continue;
-      dayList.push(iso(d));
+    const days = [];
+    for (let d = new Date(from); d <= to; d = addDays(d, 1)) days.push(iso(d));
+    if (state.range === "past") days.reverse();
+    const countOf = (day) => list.filter((r) => r.day === day && r.status === "confirmed").length;
+
+    if (!state.selected || !days.includes(state.selected)) {
+      state.selected = state.range === "upcoming"
+        ? (countOf(todayIso) ? todayIso : days.find((d) => countOf(d)) || todayIso)
+        : days.find((d) => countOf(d)) || days[0];
     }
-    if (state.range === "upcoming") dayList.sort(); else dayList.reverse();
-    $("#agenda").innerHTML = dayList.map((day) => {
-      const items = list.filter((r) => r.day === day);
-      const open = CFG.open[fromIso(day).getDay()];
-      const closedNote = blockedSet.has(day) ? `Fermé${blockedSet.get(day) ? " · " + esc(blockedSet.get(day)) : ""}` : !open ? "Fermé" : `${items.filter((r) => r.status === "confirmed").length} rdv`;
-      return `<section class="a-day${day === todayIso ? " is-today" : ""}">
-        <h3><b>${fmtLong(day)}</b><span>${closedNote}</span></h3>
-        ${items.length ? items.map(apptRow).join("") : `<p class="a-empty">${open && !blockedSet.has(day) ? "Aucun rendez-vous." : "Salon fermé."}</p>`}
-      </section>`;
-    }).join("") + (state.range === "upcoming" && !list.some((r) => r.day !== todayIso) ? `<p class="a-empty">Aucun autre rendez-vous à venir.</p>` : "") || `<p class="a-empty">Aucun rendez-vous sur cette période.</p>`;
+
+    // Bandeau de dates
+    $("#strip").innerHTML = days.map((day) => {
+      const dt = fromIso(day), n = countOf(day);
+      const closed = blocked.has(day) || !CFG.open[dt.getDay()];
+      return `<button class="a-chip${day === state.selected ? " is-on" : ""}${closed ? " is-closed" : ""}${day === todayIso ? " is-today" : ""}" data-day="${day}" aria-pressed="${day === state.selected}">
+        <small>${DOW[dt.getDay()]}</small><b>${dt.getDate()}</b><em>${closed && !n ? "fermé" : n ? n + " rdv" : "–"}</em></button>`;
+    }).join("");
+    $(`#strip [data-day="${state.selected}"]`)?.scrollIntoView({ block: "nearest", inline: "center" });
+
+    // Recherche : remplace la vue du jour
+    const q = state.query.trim().toLowerCase();
+    if (q) {
+      const digits = q.replace(/\D/g, "");
+      const hits = state.appts.filter((r) => (state.showCancelled || r.status === "confirmed") && (
+        r.client_name.toLowerCase().includes(q) || (r.client_email || "").toLowerCase().includes(q) || (digits.length >= 3 && telOf(r).includes(digits))));
+      $("#agenda").innerHTML = `<div class="a-dayhead"><b>${hits.length} résultat${hits.length > 1 ? "s" : ""}</b><span>pour « ${esc(state.query.trim())} »</span></div>`
+        + (hits.map((r) => apptRow(r, true)).join("") || `<p class="a-empty">Aucun client trouvé sur cette période.</p>`);
+      return;
+    }
+
+    // Planning du jour sélectionné : une ligne par créneau
+    const day = state.selected, dt = fromIso(day);
+    const items = list.filter((r) => r.day === day);
+    const confirmed = items.filter((r) => r.status === "confirmed");
+    const last = CFG.open[dt.getDay()];
+    const closed = blocked.has(day) || !last;
+    const slots = closed ? [] : CFG.slots.filter((t) => t <= last);
+    const extra = items.filter((r) => !slots.includes(String(r.slot).slice(0, 5)));
+    const revenue = confirmed.reduce((s, r) => s + (r.price || 0), 0);
+    $("#agenda").innerHTML = `<div class="a-dayhead${day === todayIso ? " is-today" : ""}"><b>${fmtLong(day)}</b>
+        <span>${closed ? "Salon fermé" + (blocked.get(day) ? " · " + esc(blocked.get(day)) : "") : `${confirmed.length} rdv · ${slots.length - confirmed.filter((r) => slots.includes(String(r.slot).slice(0, 5))).length} libres · ${revenue} €`}</span></div>`
+      + slots.map((t) => {
+          const here = items.filter((r) => String(r.slot).slice(0, 5) === t);
+          return here.length ? here.map((r) => apptRow(r)).join("") : `<div class="a-appt is-free"><span class="a-time">${t}</span><span class="a-freelabel">Libre</span></div>`;
+        }).join("")
+      + extra.map((r) => apptRow(r)).join("")
+      + (closed && !items.length ? `<p class="a-empty">Aucun rendez-vous ce jour-là.</p>` : "");
   }
 
-  function apptRow(r) {
+  function apptRow(r, withDay) {
     const cancelled = r.status === "cancelled";
-    const tel = r.client_phone.replace(/[^0-9+]/g, "");
     const confirming = state.confirming === r.id;
     const actions = cancelled
       ? `<button class="a-btn" data-act="restore" data-id="${r.id}">Rétablir</button>`
       : confirming
-        ? `<button class="a-btn a-btn--danger" data-act="cancel" data-id="${r.id}">Confirmer l’annulation</button><button class="a-btn" data-act="keep" data-id="${r.id}">Garder</button>`
+        ? `<button class="a-btn a-btn--danger" data-act="cancel" data-id="${r.id}">Confirmer</button><button class="a-btn" data-act="keep" data-id="${r.id}">Garder</button>`
         : `<button class="a-btn" data-act="ask" data-id="${r.id}">Annuler</button>`;
     return `<article class="a-appt${cancelled ? " is-cancelled" : ""}">
-      <span class="a-time">${esc(String(r.slot).slice(0, 5))}</span>
+      <span class="a-time">${withDay ? `<small>${esc(fromIso(r.day).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }))}</small>` : ""}${esc(String(r.slot).slice(0, 5))}</span>
       <div class="a-who">
         <strong>${esc(r.client_name)}</strong>${cancelled ? '<span class="a-badge">Annulé</span>' : ""}
-        <p>${esc(r.service)}${r.price ? " · " + esc(r.price) + " €" : ""}</p>
-        <p><a href="tel:${esc(tel)}">${esc(r.client_phone)}</a>${r.client_email ? ` · <a href="mailto:${esc(r.client_email)}">${esc(r.client_email)}</a>` : ""}</p>
+        <span class="a-meta">${esc(r.service)}${r.price ? " · " + esc(r.price) + " €" : ""}</span>
+        <span class="a-meta"><a href="tel:${esc(telOf(r))}">${esc(r.client_phone)}</a>${r.client_email ? ` · <a href="mailto:${esc(r.client_email)}">${esc(r.client_email)}</a>` : ""}</span>
       </div>
       <div class="a-actions">${actions}</div>
     </article>`;
   }
+
+  $("#strip").addEventListener("click", (e) => {
+    const c = e.target.closest("[data-day]"); if (!c) return;
+    state.selected = c.dataset.day; state.confirming = null; refreshView();
+  });
+  document.querySelectorAll("[data-scroll]").forEach((b) => b.addEventListener("click", () =>
+    $("#strip").scrollBy({ left: +b.dataset.scroll * $("#strip").clientWidth * .8, behavior: "smooth" })));
+  $("#search").addEventListener("input", (e) => { state.query = e.target.value; refreshView(); });
 
   $("#agenda").addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-act]"); if (!btn) return;
@@ -137,7 +178,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
   };
 
   document.querySelectorAll(".a-tab").forEach((t) => t.addEventListener("click", () => {
-    state.range = t.dataset.range;
+    state.range = t.dataset.range; state.selected = null;
     document.querySelectorAll(".a-tab").forEach((x) => x.setAttribute("aria-pressed", x === t));
     refresh();
   }));
