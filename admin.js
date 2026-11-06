@@ -50,7 +50,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
   // ---------- Données ----------
   async function refresh() {
     const today = new Date(); today.setHours(0, 0, 0, 0);
-    const [from, to] = state.range === "upcoming" ? [today, addDays(today, 13)] : [addDays(today, -30), addDays(today, -1)];
+    const [from, to] = state.range === "upcoming" ? [today, addDays(today, 60)] : [addDays(today, -30), addDays(today, -1)];
     const [a, b, w] = await Promise.all([
       db.from("appointments").select("*").gte("day", iso(from)).lte("day", iso(to)).order("day").order("slot"),
       db.from("blocked_days").select("*").gte("day", iso(today)).order("day"),
@@ -76,7 +76,9 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
     const list = state.appts.filter((r) => state.showCancelled || r.status === "confirmed");
     const dayList = [];
     for (let d = new Date(from); d <= to; d = addDays(d, 1)) {
-      if (state.range === "past" && !list.some((r) => r.day === iso(d))) continue;
+      // seuls les jours utiles : avec rendez-vous, aujourd'hui, ou fermés exceptionnellement
+      const hasItems = list.some((r) => r.day === iso(d));
+      if (!hasItems && !(state.range === "upcoming" && (iso(d) === todayIso || blockedSet.has(iso(d))))) continue;
       dayList.push(iso(d));
     }
     if (state.range === "upcoming") dayList.sort(); else dayList.reverse();
@@ -88,7 +90,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
         <h3><b>${fmtLong(day)}</b><span>${closedNote}</span></h3>
         ${items.length ? items.map(apptRow).join("") : `<p class="a-empty">${open && !blockedSet.has(day) ? "Aucun rendez-vous." : "Salon fermé."}</p>`}
       </section>`;
-    }).join("") || `<p class="a-empty">Aucun rendez-vous sur cette période.</p>`;
+    }).join("") + (state.range === "upcoming" && !list.some((r) => r.day !== todayIso) ? `<p class="a-empty">Aucun autre rendez-vous à venir.</p>` : "") || `<p class="a-empty">Aucun rendez-vous sur cette période.</p>`;
   }
 
   function apptRow(r) {
@@ -130,7 +132,7 @@ if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || !window.supabase) {
   const alertRow = (btn, msg) => { btn.disabled = false; btn.textContent = msg; };
   const refreshView = () => {
     const today = new Date(); today.setHours(0, 0, 0, 0);
-    const [from, to] = state.range === "upcoming" ? [today, addDays(today, 13)] : [addDays(today, -30), addDays(today, -1)];
+    const [from, to] = state.range === "upcoming" ? [today, addDays(today, 60)] : [addDays(today, -30), addDays(today, -1)];
     renderAgenda(from, to);
   };
 
