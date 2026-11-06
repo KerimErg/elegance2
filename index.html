@@ -7,7 +7,7 @@
   <meta name="description" content="Élégance, salon de coiffure femme, homme et barbier à Strasbourg. Coupe, couleur, balayage, barbe. Réservez en ligne.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -47,7 +47,7 @@
   <!-- ================= HERO SLIDER ================= -->
   <section class="hero slider" id="accueil" data-autoplay="7000" aria-roledescription="carrousel">
     <div class="slide is-active">
-      <div class="slide__bg" style="--img:url('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=2000&q=75'); --fb: var(--fb-1)"></div>
+      <div class="slide__bg" style="--img:url('images/hero-coupe.jpg'); --fb: var(--fb-1)"></div>
       <div class="hero__content">
         <p class="kicker">01 — Coupe</p>
         <h1 class="display">Votre style,<br><strong>signé Élégance.</strong><i class="dot-accent"></i></h1>
@@ -56,7 +56,7 @@
       </div>
     </div>
     <div class="slide">
-      <div class="slide__bg" style="--img:url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=2000&q=75'); --fb: var(--fb-2)"></div>
+      <div class="slide__bg" style="--img:url('images/hero-couleur.jpg'); --fb: var(--fb-2)"></div>
       <div class="hero__content">
         <p class="kicker">02 — Couleur</p>
         <h2 class="display">La lumière,<br><strong>dans vos cheveux.</strong><i class="dot-accent"></i></h2>
@@ -65,7 +65,7 @@
       </div>
     </div>
     <div class="slide">
-      <div class="slide__bg" style="--img:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=2000&q=75'); --fb: var(--fb-3)"></div>
+      <div class="slide__bg" style="--img:url('images/hero-barbier.jpg'); --fb: var(--fb-3)"></div>
       <div class="hero__content">
         <p class="kicker">03 — Barbier</p>
         <h2 class="display">Le geste net,<br><strong>le détail juste.</strong><i class="dot-accent"></i></h2>
@@ -73,9 +73,6 @@
         <ul class="tags"><li>Dégradé</li><li>Barbe</li><li>Rasage</li></ul>
       </div>
     </div>
-    <div class="gridlines" aria-hidden="true"><i></i><i></i><i></i></div>
-    <div class="micro" aria-hidden="true"><span>Coupe sur-mesure</span><span>Couleur &amp; lumière</span><span>Barbier &amp; rasage</span><span>48.58° N · 7.75° E</span></div>
-    <p class="vbrand" aria-hidden="true">Élégance <i></i> Salon de coiffure <i></i> Strasbourg</p>
     <div class="slider__ui">
       <div class="slider__progress"><span></span></div>
       <button class="round-btn" data-prev aria-label="Diapositive précédente"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
@@ -87,7 +84,7 @@
 
   <!-- ================= PRESTATIONS + RESERVATION ================= -->
   <section class="studio" id="prestations">
-    <div class="studio__bg" style="--img:url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=2000&q=75'); --fb: var(--fb-4)"></div>
+    <div class="studio__bg" style="--img:url('images/studio.jpg'); --fb: var(--fb-4)"></div>
     <div class="wrap studio__grid">
       <div class="glass">
         <p class="eyebrow"><span></span>La carte</p>
@@ -125,18 +122,10 @@
     </div>
   </section>
 
-  <!-- ================= BANDEAU ================= -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee__track">
-      <span>Coupe</span><em>✦</em><span class="o">Balayage</span><em>✦</em><span>Barbe</span><em>✦</em><span class="o">Couleur</span><em>✦</em><span>Chignon</span><em>✦</em><span class="o">Soin</span><em>✦</em>
-      <span>Coupe</span><em>✦</em><span class="o">Balayage</span><em>✦</em><span>Barbe</span><em>✦</em><span class="o">Couleur</span><em>✦</em><span>Chignon</span><em>✦</em><span class="o">Soin</span><em>✦</em>
-    </div>
-  </div>
-
   <!-- ================= REALISATIONS ================= -->
   <section class="looks slider" id="realisations" data-autoplay="0" aria-roledescription="carrousel">
     <div class="slide is-active">
-      <div class="slide__bg slide__bg--blur" style="--img:url('https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1600&q=60'); --fb: var(--fb-2)"></div>
+      <div class="slide__bg slide__bg--blur" style="--img:url('images/look-balayage.jpg'); --fb: var(--fb-2)"></div>
       <div class="wrap looks__grid">
         <div class="looks__text">
           <ul class="tags tags--gold"><li class="tag-plain">Couleur</li><li>Par Sarah</li></ul>
@@ -144,13 +133,13 @@
           <p class="lead">Un éclaircissement doux, fondu depuis les racines, pour une lumière naturelle qui dure.</p>
         </div>
         <div class="looks__media">
-          <figure class="frame frame--lg" style="--img:url('https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1400&q=75'); --fb: var(--fb-2)"><figcaption>Après · 2h30</figcaption></figure>
-          <figure class="frame frame--sm" style="--img:url('https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=600&q=75'); --fb: var(--fb-1)"></figure>
+          <figure class="frame frame--lg" style="--img:url('images/look-balayage.jpg'); --fb: var(--fb-2)"><figcaption>Après · 2h30</figcaption></figure>
+          <figure class="frame frame--sm" style="--img:url('images/look-balayage-detail.jpg'); --fb: var(--fb-1)"></figure>
         </div>
       </div>
     </div>
     <div class="slide">
-      <div class="slide__bg slide__bg--blur" style="--img:url('https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=1600&q=60'); --fb: var(--fb-3)"></div>
+      <div class="slide__bg slide__bg--blur" style="--img:url('images/look-degrade.jpg'); --fb: var(--fb-3)"></div>
       <div class="wrap looks__grid">
         <div class="looks__text">
           <ul class="tags tags--gold"><li class="tag-plain">Barbier</li><li>Par Karim</li></ul>
@@ -158,13 +147,13 @@
           <p class="lead">Un dégradé bas net, une barbe redessinée au rasoir et finie à la serviette chaude.</p>
         </div>
         <div class="looks__media">
-          <figure class="frame frame--lg" style="--img:url('https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=1400&q=75'); --fb: var(--fb-3)"><figcaption>Après · 45 min</figcaption></figure>
-          <figure class="frame frame--sm" style="--img:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=75'); --fb: var(--fb-4)"></figure>
+          <figure class="frame frame--lg" style="--img:url('images/look-degrade.jpg'); --fb: var(--fb-3)"><figcaption>Après · 45 min</figcaption></figure>
+          <figure class="frame frame--sm" style="--img:url('images/look-degrade-detail.jpg'); --fb: var(--fb-4)"></figure>
         </div>
       </div>
     </div>
     <div class="slide">
-      <div class="slide__bg slide__bg--blur" style="--img:url('https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=1600&q=60'); --fb: var(--fb-1)"></div>
+      <div class="slide__bg slide__bg--blur" style="--img:url('images/look-chignon.jpg'); --fb: var(--fb-1)"></div>
       <div class="wrap looks__grid">
         <div class="looks__text">
           <ul class="tags tags--gold"><li class="tag-plain">Coiffage</li><li>Par Léa</li></ul>
@@ -172,8 +161,8 @@
           <p class="lead">Mariage, gala ou simple envie : un chignon souple qui tient toute la nuit sans perdre son mouvement.</p>
         </div>
         <div class="looks__media">
-          <figure class="frame frame--lg" style="--img:url('https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=1400&q=75'); --fb: var(--fb-1)"><figcaption>Après · 1h</figcaption></figure>
-          <figure class="frame frame--sm" style="--img:url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&q=75'); --fb: var(--fb-2)"></figure>
+          <figure class="frame frame--lg" style="--img:url('images/look-chignon.jpg'); --fb: var(--fb-1)"><figcaption>Après · 1h</figcaption></figure>
+          <figure class="frame frame--sm" style="--img:url('images/look-chignon-detail.jpg'); --fb: var(--fb-2)"></figure>
         </div>
       </div>
     </div>
@@ -210,8 +199,7 @@
 
   <!-- ================= CONTACT ================= -->
   <section class="contact" id="contact">
-    <div class="gridlines gridlines--soft" aria-hidden="true"><i></i><i></i><i></i></div>
-    <div class="contact__bg" style="--img:url('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=2000&q=60'); --fb: var(--fb-4)"></div>
+    <div class="contact__bg" style="--img:url('images/salon.jpg'); --fb: var(--fb-4)"></div>
     <div class="wrap contact__grid">
       <div>
         <p class="eyebrow"><span></span>Nous trouver</p>

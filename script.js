@@ -127,7 +127,7 @@ acc.addEventListener("click", (e) => {
 // ===================== Équipe =====================
 $("#team").innerHTML = TEAM.map((m) => `
   <article class="member">
-    <div class="member__art" style="--fb:${m.fb}"><span>${m.name[0]}</span><em>${m.role}</em></div>
+    <div class="member__art has-photo" style="--fb:${m.fb}; --img:url('images/team-${m.id}.jpg')"><span>${m.name[0]}</span><em>${m.role}</em></div>
     <div class="member__body">
       <h3>${m.name}</h3>
       <p>${m.spec}</p>
