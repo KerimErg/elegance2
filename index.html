@@ -4,95 +4,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Élégance Strasbourg</title>
-  <meta name="description" content="Élégance, salon de coiffure femme, homme et barbier à Strasbourg. Coupe, couleur, balayage, barbe. Réservez en ligne.">
+  <meta name="description" content="Elegance Strasbourg, barbier : dégradés, coupes texturées, décoloration et barbe. Réservez en ligne.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Allura&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- ================= HEADER ================= -->
 <header class="header" id="header">
   <div class="header__inner">
-    <a href="#accueil" class="logo" aria-label="Élégance Strasbourg, accueil">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M24 6H11a4 4 0 0 0-4 4v0a4 4 0 0 0 4 4h8M7 26h13a4 4 0 0 0 4-4v0a4 4 0 0 0-4-4h-8"/></svg>
-      <span>ÉLÉGANCE</span>
+    <a href="#accueil" class="logo" aria-label="Elegance Strasbourg, accueil">
+      <span class="logo__word">ELEGANCE</span>
+      <span class="logo__script">Strasbourg</span>
     </a>
     <nav class="nav" id="nav" aria-label="Navigation principale">
-      <a href="#accueil">Accueil</a>
-      <a href="#prestations">Prestations</a>
-      <a href="#realisations">Réalisations</a>
-      <a href="#equipe">Équipe</a>
-      <a href="#avis">Avis</a>
-      <a href="#contact">Contact</a>
-      <a href="#prestations" class="nav__cta" data-book>Prendre rendez-vous</a>
+      <a href="#prestations"><small>01</small>Prestations</a>
+      <a href="#realisations"><small>02</small>Réalisations</a>
+      <a href="#salon"><small>03</small>Le salon</a>
+      <a href="#avis"><small>04</small>Avis</a>
+      <a href="#prestations" class="nav__cta">Prendre rendez-vous</a>
     </nav>
-    <a href="#prestations" class="pill-btn header__cta" data-book>Prendre rendez-vous</a>
+    <div class="header__right">
+      <a href="tel:+33300000000" class="header__tel">03 00 00 00 00</a>
+      <a href="#prestations" class="btn btn--light">Prendre rendez-vous</a>
+    </div>
     <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
   </div>
 </header>
 
-<!-- ================= DOT NAV ================= -->
-<nav class="dots" id="dots" aria-label="Sections">
-  <a href="#accueil" data-label="Accueil"></a>
-  <a href="#prestations" data-label="Prestations"></a>
-  <a href="#realisations" data-label="Réalisations"></a>
-  <a href="#equipe" data-label="Équipe"></a>
-  <a href="#avis" data-label="Avis"></a>
-  <a href="#contact" data-label="Contact"></a>
-</nav>
-
 <main>
-  <!-- ================= HERO SLIDER ================= -->
-  <section class="hero slider" id="accueil" data-autoplay="7000" aria-roledescription="carrousel">
-    <div class="slide is-active">
-      <div class="slide__bg" style="--img:url('images/hero-coupe.jpg'); --fb: var(--fb-1)"></div>
-      <div class="hero__content">
-        <p class="kicker">01 — Coupe</p>
-        <h1 class="display">Votre style,<br><strong>signé Élégance.</strong><i class="dot-accent"></i></h1>
-        <p class="lead">Coupes femme, homme et enfant au cœur de Strasbourg. Un diagnostic, un geste précis, un résultat qui vous ressemble.</p>
-        <ul class="tags"><li>Coupe femme</li><li>Coupe homme</li><li>Brushing</li></ul>
+  <!-- ================= ACCUEIL ================= -->
+  <section class="hero" id="accueil">
+    <canvas class="hive" id="hive" aria-hidden="true"></canvas>
+    <div class="hero__inner">
+      <div class="hero__text">
+        <p class="overline">Barbier · Strasbourg</p>
+        <h1 class="hero__title">
+          <span class="hero__word">ELEGANCE</span>
+          <span class="hero__script">Strasbourg</span>
+        </h1>
+        <p class="hero__lead">Dégradés au millimètre, coupes texturées, décoloration et barbe. Un fauteuil, un barbier, le temps qu’il faut.</p>
+        <div class="hero__actions">
+          <a href="#prestations" class="btn btn--light">Réserver mon créneau</a>
+          <a href="#realisations" class="btn btn--line">Voir le travail</a>
+        </div>
       </div>
+      <figure class="hero__photo">
+        <div class="hex"><img src="images/salon.jpg" alt="L’intérieur du salon Elegance : fauteuil de barbier, miroirs et plafond lumineux en nid d’abeille" width="382" height="443"></div>
+        <figcaption>Le salon · plafond nid d’abeille</figcaption>
+      </figure>
     </div>
-    <div class="slide">
-      <div class="slide__bg" style="--img:url('images/hero-couleur.jpg'); --fb: var(--fb-2)"></div>
-      <div class="hero__content">
-        <p class="kicker">02 — Couleur</p>
-        <h2 class="display">La lumière,<br><strong>dans vos cheveux.</strong><i class="dot-accent"></i></h2>
-        <p class="lead">Balayage, mèches, couleur et patine : des nuances travaillées sur mesure pour éclairer votre visage.</p>
-        <ul class="tags"><li>Balayage</li><li>Couleur</li><li>Patine</li></ul>
-      </div>
-    </div>
-    <div class="slide">
-      <div class="slide__bg" style="--img:url('images/hero-barbier.jpg'); --fb: var(--fb-3)"></div>
-      <div class="hero__content">
-        <p class="kicker">03 — Barbier</p>
-        <h2 class="display">Le geste net,<br><strong>le détail juste.</strong><i class="dot-accent"></i></h2>
-        <p class="lead">Dégradés, taille de barbe et rasage traditionnel à la serviette chaude, dans le calme du salon.</p>
-        <ul class="tags"><li>Dégradé</li><li>Barbe</li><li>Rasage</li></ul>
-      </div>
-    </div>
-    <div class="slider__ui">
-      <div class="slider__progress"><span></span></div>
-      <button class="round-btn" data-prev aria-label="Diapositive précédente"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
-      <button class="round-btn" data-next aria-label="Diapositive suivante"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
-      <span class="counter"><b data-current>01</b> / <span data-total>03</span></span>
-    </div>
-    <a href="#prestations" class="scroll-hint">Défiler</a>
+    <dl class="hero__facts">
+      <div><dt>Horaires</dt><dd>Mar – Sam · 9h – 19h</dd></div>
+      <div><dt>Spécialités</dt><dd>Dégradé · Barbe · Décoloration</dd></div>
+      <div><dt>Réservation</dt><dd>En ligne, 24h/24</dd></div>
+    </dl>
   </section>
 
-  <!-- ================= PRESTATIONS + RESERVATION ================= -->
-  <section class="studio" id="prestations">
-    <div class="studio__bg" style="--img:url('images/studio.jpg'); --fb: var(--fb-4)"></div>
-    <div class="wrap studio__grid">
-      <div class="glass">
-        <p class="eyebrow"><span></span>La carte</p>
-        <h2 class="h2">L’art de la coiffure, <strong>à votre mesure.</strong></h2>
-        <p class="muted">Chaque prestation commence par un diagnostic et un shampoing soin. Tarifs indicatifs, ajustés selon la longueur et l’épaisseur des cheveux.</p>
+  <!-- ================= PRESTATIONS + RÉSERVATION ================= -->
+  <section class="carte" id="prestations">
+    <div class="wrap carte__grid">
+      <div class="carte__panel">
+        <p class="overline overline--num"><b>01</b> La carte</p>
+        <h2 class="h2">Prestations</h2>
+        <p class="muted">Shampoing et coiffage inclus. Le prix exact vous est annoncé avant de commencer.</p>
         <div class="accordion" id="accordion"></div>
       </div>
-
       <div class="phone-wrap">
         <div class="phone" id="phone">
           <div class="phone__notch"></div>
@@ -101,137 +79,104 @@
               <span class="phone__check" aria-hidden="true"></span>
               <span id="phoneStatusText">Réservez en moins d’une minute</span>
             </div>
-
             <p class="phone__label">Prestation</p>
-            <div class="chips chips--scroll" id="pService"></div>
-
-            <p class="phone__label">Coiffeur</p>
-            <div class="chips chips--scroll" id="pStylist"></div>
-
+            <div class="chips" id="pService"></div>
             <p class="phone__label">Date</p>
-            <div class="chips chips--scroll" id="pDate"></div>
-
+            <div class="chips" id="pDate"></div>
             <p class="phone__label">Heure</p>
             <div class="slots" id="pSlots"></div>
-
             <button class="phone__confirm" id="pConfirm" disabled>Choisissez un créneau</button>
           </div>
         </div>
-        <p class="phone__tag">Réservation en ligne · Paiement au salon</p>
+        <p class="phone__tag">Paiement au salon · Annulation libre 24h avant</p>
       </div>
     </div>
   </section>
 
-  <!-- ================= REALISATIONS ================= -->
-  <section class="looks slider" id="realisations" data-autoplay="0" aria-roledescription="carrousel">
-    <div class="slide is-active">
-      <div class="slide__bg slide__bg--blur" style="--img:url('images/look-balayage.jpg'); --fb: var(--fb-2)"></div>
-      <div class="wrap looks__grid">
-        <div class="looks__text">
-          <ul class="tags tags--gold"><li class="tag-plain">Couleur</li><li>Par Sarah</li></ul>
-          <h2 class="display display--xl">Balayage<br>miel</h2>
-          <p class="lead">Un éclaircissement doux, fondu depuis les racines, pour une lumière naturelle qui dure.</p>
-        </div>
-        <div class="looks__media">
-          <figure class="frame frame--lg" style="--img:url('images/look-balayage.jpg'); --fb: var(--fb-2)"><figcaption>Après · 2h30</figcaption></figure>
-          <figure class="frame frame--sm" style="--img:url('images/look-balayage-detail.jpg'); --fb: var(--fb-1)"></figure>
-        </div>
-      </div>
-    </div>
-    <div class="slide">
-      <div class="slide__bg slide__bg--blur" style="--img:url('images/look-degrade.jpg'); --fb: var(--fb-3)"></div>
-      <div class="wrap looks__grid">
-        <div class="looks__text">
-          <ul class="tags tags--gold"><li class="tag-plain">Barbier</li><li>Par Karim</li></ul>
-          <h2 class="display display--xl">Dégradé<br>& barbe</h2>
-          <p class="lead">Un dégradé bas net, une barbe redessinée au rasoir et finie à la serviette chaude.</p>
-        </div>
-        <div class="looks__media">
-          <figure class="frame frame--lg" style="--img:url('images/look-degrade.jpg'); --fb: var(--fb-3)"><figcaption>Après · 45 min</figcaption></figure>
-          <figure class="frame frame--sm" style="--img:url('images/look-degrade-detail.jpg'); --fb: var(--fb-4)"></figure>
-        </div>
-      </div>
-    </div>
-    <div class="slide">
-      <div class="slide__bg slide__bg--blur" style="--img:url('images/look-chignon.jpg'); --fb: var(--fb-1)"></div>
-      <div class="wrap looks__grid">
-        <div class="looks__text">
-          <ul class="tags tags--gold"><li class="tag-plain">Coiffage</li><li>Par Léa</li></ul>
-          <h2 class="display display--xl">Chignon<br>de soirée</h2>
-          <p class="lead">Mariage, gala ou simple envie : un chignon souple qui tient toute la nuit sans perdre son mouvement.</p>
-        </div>
-        <div class="looks__media">
-          <figure class="frame frame--lg" style="--img:url('images/look-chignon.jpg'); --fb: var(--fb-1)"><figcaption>Après · 1h</figcaption></figure>
-          <figure class="frame frame--sm" style="--img:url('images/look-chignon-detail.jpg'); --fb: var(--fb-2)"></figure>
-        </div>
-      </div>
-    </div>
-    <div class="slider__ui">
-      <div class="slider__progress"><span></span></div>
-      <button class="round-btn" data-prev aria-label="Réalisation précédente"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
-      <button class="round-btn" data-next aria-label="Réalisation suivante"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
-      <span class="counter"><b data-current>01</b> / <span data-total>03</span></span>
-    </div>
-  </section>
-
-  <!-- ================= EQUIPE ================= -->
-  <section class="section" id="equipe">
+  <!-- ================= RÉALISATIONS ================= -->
+  <section class="travail" id="realisations">
     <div class="wrap">
-      <div class="section__head">
-        <p class="eyebrow"><span></span>L’équipe</p>
-        <h2 class="h2 h2--big">Quatre regards experts. <strong>Une même exigence.</strong></h2>
+      <div class="section-head">
+        <p class="overline overline--num"><b>02</b> Réalisations</p>
+        <h2 class="h2 h2--xl">Le travail</h2>
       </div>
-      <div class="team" id="team"></div>
+      <div class="travail__row">
+        <figure class="look">
+          <div class="look__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" loading="lazy" width="508" height="854"></div>
+          <figcaption><b>01</b>Crop texturé · dégradé haut</figcaption>
+        </figure>
+        <figure class="look look--mid">
+          <div class="look__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" loading="lazy" width="408" height="455"></div>
+          <figcaption><b>02</b>Crop platine · trait</figcaption>
+        </figure>
+        <figure class="look look--low">
+          <div class="look__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" loading="lazy" width="398" height="419"></div>
+          <figcaption><b>03</b>Boucles décolorées · contour</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
-  <!-- ================= AVIS ================= -->
-  <section class="section section--quote" id="avis">
+  <!-- ================= CITATION ================= -->
+  <section class="statement">
     <div class="wrap">
-      <p class="eyebrow"><span></span>Ils en parlent</p>
-      <div class="quotes">
-        <figure class="quote"><blockquote>« Mon balayage n’a jamais été aussi naturel. On sent qu’ils prennent le temps de comprendre ce qu’on veut. »</blockquote><figcaption>Camille · Coupe &amp; balayage</figcaption></figure>
-        <figure class="quote"><blockquote>« Dégradé impeccable et barbe parfaite. Le meilleur barbier que j’ai trouvé à Strasbourg. »</blockquote><figcaption>Yanis · Coupe + barbe</figcaption></figure>
-        <figure class="quote"><blockquote>« Un salon magnifique et une équipe aux petits soins. Je ressors à chaque fois avec le sourire. »</blockquote><figcaption>Sophie · Couleur</figcaption></figure>
-      </div>
+      <p class="statement__text">Le dégradé parfait<br>se joue <span>au millimètre.</span></p>
     </div>
   </section>
 
-  <!-- ================= CONTACT ================= -->
-  <section class="contact" id="contact">
-    <div class="contact__bg" style="--img:url('images/salon.jpg'); --fb: var(--fb-4)"></div>
-    <div class="wrap contact__grid">
-      <div>
-        <p class="eyebrow"><span></span>Nous trouver</p>
-        <h2 class="display display--md">Rendez-vous<br><strong>au salon.</strong><i class="dot-accent"></i></h2>
-        <div class="contact__actions">
-          <a href="#prestations" class="pill-btn" data-book>Prendre rendez-vous</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=Elegance+coiffure+Strasbourg" class="pill-btn pill-btn--ghost" target="_blank" rel="noopener">Itinéraire</a>
-        </div>
-      </div>
-      <div class="glass contact__card">
-        <dl class="info">
-          <div><dt>Adresse</dt><dd>Adresse du salon<br>67000 Strasbourg</dd></div>
-          <div><dt>Téléphone</dt><dd><a href="tel:+33300000000">03 00 00 00 00</a></dd></div>
-          <div><dt>E-mail</dt><dd><a href="mailto:contact@elegance-strasbourg.fr">contact@elegance-strasbourg.fr</a></dd></div>
-        </dl>
+  <!-- ================= LE SALON ================= -->
+  <section class="salon" id="salon">
+    <div class="wrap salon__grid">
+      <figure class="salon__photo">
+        <img src="images/salon.jpg" alt="Le salon Elegance Strasbourg" loading="lazy" width="382" height="443">
+      </figure>
+      <div class="salon__info">
+        <p class="overline overline--num"><b>03</b> Le salon</p>
+        <h2 class="h2">Venez nous voir</h2>
+        <address class="salon__addr">Adresse du salon<br>67000 Strasbourg</address>
         <table class="hours">
-          <caption>Horaires</caption>
+          <caption class="sr-only">Horaires d’ouverture</caption>
           <tbody>
             <tr><th>Lundi</th><td>Fermé</td></tr>
-            <tr><th>Mardi – Vendredi</th><td>9:00 – 19:00</td></tr>
+            <tr><th>Mardi</th><td>9:00 – 19:00</td></tr>
+            <tr><th>Mercredi</th><td>9:00 – 19:00</td></tr>
+            <tr><th>Jeudi</th><td>9:00 – 19:00</td></tr>
+            <tr><th>Vendredi</th><td>9:00 – 19:00</td></tr>
             <tr><th>Samedi</th><td>9:00 – 18:00</td></tr>
             <tr><th>Dimanche</th><td>Fermé</td></tr>
           </tbody>
         </table>
+        <div class="salon__actions">
+          <a href="#prestations" class="btn btn--light">Prendre rendez-vous</a>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+barbier+Strasbourg" class="btn btn--line" target="_blank" rel="noopener">Itinéraire →</a>
+        </div>
+        <p class="salon__contact"><a href="tel:+33300000000">03 00 00 00 00</a><span>·</span><a href="mailto:contact@elegance-strasbourg.fr">contact@elegance-strasbourg.fr</a></p>
       </div>
     </div>
-    <footer class="footer wrap">
-      <span>© <span id="year"></span> Élégance Strasbourg</span>
-      <span class="footer__links"><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">Mentions légales</a></span>
-    </footer>
+  </section>
+
+  <!-- ================= AVIS ================= -->
+  <section class="avis" id="avis">
+    <div class="wrap">
+      <p class="overline overline--num"><b>04</b> Avis</p>
+      <div class="avis__grid">
+        <figure class="quote"><blockquote>Dégradé impeccable, contour propre. Le meilleur barbier que j’ai trouvé à Strasbourg.</blockquote><figcaption>Yanis — Dégradé</figcaption></figure>
+        <figure class="quote"><blockquote>Ma décoloration est exactement ce que je voulais. Ils prennent le temps de bien faire.</blockquote><figcaption>Lucas — Décoloration</figcaption></figure>
+        <figure class="quote"><blockquote>Salon magnifique, ambiance au top. Je ne vais plus ailleurs.</blockquote><figcaption>Mehdi — Coupe + barbe</figcaption></figure>
+      </div>
+    </div>
   </section>
 </main>
+
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <p class="footer__word">ELEGANCE<span>Strasbourg</span></p>
+    <div class="footer__meta">
+      <span>© <span id="year"></span> Elegance Strasbourg</span>
+      <span class="footer__links"><a href="#">Instagram</a><a href="#">Snapchat</a><a href="#">Mentions légales</a></span>
+    </div>
+  </div>
+</footer>
 
 <script src="script.js"></script>
 </body>

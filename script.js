@@ -1,43 +1,43 @@
 // ===================== Données du salon (à adapter) =====================
 const CARTE = [
-  { title: "Femme", intro: "Coupe, brushing et coiffage, shampoing soin inclus.", items: [
-    ["Coupe & brushing", "45 €"], ["Brushing", "28 €"], ["Coupe enfant (−12 ans)", "18 €"], ["Chignon & coiffure de soirée", "dès 55 €"] ] },
-  { title: "Couleur & lumière", intro: "Diagnostic couleur offert avant chaque prestation.", items: [
-    ["Couleur racines", "45 €"], ["Couleur complète", "60 €"], ["Balayage / mèches", "dès 85 €"], ["Patine & gloss", "25 €"] ] },
-  { title: "Homme & barbier", intro: "Finitions au rasoir et serviette chaude.", items: [
-    ["Coupe homme", "25 €"], ["Coupe + barbe", "38 €"], ["Taille de barbe", "18 €"], ["Rasage traditionnel", "25 €"] ] },
-  { title: "Soins", intro: "Des rituels professionnels pour réparer et sublimer.", items: [
-    ["Soin profond", "20 €"], ["Soin kératine", "dès 120 €"], ["Massage crânien", "15 €"] ] },
+  { title: "Coupes", intro: "Shampoing et coiffage inclus.", items: [
+    ["Coupe homme", "25 €"], ["Dégradé (taper, mid, high)", "25 €"], ["Coupe ciseaux", "28 €"], ["Coupe enfant (−12 ans)", "18 €"] ] },
+  { title: "Barbe", intro: "Contours au rasoir et serviette chaude.", items: [
+    ["Taille de barbe", "15 €"], ["Coupe + barbe", "35 €"], ["Rasage traditionnel", "20 €"] ] },
+  { title: "Couleur", intro: "Décoloration et mèches réalisées avec soin du cheveu.", items: [
+    ["Décoloration / platine", "dès 50 €"], ["Mèches", "dès 40 €"], ["Coloration", "dès 30 €"] ] },
+  { title: "Finitions", intro: "Les détails qui font la différence.", items: [
+    ["Trait / motif", "5 €"], ["Contour seul", "10 €"], ["Sourcils", "5 €"] ] },
 ];
 
 const SERVICES = [
-  { id: "cf", name: "Coupe femme", price: 45, min: 60 },
-  { id: "ch", name: "Coupe homme", price: 25, min: 30 },
-  { id: "cb", name: "Coupe + barbe", price: 38, min: 45 },
-  { id: "bal", name: "Balayage", price: 85, min: 150 },
-  { id: "col", name: "Couleur", price: 45, min: 75 },
-  { id: "bar", name: "Barbe", price: 18, min: 20 },
+  { id: "coupe", name: "Coupe", price: 25 },
+  { id: "degrade", name: "Dégradé", price: 25 },
+  { id: "cb", name: "Coupe + barbe", price: 35 },
+  { id: "barbe", name: "Barbe", price: 15 },
+  { id: "deco", name: "Décoloration", price: 50 },
+  { id: "enfant", name: "Enfant", price: 18 },
 ];
 
-const TEAM = [
-  { id: "sarah", name: "Sarah", role: "Coloriste", spec: "Balayages lumineux et couleurs naturelles.", fb: "var(--fb-2)" },
-  { id: "karim", name: "Karim", role: "Barbier", spec: "Dégradés précis et rasage à l’ancienne.", fb: "var(--fb-3)" },
-  { id: "lea", name: "Léa", role: "Visagiste", spec: "Coupes pensées pour la forme du visage.", fb: "var(--fb-1)" },
-  { id: "thomas", name: "Thomas", role: "Coiffeur mixte", spec: "Tendances homme & femme, chignons.", fb: "var(--fb-4)" },
-];
-
-// 0 = dimanche … 6 = samedi
-const OPEN = { 2: ["09:00", "18:00"], 3: ["09:00", "18:00"], 4: ["09:00", "18:00"], 5: ["09:00", "18:00"], 6: ["09:00", "17:00"] };
-const SLOT_TIMES = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+// Dernier créneau par jour d'ouverture (0 = dimanche … 6 = samedi)
+const OPEN = { 2: "18:00", 3: "18:00", 4: "18:00", 5: "18:00", 6: "17:00" };
+const SLOT_TIMES = ["09:00", "10:00", "11:00", "12:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const pad = (n) => String(n).padStart(2, "0");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// ===================== Header & menu =====================
+// ===================== Header, menu, lien actif =====================
 const header = $("#header"), nav = $("#nav"), burger = $("#burger");
-const onScroll = () => header.classList.toggle("is-solid", scrollY > 30);
+const navLinks = $$(".nav a:not(.nav__cta)");
+const onScroll = () => {
+  header.classList.toggle("is-solid", scrollY > 30);
+  const y = scrollY + innerHeight * .4;
+  let active = null;
+  navLinks.forEach((a) => { const s = $(a.getAttribute("href")); if (s && s.offsetTop <= y) active = a; });
+  navLinks.forEach((a) => a.classList.toggle("is-active", a === active));
+};
 addEventListener("scroll", onScroll, { passive: true }); onScroll();
 const setMenu = (open) => {
   nav.classList.toggle("is-open", open);
@@ -48,171 +48,122 @@ burger.addEventListener("click", () => setMenu(!nav.classList.contains("is-open"
 nav.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
 addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
 
-// ===================== Sliders =====================
-$$(".slider").forEach((root) => {
-  const slides = $$(".slide", root);
-  const cur = $("[data-current]", root), bar = $(".slider__progress span", root);
-  const delay = +root.dataset.autoplay || 0;
-  let i = 0, timer = null;
-  $("[data-total]", root).textContent = pad(slides.length);
-
-  const go = (n) => {
-    slides[i].classList.remove("is-active");
-    slides[i].setAttribute("aria-hidden", "true");
-    i = (n + slides.length) % slides.length;
-    slides[i].classList.add("is-active");
-    slides[i].removeAttribute("aria-hidden");
-    cur.textContent = pad(i + 1);
-    restart();
-  };
-  const restart = () => {
-    clearTimeout(timer);
-    bar.classList.remove("run"); void bar.offsetWidth;
-    if (delay && !reduced) {
-      bar.style.setProperty("--dur", delay + "ms");
-      bar.classList.add("run");
-      timer = setTimeout(() => go(i + 1), delay);
-    } else {
-      bar.style.width = ((i + 1) / slides.length) * 100 + "%";
-    }
-  };
-  slides.forEach((s, k) => k && s.setAttribute("aria-hidden", "true"));
-  $("[data-prev]", root).addEventListener("click", () => go(i - 1));
-  $("[data-next]", root).addEventListener("click", () => go(i + 1));
-
-  // swipe
-  let x0 = null;
-  root.addEventListener("touchstart", (e) => (x0 = e.touches[0].clientX), { passive: true });
-  root.addEventListener("touchend", (e) => {
-    if (x0 === null) return;
-    const dx = e.changedTouches[0].clientX - x0; x0 = null;
-    if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1));
-  });
-  // pause hors écran
-  new IntersectionObserver(([en]) => { if (en.isIntersecting) restart(); else clearTimeout(timer); }, { threshold: .3 }).observe(root);
-  restart();
-});
-
-// ===================== Navigation à points =====================
-const dotLinks = $$("#dots a");
-const sections = dotLinks.map((a) => $(a.getAttribute("href")));
-const markDots = () => {
-  const y = scrollY + innerHeight * .45;
-  let k = 0;
-  sections.forEach((s, n) => { if (s.offsetTop <= y) k = n; });
-  dotLinks.forEach((a, n) => { a.classList.toggle("is-active", n === k); a.classList.toggle("is-past", n < k); });
-};
-addEventListener("scroll", markDots, { passive: true }); markDots();
+// ===================== Plafond nid d'abeille (accueil) =====================
+const hive = $("#hive"), ctx = hive.getContext("2d");
+let mouse = { x: -999, y: -999 }, cells = [];
+function sizeHive() {
+  const r = hive.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+  hive.width = r.width * dpr; hive.height = r.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const R = Math.max(46, Math.min(80, r.width / 18)), w = Math.sqrt(3) * R, h = 1.5 * R;
+  cells = [];
+  for (let row = -1; row * h < r.height + R; row++)
+    for (let col = -1; col * w < r.width + w; col++)
+      cells.push({ x: col * w + (row % 2 ? w / 2 : 0), y: row * h, R, seed: Math.random() });
+  drawHive(0);
+}
+function hexPath(x, y, R) {
+  ctx.beginPath();
+  for (let k = 0; k < 6; k++) {
+    const a = Math.PI / 180 * (60 * k - 30);
+    if (k) ctx.lineTo(x + R * Math.cos(a), y + R * Math.sin(a)); else ctx.moveTo(x + R * Math.cos(a), y + R * Math.sin(a));
+  }
+  ctx.closePath();
+}
+function drawHive(t) {
+  const W = hive.clientWidth, H = hive.clientHeight;
+  ctx.clearRect(0, 0, W, H);
+  for (const c of cells) {
+    const near = Math.max(0, 1 - Math.hypot(c.x - mouse.x, c.y - mouse.y) / 260);
+    const fadeY = Math.max(0, 1 - c.y / (H * .95)); // plus lumineux en haut, comme un plafond
+    const pulse = reduced ? 0 : (Math.sin(t / 1400 + c.seed * 12) + 1) / 2 * .05;
+    const a = (.05 + pulse) * fadeY + near * .55;
+    if (a < .01) continue;
+    hexPath(c.x, c.y, c.R * .94);
+    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = `rgba(255,255,255,${a})`;
+    ctx.shadowColor = "rgba(255,255,255,.8)";
+    ctx.shadowBlur = near > .05 ? 14 * near : 0;
+    ctx.stroke();
+  }
+}
+let raf;
+const loop = (t) => { drawHive(t); raf = requestAnimationFrame(loop); };
+const heroEl = hive.parentElement;
+heroEl.addEventListener("pointermove", (e) => { const r = hive.getBoundingClientRect(); mouse = { x: e.clientX - r.left, y: e.clientY - r.top }; });
+heroEl.addEventListener("pointerleave", () => (mouse = { x: -999, y: -999 }));
+addEventListener("resize", sizeHive);
+sizeHive();
+new IntersectionObserver(([en]) => { cancelAnimationFrame(raf); if (en.isIntersecting) raf = requestAnimationFrame(loop); }).observe(hive);
 
 // ===================== Carte (accordéon) =====================
 const acc = $("#accordion");
 acc.innerHTML = CARTE.map((c, k) => `
   <div class="acc${k === 0 ? " is-open" : ""}">
-    <button class="acc__head" aria-expanded="${k === 0}" aria-controls="acc-${k}" id="acc-h-${k}">
-      <span class="acc__num">${pad(k + 1)}</span>${c.title}
-    </button>
+    <button class="acc__head" aria-expanded="${k === 0}" aria-controls="acc-${k}" id="acc-h-${k}"><span class="acc__num">${pad(k + 1)}</span>${c.title}</button>
     <div class="acc__body" id="acc-${k}" role="region" aria-labelledby="acc-h-${k}">
       <div class="acc__inner"><p>${c.intro}</p><ul>${c.items.map(([n, p]) => `<li class="price"><span>${n}</span><i></i><b>${p}</b></li>`).join("")}</ul></div>
     </div>
   </div>`).join("");
 acc.addEventListener("click", (e) => {
   const head = e.target.closest(".acc__head"); if (!head) return;
+  const target = head.parentElement, wasOpen = target.classList.contains("is-open");
   $$(".acc", acc).forEach((item) => {
-    const open = item === head.parentElement;
+    const open = item === target && !wasOpen;
     item.classList.toggle("is-open", open);
     $(".acc__head", item).setAttribute("aria-expanded", open);
   });
 });
 
-// ===================== Équipe =====================
-$("#team").innerHTML = TEAM.map((m) => `
-  <article class="member">
-    <div class="member__art has-photo" style="--fb:${m.fb}; --img:url('images/team-${m.id}.jpg')"><span>${m.name[0]}</span><em>${m.role}</em></div>
-    <div class="member__body">
-      <h3>${m.name}</h3>
-      <p>${m.spec}</p>
-      <a href="#prestations" class="member__book" data-stylist="${m.id}">Réserver avec ${m.name} <span aria-hidden="true">→</span></a>
-    </div>
-  </article>`).join("");
-
 // ===================== Réservation (téléphone) =====================
-const state = { service: SERVICES[0].id, stylist: "any", date: null, time: null, done: false };
+const state = { service: SERVICES[0].id, date: null, time: null, done: false };
 const today = new Date(); today.setHours(0, 0, 0, 0);
 const days = [];
 for (let d = new Date(today); days.length < 12; d.setDate(d.getDate() + 1)) if (OPEN[d.getDay()]) days.push(new Date(d));
-state.date = days[0].getTime();
-// démarre sur le premier jour qui a encore un créneau libre
-queueMicrotask(() => {
-  for (const d of days) { state.date = d.getTime(); if (SLOT_TIMES.some((t) => !taken(t))) break; }
-  renderPhone();
-});
-
 const fmtDay = (t) => new Date(t).toLocaleDateString("fr-FR", { weekday: "short" }).replace(".", "");
 const fmtLong = (t) => new Date(t).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
 
 function taken(time) {
   const d = new Date(state.date);
-  const [hh, mm] = time.split(":").map(Number);
-  if (time > OPEN[d.getDay()][1]) return true;
-  if (state.date === today.getTime()) { const n = new Date(); if (hh * 60 + mm <= n.getHours() * 60 + n.getMinutes() + 30) return true; }
-  let h = 7; for (const c of state.date + state.stylist + time) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  return h % 4 === 0; // créneaux déjà réservés (simulation)
+  if (time > OPEN[d.getDay()]) return true;
+  if (state.date === today.getTime()) {
+    const n = new Date(), [hh, mm] = time.split(":").map(Number);
+    if (hh * 60 + mm <= n.getHours() * 60 + n.getMinutes() + 30) return true;
+  }
+  let h = 7; for (const c of state.date + time) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return h % 4 === 0; // créneaux déjà pris (simulation)
 }
-
-function chip(group, value, label, sub) {
-  const on = state[group] === value;
-  return `<button class="chip${on ? " is-on" : ""}" data-g="${group}" data-v="${value}" aria-pressed="${on}">${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
-}
+const chip = (g, v, label, sub) =>
+  `<button class="chip${state[g] === v ? " is-on" : ""}" data-g="${g}" data-v="${v}" aria-pressed="${state[g] === v}">${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
 
 function renderPhone() {
   $("#pService").innerHTML = SERVICES.map((s) => chip("service", s.id, s.name, `${s.price} €`)).join("");
-  $("#pStylist").innerHTML = chip("stylist", "any", "Sans préférence") + TEAM.map((m) => chip("stylist", m.id, m.name)).join("");
   $("#pDate").innerHTML = days.map((d) => chip("date", d.getTime(), `${fmtDay(d)} ${d.getDate()}`)).join("");
   $("#pSlots").innerHTML = SLOT_TIMES.map((t) => {
-    const off = taken(t);
-    if (off && state.time === t) state.time = null;
+    const off = taken(t); if (off && state.time === t) state.time = null;
     return `<button class="slot${state.time === t ? " is-on" : ""}" data-t="${t}" ${off ? "disabled" : ""}>${t}</button>`;
   }).join("");
-
-  const s = SERVICES.find((x) => x.id === state.service);
-  const btn = $("#pConfirm");
+  const s = SERVICES.find((x) => x.id === state.service), btn = $("#pConfirm");
   btn.disabled = !state.time;
   btn.textContent = state.time ? `Confirmer · ${s.name} · ${state.time}` : "Choisissez un créneau";
-
-  const status = $("#phoneStatus");
-  status.classList.toggle("is-ok", state.done);
-  $("#phoneStatusText").textContent = state.done
-    ? `Rendez-vous confirmé · ${fmtLong(state.date)}, ${state.time}`
-    : "Réservez en moins d’une minute";
+  $("#phoneStatus").classList.toggle("is-ok", state.done);
+  $("#phoneStatusText").textContent = state.done ? `Rendez-vous confirmé · ${fmtLong(state.date)}, ${state.time}` : "Réservez en moins d’une minute";
 }
-
 $("#phone").addEventListener("click", (e) => {
   const c = e.target.closest(".chip"), sl = e.target.closest(".slot");
   if (c) {
-    const g = c.dataset.g;
-    state[g] = g === "date" ? +c.dataset.v : c.dataset.v;
-    if (g !== "service") state.time = state.time; // conserve l'heure si encore libre
+    const box = c.parentElement, left = box.scrollLeft;
+    state[c.dataset.g] = c.dataset.g === "date" ? +c.dataset.v : c.dataset.v;
     state.done = false;
-    const scroller = c.parentElement, left = scroller.scrollLeft;
-    renderPhone();
-    $(`#${scroller.id}`).scrollLeft = left;
-  } else if (sl && !sl.disabled) {
-    state.time = sl.dataset.t; state.done = false; renderPhone();
-  } else if (e.target.closest("#pConfirm") && state.time) {
-    state.done = true; renderPhone();
-  }
+    renderPhone(); $("#" + box.id).scrollLeft = left;
+  } else if (sl && !sl.disabled) { state.time = sl.dataset.t; state.done = false; renderPhone(); }
+  else if (e.target.closest("#pConfirm") && state.time) { state.done = true; renderPhone(); }
 });
-
-// Liens « Réserver avec … »
-document.addEventListener("click", (e) => {
-  const a = e.target.closest("[data-stylist]");
-  if (a) { state.stylist = a.dataset.stylist; state.done = false; renderPhone(); }
-});
-
+for (const d of days) { state.date = d.getTime(); if (SLOT_TIMES.some((t) => !taken(t))) break; }
 renderPhone();
 
 // ===================== Divers =====================
 $("#year").textContent = today.getFullYear();
-const dayIdx = today.getDay();
-const row = { 1: 0, 2: 1, 3: 1, 4: 1, 5: 1, 6: 2, 0: 3 }[dayIdx];
-$$(".hours tbody tr")[row]?.classList.add("is-today");
+const rows = $$(".hours tbody tr");
+rows.forEach((r) => { if (r.cells[1].textContent.trim() === "Fermé") r.classList.add("is-closed"); });
+rows[(today.getDay() + 6) % 7]?.classList.add("is-today");
