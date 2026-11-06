@@ -10,18 +10,9 @@ const CARTE = [
     ["Trait / motif", "5 €"], ["Contour seul", "10 €"], ["Sourcils", "5 €"] ] },
 ];
 
-const SERVICES = [
-  { id: "coupe", name: "Coupe", price: 25 },
-  { id: "degrade", name: "Dégradé", price: 25 },
-  { id: "cb", name: "Coupe + barbe", price: 35 },
-  { id: "barbe", name: "Barbe", price: 15 },
-  { id: "deco", name: "Décoloration", price: 50 },
-  { id: "enfant", name: "Enfant", price: 18 },
-];
-
-// Dernier créneau par jour d'ouverture (0 = dimanche … 6 = samedi)
-const OPEN = { 2: "18:00", 3: "18:00", 4: "18:00", 5: "18:00", 6: "17:00" };
-const SLOT_TIMES = ["09:00", "10:00", "11:00", "12:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+// Prestations, horaires et clés Supabase : voir config.js
+const CFG = window.ELEGANCE;
+const SERVICES = CFG.services, OPEN = CFG.open, SLOT_TIMES = CFG.slots;
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -132,51 +123,164 @@ acc.addEventListener("click", (e) => {
 });
 
 // ===================== Réservation (téléphone) =====================
-const state = { service: SERVICES[0].id, date: null, time: null, done: false };
+// Vraie réservation via Supabase quand config.js est rempli, sinon mode démonstration.
+const db = CFG.supabaseUrl && CFG.supabaseAnonKey && window.supabase
+  ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey)
+  : null;
+const DEMO = !db;
+
 const today = new Date(); today.setHours(0, 0, 0, 0);
+const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const fromIso = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const fmtDay = (s) => fromIso(s).toLocaleDateString("fr-FR", { weekday: "short" }).replace(".", "");
+const fmtLong = (s) => fromIso(s).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+
 const days = [];
-for (let d = new Date(today); days.length < 12; d.setDate(d.getDate() + 1)) if (OPEN[d.getDay()]) days.push(new Date(d));
-const fmtDay = (t) => new Date(t).toLocaleDateString("fr-FR", { weekday: "short" }).replace(".", "");
-const fmtLong = (t) => new Date(t).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+for (let d = new Date(today), n = 0; n < CFG.daysAhead; n++, d.setDate(d.getDate() + 1)) if (OPEN[d.getDay()]) days.push(iso(d));
 
-function taken(time) {
-  const d = new Date(state.date);
-  if (time > OPEN[d.getDay()]) return true;
-  if (state.date === today.getTime()) {
-    const n = new Date(), [hh, mm] = time.split(":").map(Number);
-    if (hh * 60 + mm <= n.getHours() * 60 + n.getMinutes() + 30) return true;
+const book = { service: SERVICES[0].id, date: null, time: null, taken: new Set(), blocked: new Set(), loading: false };
+const el = {
+  pick: $("#stepPick"), form: $("#stepForm"), done: $("#stepDone"),
+  status: $("#phoneStatus"), statusText: $("#phoneStatusText"),
+  next: $("#pNext"), submit: $("#pSubmit"), error: $("#pError"), loading: $("#pLoading"),
+};
+
+if (DEMO) $("#phoneTag").textContent = "Mode démonstration · aucune réservation n’est enregistrée";
+
+function demoTaken(day, time) {
+  let h = 7; for (const c of day + time) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return h % 4 === 0;
+}
+
+async function loadAvailability() {
+  book.loading = true; el.loading.hidden = false;
+  try {
+    if (DEMO) {
+      book.taken = new Set(days.flatMap((d) => SLOT_TIMES.filter((t) => demoTaken(d, t)).map((t) => `${d}|${t}`)));
+    } else {
+      const from = days[0], to = days[days.length - 1];
+      const [taken, blocked] = await Promise.all([
+        db.rpc("taken_slots", { from_day: from, to_day: to }),
+        db.from("blocked_days").select("day").gte("day", from).lte("day", to),
+      ]);
+      if (taken.error) throw taken.error;
+      if (blocked.error) throw blocked.error;
+      book.taken = new Set(taken.data.map((r) => `${r.day}|${String(r.slot).slice(0, 5)}`));
+      book.blocked = new Set(blocked.data.map((r) => r.day));
+    }
+    el.error.textContent = "";
+  } catch (err) {
+    console.error(err);
+    el.statusText.textContent = "Créneaux indisponibles pour le moment. Réessayez ou appelez le salon.";
+  } finally {
+    book.loading = false; el.loading.hidden = true;
   }
-  let h = 7; for (const c of state.date + time) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  return h % 4 === 0; // créneaux déjà pris (simulation)
 }
-const chip = (g, v, label, sub) =>
-  `<button class="chip${state[g] === v ? " is-on" : ""}" data-g="${g}" data-v="${v}" aria-pressed="${state[g] === v}">${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
 
-function renderPhone() {
-  $("#pService").innerHTML = SERVICES.map((s) => chip("service", s.id, s.name, `${s.price} €`)).join("");
-  $("#pDate").innerHTML = days.map((d) => chip("date", d.getTime(), `${fmtDay(d)} ${d.getDate()}`)).join("");
-  $("#pSlots").innerHTML = SLOT_TIMES.map((t) => {
-    const off = taken(t); if (off && state.time === t) state.time = null;
-    return `<button class="slot${state.time === t ? " is-on" : ""}" data-t="${t}" ${off ? "disabled" : ""}>${t}</button>`;
-  }).join("");
-  const s = SERVICES.find((x) => x.id === state.service), btn = $("#pConfirm");
-  btn.disabled = !state.time;
-  btn.textContent = state.time ? `Confirmer · ${s.name} · ${state.time}` : "Choisissez un créneau";
-  $("#phoneStatus").classList.toggle("is-ok", state.done);
-  $("#phoneStatusText").textContent = state.done ? `Rendez-vous confirmé · ${fmtLong(state.date)}, ${state.time}` : "Réservez en moins d’une minute";
+function slotFree(day, time) {
+  const d = fromIso(day);
+  if (book.blocked.has(day) || !OPEN[d.getDay()] || time > OPEN[d.getDay()]) return false;
+  if (day === iso(today)) {
+    const n = new Date(), [hh, mm] = time.split(":").map(Number);
+    if (hh * 60 + mm <= n.getHours() * 60 + n.getMinutes() + 30) return false;
+  }
+  return !book.taken.has(`${day}|${time}`);
 }
-$("#phone").addEventListener("click", (e) => {
+const dayHasSlot = (day) => SLOT_TIMES.some((t) => slotFree(day, t));
+
+const chip = (g, v, label, sub, off) =>
+  `<button type="button" class="chip${book[g] === v ? " is-on" : ""}" data-g="${g}" data-v="${v}" aria-pressed="${book[g] === v}" ${off ? "disabled" : ""}>${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
+
+function renderPick() {
+  $("#pService").innerHTML = SERVICES.map((s) => chip("service", s.id, s.name, `${s.price} €`)).join("");
+  $("#pDate").innerHTML = days.map((d) => chip("date", d, `${fmtDay(d)} ${fromIso(d).getDate()}`, book.blocked.has(d) ? "fermé" : !dayHasSlot(d) ? "complet" : "", !dayHasSlot(d))).join("");
+  if (book.time && !slotFree(book.date, book.time)) book.time = null;
+  $("#pSlots").innerHTML = SLOT_TIMES.map((t) => {
+    const off = !slotFree(book.date, t);
+    return `<button type="button" class="slot${book.time === t ? " is-on" : ""}" data-t="${t}" ${off ? "disabled" : ""}>${t}</button>`;
+  }).join("");
+  const s = SERVICES.find((x) => x.id === book.service);
+  el.next.disabled = !book.time;
+  el.next.textContent = book.time ? `Continuer · ${s.name} · ${book.time}` : "Choisissez un créneau";
+}
+
+function show(step) {
+  el.pick.hidden = step !== "pick"; el.form.hidden = step !== "form"; el.done.hidden = step !== "done";
+  el.status.classList.toggle("is-ok", step === "done");
+  if (step !== "done") el.statusText.textContent = step === "form" ? "Plus qu’une étape" : "Réservez en moins d’une minute";
+}
+
+el.pick.addEventListener("click", (e) => {
   const c = e.target.closest(".chip"), sl = e.target.closest(".slot");
-  if (c) {
+  if (c && !c.disabled) {
     const box = c.parentElement, left = box.scrollLeft;
-    state[c.dataset.g] = c.dataset.g === "date" ? +c.dataset.v : c.dataset.v;
-    state.done = false;
-    renderPhone(); $("#" + box.id).scrollLeft = left;
-  } else if (sl && !sl.disabled) { state.time = sl.dataset.t; state.done = false; renderPhone(); }
-  else if (e.target.closest("#pConfirm") && state.time) { state.done = true; renderPhone(); }
+    book[c.dataset.g] = c.dataset.v;
+    renderPick(); $("#" + box.id).scrollLeft = left;
+  } else if (sl && !sl.disabled) { book.time = sl.dataset.t; renderPick(); }
 });
-for (const d of days) { state.date = d.getTime(); if (SLOT_TIMES.some((t) => !taken(t))) break; }
-renderPhone();
+
+el.next.addEventListener("click", () => {
+  if (!book.time) return;
+  const s = SERVICES.find((x) => x.id === book.service);
+  $("#pRecap").innerHTML = `<b>${s.name}</b> · ${s.price} €<br>${fmtLong(book.date)} à ${book.time}`;
+  el.error.textContent = "";
+  show("form");
+  $("#fName").focus({ preventScroll: true });
+});
+$("#pBack").addEventListener("click", () => show("pick"));
+
+function validate() {
+  const name = $("#fName").value.trim(), phone = $("#fPhone").value.trim(), email = $("#fEmail").value.trim();
+  if (name.length < 2) return ["Indiquez votre nom et prénom.", "#fName"];
+  if (!/^[0-9 +().-]{8,20}$/.test(phone) || phone.replace(/\D/g, "").length < 9) return ["Indiquez un numéro de téléphone valide, par exemple 06 12 34 56 78.", "#fPhone"];
+  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return ["L’adresse e-mail n’est pas valide. Corrigez-la ou laissez le champ vide.", "#fEmail"];
+  return [null, { name, phone, email }];
+}
+
+el.form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const [msg, data] = validate();
+  if (msg) { el.error.textContent = msg; $(data).focus(); return; }
+  const s = SERVICES.find((x) => x.id === book.service);
+  el.submit.disabled = true; el.submit.textContent = "Envoi…"; el.error.textContent = "";
+  try {
+    if (DEMO) {
+      await new Promise((r) => setTimeout(r, 600));
+    } else {
+      const { error } = await db.from("appointments").insert({
+        day: book.date, slot: book.time, service: s.name, price: s.price,
+        client_name: data.name, client_phone: data.phone, client_email: data.email || null,
+      });
+      if (error) throw error;
+    }
+    book.taken.add(`${book.date}|${book.time}`);
+    $("#pDoneText").textContent = `${s.name} · ${fmtLong(book.date)} à ${book.time}. À très vite au salon, ${data.name.split(" ")[0]} !`;
+    el.statusText.textContent = `Rendez-vous confirmé · ${fmtLong(book.date)}, ${book.time}`;
+    show("done");
+    el.form.reset();
+  } catch (err) {
+    console.error(err);
+    const gone = err && (err.code === "23505" || err.code === "42501");
+    if (gone) {
+      await loadAvailability(); book.time = null; renderPick(); show("pick");
+      el.statusText.textContent = "Ce créneau vient d’être pris. Choisissez-en un autre.";
+    } else {
+      el.error.textContent = "La réservation n’a pas pu être envoyée. Vérifiez votre connexion et réessayez, ou appelez le salon.";
+    }
+  } finally {
+    el.submit.disabled = false; el.submit.textContent = "Confirmer le rendez-vous";
+  }
+});
+
+$("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); show("pick"); });
+
+(async () => {
+  book.date = days[0];
+  renderPick();
+  await loadAvailability();
+  book.date = days.find(dayHasSlot) || days[0];
+  renderPick();
+})();
 
 // ===================== Divers =====================
 $("#year").textContent = today.getFullYear();

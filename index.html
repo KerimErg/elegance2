@@ -80,16 +80,36 @@
               <span class="phone__check" aria-hidden="true"></span>
               <span id="phoneStatusText">Réservez en moins d’une minute</span>
             </div>
-            <p class="phone__label">Prestation</p>
-            <div class="chips" id="pService"></div>
-            <p class="phone__label">Date</p>
-            <div class="chips" id="pDate"></div>
-            <p class="phone__label">Heure</p>
-            <div class="slots" id="pSlots"></div>
-            <button class="phone__confirm" id="pConfirm" disabled>Choisissez un créneau</button>
+
+            <div class="phone__step" id="stepPick">
+              <p class="phone__label">Prestation</p>
+              <div class="chips" id="pService"></div>
+              <p class="phone__label">Date</p>
+              <div class="chips" id="pDate"></div>
+              <p class="phone__label">Heure <span class="phone__loading" id="pLoading" hidden>· mise à jour…</span></p>
+              <div class="slots" id="pSlots"></div>
+              <button class="phone__confirm" id="pNext" type="button" disabled>Choisissez un créneau</button>
+            </div>
+
+            <form class="phone__step" id="stepForm" hidden novalidate>
+              <button type="button" class="phone__back" id="pBack">← Modifier le créneau</button>
+              <p class="phone__recap" id="pRecap"></p>
+              <label class="field"><span>Nom et prénom</span><input id="fName" name="name" autocomplete="name" required minlength="2" maxlength="80"></label>
+              <label class="field"><span>Téléphone</span><input id="fPhone" name="tel" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20"></label>
+              <label class="field"><span>E-mail <small>facultatif</small></span><input id="fEmail" name="email" type="email" autocomplete="email" maxlength="120"></label>
+              <p class="phone__error" id="pError" role="alert"></p>
+              <button class="phone__confirm" id="pSubmit" type="submit">Confirmer le rendez-vous</button>
+            </form>
+
+            <div class="phone__step phone__done" id="stepDone" hidden>
+              <span class="phone__bigcheck" aria-hidden="true"></span>
+              <p class="phone__done-title">C’est réservé</p>
+              <p class="phone__done-text" id="pDoneText"></p>
+              <button class="phone__confirm phone__confirm--ghost" id="pAgain" type="button">Nouvelle réservation</button>
+            </div>
           </div>
         </div>
-        <p class="phone__tag">Paiement au salon · Annulation libre 24h avant</p>
+        <p class="phone__tag" id="phoneTag">Paiement au salon · Pour annuler, appelez le salon</p>
       </div>
     </div>
   </section>
@@ -193,6 +213,8 @@
   </div>
 </footer>
 
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
