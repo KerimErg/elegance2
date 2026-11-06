@@ -6,7 +6,7 @@ window.ELEGANCE = {
   // Supabase > Project Settings > API : « Project URL » et clé « anon public ».
   // Tant que ces deux champs sont vides, le site fonctionne en mode démonstration.
   supabaseUrl: "https://qoigulopadznqcjynoyz.supabase.co",
-  supabaseAnonKey: "",
+  supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFvaWd1bG9wYWR6bnFjanlub3l6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQwMDQ3MTMsImV4cCI6MjEwOTU4MDcxM30.L3Ns_tA0UsrRUNHybQwEgWIuf5ZZLHosSuVi7LP8D_8",
 
   services: [
     { id: "coupe", name: "Coupe", price: 25 },
