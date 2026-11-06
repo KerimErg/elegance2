@@ -5,7 +5,7 @@
 window.ELEGANCE = {
   // Supabase > Project Settings > API : « Project URL » et clé « anon public ».
   // Tant que ces deux champs sont vides, le site fonctionne en mode démonstration.
-  supabaseUrl: "",
+  supabaseUrl: "https://qoigulopadznqcjynoyz.supabase.co",
   supabaseAnonKey: "",
 
   services: [
