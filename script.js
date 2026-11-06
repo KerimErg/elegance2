@@ -168,52 +168,8 @@ const rows = $$(".hours tbody tr");
 rows.forEach((r) => { if (r.cells[1].textContent.trim() === "Fermé") r.classList.add("is-closed"); });
 rows[(today.getDay() + 6) % 7]?.classList.add("is-today");
 
-// ===================== Réalisations : dévoilement + profondeur =====================
-const looks = $$(".look");
-looks.forEach((el, k) => {
-  el.style.setProperty("--d", (k * .18) + "s");
-  // on ne masque que ce qui est hors écran au chargement : la page reste complète sans script
-  if (!reduced && el.getBoundingClientRect().top > innerHeight) {
-    el.classList.add("will-reveal", "instant"); // masquage sans transition
-    void el.offsetHeight;
-    requestAnimationFrame(() => el.classList.remove("instant"));
-  }
-});
-const lookIO = new IntersectionObserver((entries) => entries.forEach((en) => {
-  if (en.isIntersecting) { en.target.classList.add("is-in"); lookIO.unobserve(en.target); }
-}), { threshold: .2 });
-looks.forEach((el) => lookIO.observe(el));
-
-const speeds = [-0.04, 0.03, 0.08];
-const parallax = () => {
-  const off = reduced || innerWidth < 641;
-  looks.forEach((el, k) => {
-    if (off) return el.style.setProperty("--py", "0px");
-    const r = el.parentElement.getBoundingClientRect();
-    const mid = r.top + r.height / 2 - innerHeight / 2;
-    el.style.setProperty("--py", (-mid * speeds[k]).toFixed(1) + "px");
-  });
-};
-addEventListener("scroll", parallax, { passive: true });
-addEventListener("resize", parallax);
-parallax();
-
-// ===================== Réalisations : mise en avant automatique en boucle =====================
-const row = $(".travail__row");
-let focusIdx = -1, cycleTimer = null;
-const cycle = () => {
-  looks.forEach((el) => el.classList.remove("is-focus"));
-  focusIdx = (focusIdx + 1) % looks.length;
-  void looks[focusIdx].offsetWidth; // relance le balayage
-  looks[focusIdx].classList.add("is-focus");
-};
-const startCycle = () => {
-  if (reduced || cycleTimer) return;
-  row.classList.add("is-cycling"); cycle();
-  cycleTimer = setInterval(cycle, 2800);
-};
-const stopCycle = () => { clearInterval(cycleTimer); cycleTimer = null; };
-new IntersectionObserver(([en]) => {
-  if (en.isIntersecting) setTimeout(startCycle, 1800); // après le dévoilement
-  else stopCycle();
-}, { threshold: .3 }).observe(row);
+// ===================== Réalisations : défilement continu =====================
+const track = $("#reelTrack");
+const set = track.innerHTML;
+track.innerHTML = set + set; // deux copies identiques -> boucle sans couture
+track.querySelectorAll(".reel__item").forEach((el, k) => { if (k >= track.children.length / 2) el.setAttribute("aria-hidden", "true"); });
