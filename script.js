@@ -1,14 +1,14 @@
 // ===================== Données du salon (à adapter) =====================
 const CARTE = [
-  { title: "Coupes", intro: "Shampoing et coiffage inclus.", items: [
-    ["Coupe homme", "25 €"], ["Dégradé (taper, mid, high)", "25 €"], ["Coupe ciseaux", "28 €"], ["Coupe enfant (−12 ans)", "18 €"] ] },
-  { title: "Barbe", intro: "Contours au rasoir et serviette chaude.", items: [
-    ["Taille de barbe", "15 €"], ["Coupe + barbe", "35 €"], ["Rasage traditionnel", "20 €"] ] },
-  { title: "Couleur", intro: "Décoloration et mèches réalisées avec soin du cheveu.", items: [
-    ["Décoloration / platine", "dès 50 €"], ["Mèches", "dès 40 €"], ["Coloration", "dès 30 €"] ] },
-  { title: "Finitions", intro: "Les détails qui font la différence.", items: [
-    ["Trait / motif", "5 €"], ["Contour seul", "10 €"], ["Sourcils", "5 €"] ] },
-];
+  { title: "Coupe", intro: "Coupe aux ciseaux ou à la tondeuse, dégradé compris.", items: [
+    ["Coupe homme · 30 min", "18 €"], ["Coupe & taille de barbe · 30 min", "28 €"] ] },
+  { title: "Barbe", intro: "Taille, contours et finitions.", items: [
+    ["Taillage barbe · 15 min", "10 €"], ["Taillage barbe · 15 min", "12 €"] ] },
+  { title: "Soin", intro: "Un moment de détente pour la peau.", items: [
+    ["Soin du visage à la vapeur · 30 min", "25 €"] ] },
+  { title: "Coloration", intro: "Sur rendez-vous par téléphone uniquement : appelez le 03 88 97 74 68.", items: [
+    ["Coloration · 30 min", "15 €"] ] },
+]
 
 // Prestations, horaires et clés Supabase : voir config.js
 const CFG = window.ELEGANCE;
