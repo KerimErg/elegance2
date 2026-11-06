@@ -92,6 +92,14 @@ create policy "admin gère jours fermés" on public.blocked_days for all to auth
 drop policy if exists "admin se voit" on public.admins;
 create policy "admin se voit" on public.admins for select to authenticated using (user_id = auth.uid());
 
+-- Accès explicites (fonctionne même si « Afficher automatiquement les nouvelles tables » est décoché)
+grant usage on schema public to anon, authenticated;
+grant insert on public.appointments to anon, authenticated;
+grant select, update, delete on public.appointments to authenticated;
+grant select on public.blocked_days to anon, authenticated;
+grant insert, update, delete on public.blocked_days to authenticated;
+grant select on public.admins to authenticated;
+
 grant execute on function public.taken_slots(date, date) to anon, authenticated;
 grant execute on function public.is_bookable(date, time) to anon, authenticated;
 grant execute on function public.is_admin() to authenticated;
