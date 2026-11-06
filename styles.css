@@ -1,5 +1,5 @@
 /* Identité tirée du salon : noir profond, lumière blanche du plafond en nid d'abeille,
-   filet bleu LED, logo en capitales larges + signature manuscrite. */
+   filet violet du logo, logo en capitales larges + signature manuscrite. */
 :root {
   color-scheme: dark;
   --bg: #09090a;
@@ -8,7 +8,7 @@
   --white: #f3f3f1;
   --mute: #96969c;
   --line: rgba(243, 243, 241, .12);
-  --led: #4c63ff;          /* filet LED bleu, en touche */
+  --led: #9b4dff;          /* violet du logo, en touche */
 
   --wide: "Michroma", "Arial Black", sans-serif;
   --script: "Allura", "Brush Script MT", cursive;
@@ -106,12 +106,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .price b { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; }
-.phone { width: min(330px, 100%); aspect-ratio: 330 / 660; max-width: 100%; border-radius: 50px; background: #060607; border: 9px solid #1c1c1f; box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 0 60px rgba(76, 99, 255, .12), 0 50px 100px rgba(0, 0, 0, .6); position: relative; overflow: hidden; }
+.phone { width: min(330px, 100%); aspect-ratio: 330 / 660; max-width: 100%; border-radius: 50px; background: #060607; border: 9px solid #1c1c1f; box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 0 60px rgba(155, 77, 255, .12), 0 50px 100px rgba(0, 0, 0, .6); position: relative; overflow: hidden; }
 .phone__notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 96px; height: 28px; border-radius: 20px; background: #000; z-index: 2; }
 .phone__screen { position: absolute; inset: 0; padding: 52px 16px 16px; display: flex; flex-direction: column; }
 .phone__status { display: flex; align-items: center; gap: .7rem; padding: .85rem .9rem; border: 1px solid var(--line); border-radius: 16px; font-size: .78rem; font-weight: 500; line-height: 1.35; transition: .3s; }
 .phone__check { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; border: 1px solid var(--line); position: relative; }
-.phone__status.is-ok { border-color: rgba(76, 99, 255, .6); }
+.phone__status.is-ok { border-color: rgba(155, 77, 255, .6); }
 .phone__status.is-ok .phone__check { background: var(--led); border-color: var(--led); }
 .phone__status.is-ok .phone__check::after { content: ""; position: absolute; left: 8px; top: 4px; width: 6px; height: 11px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .phone__label { font-size: .68rem; color: var(--mute); margin: 1rem 0 .45rem; letter-spacing: .04em; }
