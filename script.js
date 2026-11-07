@@ -309,16 +309,3 @@ const track = $("#reelTrack");
 const set = track.innerHTML;
 track.innerHTML = set + set; // deux copies identiques -> boucle sans couture
 track.querySelectorAll(".reel__item").forEach((el, k) => { if (k >= track.children.length / 2) el.setAttribute("aria-hidden", "true"); });
-
-// ===================== Accueil : profondeur au début du défilement =====================
-const heroSec = $("#accueil");
-let heroTick = false;
-const heroDepth = () => {
-  heroTick = false;
-  const p = Math.min(1, Math.max(0, scrollY / (heroSec.offsetHeight * .7)));
-  heroSec.style.setProperty("--p", p.toFixed(3));
-};
-if (!reduced) {
-  addEventListener("scroll", () => { if (!heroTick) { heroTick = true; requestAnimationFrame(heroDepth); } }, { passive: true });
-  heroDepth();
-}
