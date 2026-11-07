@@ -203,7 +203,8 @@ const chip = (g, v, label, sub, off) =>
 
 function renderPick() {
   $("#pService").innerHTML = SERVICES.map((s) => chip("service", s.id, s.name, `${s.price} €`)).join("");
-  $("#pBarber").innerHTML = chip("barber", "any", "Sans préférence") + BARBERS.map((b) => chip("barber", b.id, b.name)).join("");
+  $("#pBarber").innerHTML = chip("barber", "any", `<span class="av av--any" aria-hidden="true">✦</span>`, "Peu importe")
+    + BARBERS.map((b) => chip("barber", b.id, `<span class="av" aria-hidden="true">${b.name[0]}</span>`, b.name)).join("");
   $("#pDate").innerHTML = days.map((d) => chip("date", d, `${fmtDay(d)} ${fromIso(d).getDate()}`, book.blocked.has(d) ? "fermé" : !dayHasSlot(d) ? "complet" : "", !dayHasSlot(d))).join("");
   if (book.time && !slotFree(book.date, book.time)) book.time = null;
   $("#pSlots").innerHTML = SLOT_TIMES.map((t) => {

@@ -311,3 +311,21 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .phone__label { margin: .8rem 0 .4rem; }
 .slots { grid-template-columns: repeat(4, 1fr); gap: .35rem; }
 .slot { padding: .5rem 0; font-size: .72rem; }
+
+/* ---------- Choix du coiffeur : 5 ronds côte à côte ---------- */
+#pBarber { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .25rem; overflow: visible; margin-inline: 0; padding-inline: 0; }
+#pBarber .chip { background: none; padding: .15rem 0; display: flex; flex-direction: column; align-items: center; gap: .3rem; min-width: 0; }
+#pBarber .chip small { margin: 0; font-size: .62rem; color: var(--mute); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#pBarber .av { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--line); font-weight: 600; font-size: .9rem; transition: .2s; }
+#pBarber .av--any { font-size: .8rem; color: var(--led); }
+#pBarber .chip:hover .av { border-color: rgba(243, 243, 241, .5); }
+#pBarber .chip.is-on { background: none; color: var(--white); }
+#pBarber .chip.is-on .av { background: var(--white); color: var(--bg); border-color: var(--white); box-shadow: 0 0 16px rgba(255, 255, 255, .35); }
+#pBarber .chip.is-on small { color: var(--white); }
+
+/* ---------- Prestations : 2 colonnes, toutes visibles ---------- */
+#pService { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem; overflow: visible; margin-inline: 0; padding-inline: 0; }
+#pService .chip { display: flex; justify-content: space-between; align-items: baseline; gap: .3rem; text-align: left; padding: .45rem .6rem; min-width: 0; }
+#pService .chip small { margin: 0; flex-shrink: 0; }
+.phone__status { padding: .7rem .9rem; }
+.phone__label { margin: .65rem 0 .35rem; }
