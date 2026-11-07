@@ -12,7 +12,7 @@ window.ELEGANCE = {
   services: [
     { id: "coupe", name: "Coupe homme", price: 18 },
     { id: "coupe-barbe", name: "Coupe & barbe", price: 28 },
-    { id: "barbe", name: "Taillage barbe", price: 10 },
+    { id: "barbe", name: "Taillage barbe", price: 12 },
     { id: "soin", name: "Soin visage vapeur", price: 25 },
   ],
   // Prestations que seul le salon peut saisir (page admin)

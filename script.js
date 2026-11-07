@@ -3,7 +3,7 @@ const CARTE = [
   { title: "Coupe", intro: "Coupe aux ciseaux ou à la tondeuse, dégradé compris.", items: [
     ["Coupe homme · 30 min", "18 €"], ["Coupe & taille de barbe · 30 min", "28 €"] ] },
   { title: "Barbe", intro: "Taille, contours et finitions.", items: [
-    ["Taillage barbe · 15 min", "10 €"], ["Taillage barbe · 15 min", "12 €"] ] },
+    ["Taillage barbe · 15 min", "12 €"] ] },
   { title: "Soin", intro: "Un moment de détente pour la peau.", items: [
     ["Soin du visage à la vapeur · 30 min", "25 €"] ] },
   { title: "Coloration", intro: "Sur rendez-vous par téléphone uniquement : appelez le 03 88 97 74 68.", items: [
