@@ -315,7 +315,7 @@ const heroSec = $("#accueil");
 let heroTick = false;
 const heroDepth = () => {
   heroTick = false;
-  const p = Math.min(1, Math.max(0, scrollY / (heroSec.offsetHeight * .9)));
+  const p = Math.min(1, Math.max(0, scrollY / (heroSec.offsetHeight * .7)));
   heroSec.style.setProperty("--p", p.toFixed(3));
 };
 if (!reduced) {
