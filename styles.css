@@ -329,3 +329,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 #pService .chip small { margin: 0; flex-shrink: 0; }
 .phone__status { padding: .7rem .9rem; }
 .phone__label { margin: .65rem 0 .35rem; }
+
+/* ---------- Accueil : profondeur au début du défilement ---------- */
+.hero { --p: 0; }
+.hive { translate: 0 calc(var(--p) * 120px); }
+.hero__text { translate: 0 calc(var(--p) * -90px); opacity: calc(1 - var(--p) * 1.3); }
+.hero__photo { translate: 0 calc(var(--p) * 60px); rotate: calc(var(--p) * 6deg); scale: calc(1 - var(--p) * .06); }
+.hero__facts { opacity: calc(1 - var(--p) * 1.6); }
+.scroll-cue { position: absolute; z-index: 3; left: 50%; bottom: calc(clamp(36px, 5vw, 56px) + 76px); translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: .6rem; font-size: .66rem; letter-spacing: .3em; text-transform: uppercase; color: var(--mute); opacity: calc(1 - var(--p) * 5); transition: color .2s; }
+.scroll-cue:hover { color: var(--white); }
+.scroll-cue i { position: relative; width: 1px; height: 44px; background: rgba(243, 243, 241, .18); overflow: hidden; }
+.scroll-cue i::after { content: ""; position: absolute; left: -1px; top: -14px; width: 3px; height: 14px; border-radius: 2px; background: var(--led); box-shadow: 0 0 10px var(--led); animation: cue 1.8s cubic-bezier(.6, 0, .3, 1) infinite; }
+@keyframes cue { to { top: 100%; } }
+.intro .scroll-cue { animation: rise .8s ease 3s both; }
+@media (max-width: 960px) { .scroll-cue { display: none; } }
+@media (prefers-reduced-motion: reduce) { .hero { --p: 0 !important; } .scroll-cue i::after { animation: none; top: 15px; } }
