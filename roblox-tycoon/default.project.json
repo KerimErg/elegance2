@@ -1,0 +1,24 @@
+{
+  "name": "bonbon-tycoon",
+  "tree": {
+    "$className": "DataModel",
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "TycoonConfig": {
+        "$path": "src/server/TycoonConfig.luau"
+      },
+      "TycoonServer": {
+        "$path": "src/server/TycoonServer.server.luau"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "TycoonClient": {
+          "$path": "src/client/TycoonClient.client.luau"
+        }
+      }
+    }
+  }
+}
