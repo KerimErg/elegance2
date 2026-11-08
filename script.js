@@ -309,3 +309,30 @@ const track = $("#reelTrack");
 const set = track.innerHTML;
 track.innerHTML = set + set; // deux copies identiques -> boucle sans couture
 track.querySelectorAll(".reel__item").forEach((el, k) => { if (k >= track.children.length / 2) el.setAttribute("aria-hidden", "true"); });
+
+// ===================== L'équipe =====================
+$("#team").innerHTML = BARBERS.map((b) => `
+  <article class="barber">
+    <div class="barber__hexwrap"><div class="barber__hex" aria-hidden="true">${b.name[0]}</div></div>
+    <h3>${b.name}</h3>
+    <p>Barbier</p>
+    <a href="#prestations" class="barber__book" data-pick-barber="${b.id}">Réserver avec ${b.name}</a>
+  </article>`).join("");
+$("#team").addEventListener("click", (e) => {
+  const a = e.target.closest("[data-pick-barber]"); if (!a) return;
+  book.barber = a.dataset.pickBarber; book.time = null;
+  show("pick"); renderPick();
+});
+
+// ===================== Barre fixe mobile (Appeler / Réserver) =====================
+const mbar = $("#mbar");
+const phoneSec = $("#phone");
+let phoneInView = false;
+new IntersectionObserver(([en]) => { phoneInView = en.isIntersecting; toggleMbar(); }, { threshold: .15 }).observe(phoneSec);
+function toggleMbar() {
+  const on = scrollY > innerHeight * .6 && !phoneInView;
+  mbar.classList.toggle("is-on", on);
+  mbar.setAttribute("aria-hidden", String(!on));
+  mbar.querySelectorAll("a").forEach((a) => (on ? a.removeAttribute("tabindex") : a.setAttribute("tabindex", "-1")));
+}
+addEventListener("scroll", toggleMbar, { passive: true });

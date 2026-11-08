@@ -8,6 +8,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Allura&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#09090a">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Elegance Strasbourg">
+  <meta property="og:title" content="Elegance Strasbourg · Barbier à Schiltigheim">
+  <meta property="og:description" content="Coupe homme dès 18 €, dégradé, barbe, soin du visage. 4,8 ★ sur Google. Réservez en ligne avec Orhan, Kaan, Taha ou Omer.">
+  <meta property="og:url" content="https://elegance2-amber.vercel.app/">
+  <meta property="og:image" content="https://elegance2-amber.vercel.app/images/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BarberShop",
+    "name": "Elegance Strasbourg",
+    "url": "https://elegance2-amber.vercel.app/",
+    "image": "https://elegance2-amber.vercel.app/images/og.jpg",
+    "telephone": "+33388977468",
+    "priceRange": "12 € – 28 €",
+    "address": { "@type": "PostalAddress", "streetAddress": "162 Route de Bischwiller", "addressLocality": "Schiltigheim", "postalCode": "67300", "addressCountry": "FR" },
+    "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
+  }
+  </script>
   <link rel="stylesheet" href="styles.css">
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
@@ -22,8 +47,9 @@
     <nav class="nav" id="nav" aria-label="Navigation principale">
       <a href="#prestations"><small>01</small>Prestations</a>
       <a href="#realisations"><small>02</small>Réalisations</a>
-      <a href="#salon"><small>03</small>Le salon</a>
-      <a href="#avis"><small>04</small>Avis</a>
+      <a href="#equipe"><small>03</small>L’équipe</a>
+      <a href="#salon"><small>04</small>Le salon</a>
+      <a href="#avis"><small>05</small>Avis</a>
       <a href="#prestations" class="nav__cta">Prendre rendez-vous</a>
     </nav>
     <div class="header__right">
@@ -99,6 +125,7 @@
               <label class="field"><span>Nom et prénom</span><input id="fName" name="name" autocomplete="name" required minlength="2" maxlength="80"></label>
               <label class="field"><span>Téléphone</span><input id="fPhone" name="tel" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20"></label>
               <label class="field"><span>E-mail <small>facultatif</small></span><input id="fEmail" name="email" type="email" autocomplete="email" maxlength="120"></label>
+              <p class="phone__legal">Vos coordonnées servent uniquement à gérer ce rendez-vous. <a href="legal.html#confidentialite" target="_blank" rel="noopener">Confidentialité</a></p>
               <p class="phone__error" id="pError" role="alert"></p>
               <button class="phone__confirm" id="pSubmit" type="submit">Confirmer le rendez-vous</button>
             </form>
@@ -154,6 +181,20 @@
     </div>
   </section>
 
+  <!-- ================= ÉQUIPE ================= -->
+  <section class="equipe" id="equipe">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="overline overline--num"><b>03</b> L’équipe</p>
+          <h2 class="h2 h2--xl">Quatre barbiers</h2>
+        </div>
+        <p class="muted">Choisissez votre coiffeur au moment de réserver, ou laissez-nous vous placer avec le premier disponible.</p>
+      </div>
+      <div class="team" id="team"></div>
+    </div>
+  </section>
+
   <!-- ================= CITATION ================= -->
   <section class="statement">
     <div class="wrap">
@@ -168,7 +209,7 @@
         <img src="images/salon.jpg" alt="Le salon Elegance Strasbourg" loading="lazy" width="382" height="443">
       </figure>
       <div class="salon__info">
-        <p class="overline overline--num"><b>03</b> Le salon</p>
+        <p class="overline overline--num"><b>04</b> Le salon</p>
         <h2 class="h2">Venez nous voir</h2>
         <address class="salon__addr">162 route de Bischwiller<br>67300 Schiltigheim</address>
         <table class="hours">
@@ -195,7 +236,7 @@
   <!-- ================= AVIS ================= -->
   <section class="avis" id="avis">
     <div class="wrap">
-      <p class="overline overline--num"><b>04</b> Avis</p>
+      <p class="overline overline--num"><b>05</b> Avis</p>
       <div class="rating">
         <div class="rating__score"><b>4,8</b><span class="rating__stars" aria-hidden="true">★★★★★</span></div>
         <div class="rating__text">
@@ -210,12 +251,17 @@
   </section>
 </main>
 
+<div class="mbar" id="mbar" aria-hidden="true">
+  <a href="tel:+33388977468" class="mbar__call" tabindex="-1">Appeler</a>
+  <a href="#prestations" class="mbar__book" tabindex="-1">Réserver un créneau</a>
+</div>
+
 <footer class="footer">
   <div class="wrap footer__inner">
     <p class="footer__word">ELEGANCE<span>Strasbourg</span></p>
     <div class="footer__meta">
       <span>© <span id="year"></span> Elegance Strasbourg</span>
-      <span class="footer__links"><a href="#">Instagram</a><a href="#">Snapchat</a><a href="#">Mentions légales</a></span>
+      <span class="footer__links"><a href="legal.html">Mentions légales</a><a href="legal.html#confidentialite">Confidentialité</a></span>
     </div>
   </div>
 </footer>

@@ -329,3 +329,34 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 #pService .chip small { margin: 0; flex-shrink: 0; }
 .phone__status { padding: .7rem .9rem; }
 .phone__label { margin: .65rem 0 .35rem; }
+
+/* ---------- L'équipe ---------- */
+.equipe { padding-block: clamp(80px, 10vw, 140px); border-top: 1px solid var(--line); }
+.section-head--split { display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem 3rem; flex-wrap: wrap; }
+.section-head--split .muted { max-width: 26rem; margin: 0; }
+.team { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.8rem, 2vw, 1.5rem); }
+.barber { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .9rem; padding: clamp(1.4rem, 3vw, 2.2rem) 1rem 1.4rem; background: var(--surface); border: 1px solid var(--line); transition: border-color .3s, transform .4s cubic-bezier(.2, .7, .2, 1); }
+.barber:hover { border-color: rgba(155, 77, 255, .55); transform: translateY(-4px); }
+.barber__hex { width: min(120px, 70%); aspect-ratio: .866; display: grid; place-items: center; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: linear-gradient(160deg, #26262b, #0e0e10); font-family: var(--wide); font-size: clamp(2rem, 4vw, 2.8rem); color: var(--white); position: relative; }
+.barber__hexwrap { filter: drop-shadow(0 0 1px rgba(255, 255, 255, .85)) drop-shadow(0 0 18px rgba(255, 255, 255, .12)); display: flex; justify-content: center; width: 100%; transition: filter .4s; }
+.barber:hover .barber__hexwrap { filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 22px rgba(155, 77, 255, .55)); }
+.barber h3 { font-family: var(--wide); font-weight: 400; text-transform: uppercase; font-size: clamp(1rem, 1.6vw, 1.25rem); letter-spacing: .06em; margin-top: .3rem; }
+.barber p { font-size: .8rem; color: var(--mute); letter-spacing: .14em; text-transform: uppercase; }
+.barber__book { margin-top: .4rem; font-size: .85rem; font-weight: 600; padding: .7rem 1rem; border: 1px solid rgba(243, 243, 241, .3); width: 100%; transition: background .25s, color .25s, border-color .25s; }
+.barber__book:hover { background: var(--white); color: var(--bg); border-color: var(--white); }
+
+/* ---------- Réservation : mention confidentialité ---------- */
+.phone__legal { font-size: .62rem; color: var(--mute); line-height: 1.4; margin-top: .7rem; }
+.phone__legal a { color: var(--white); border-bottom: 1px solid var(--line); }
+
+/* ---------- Barre fixe mobile ---------- */
+.mbar { display: none; }
+@media (max-width: 960px) {
+  .mbar { position: fixed; z-index: 45; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: auto 1fr; gap: .5rem; padding: .7rem var(--gutter-r) calc(.7rem + env(safe-area-inset-bottom, 0px)) var(--gutter); background: rgba(9, 9, 10, .92); backdrop-filter: blur(14px); border-top: 1px solid var(--line); transform: translateY(110%); transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
+  .mbar.is-on { transform: none; }
+  .mbar a { display: flex; align-items: center; justify-content: center; padding: .9rem 1.1rem; font-weight: 600; font-size: .92rem; }
+  .mbar__call { border: 1px solid rgba(243, 243, 241, .35); }
+  .mbar__book { background: var(--white); color: var(--bg); }
+  .footer { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (max-width: 900px) { .team { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
