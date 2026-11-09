@@ -259,6 +259,12 @@ function renderPick() {
   el.next.textContent = book.time ? `Continuer · ${s.name} · ${book.time}` : "Choisissez un créneau";
 }
 
+// Sur téléphone, garder le haut du panneau à l'écran quand on change d'étape
+function keepPanelInView() {
+  if (innerWidth > 720) return;
+  const r = $("#phone").getBoundingClientRect();
+  if (r.top < 60 || r.top > innerHeight * .5) scrollTo({ top: scrollY + r.top - 84, behavior: reduced ? "auto" : "smooth" });
+}
 function show(step) {
   el.pick.hidden = step !== "pick"; el.form.hidden = step !== "form"; el.done.hidden = step !== "done";
   el.status.classList.toggle("is-ok", step === "done");
@@ -279,7 +285,7 @@ el.next.addEventListener("click", () => {
   const s = SERVICES.find((x) => x.id === book.service);
   $("#pRecap").innerHTML = `<b>${s.name}</b> · ${s.price} €<br>${fmtLong(book.date)} à ${book.time}<br>${book.barber === "any" ? "Premier coiffeur disponible" : "Avec " + barberName(book.barber)}`;
   el.error.textContent = "";
-  show("form");
+  show("form"); keepPanelInView();
   $("#fName").focus({ preventScroll: true });
 });
 $("#pBack").addEventListener("click", () => show("pick"));
@@ -315,7 +321,7 @@ el.form.addEventListener("submit", async (e) => {
     l.total++; if (book.barber !== "any") l.barbers.add(book.barber); book.load.set(k, l);
     $("#pDoneText").textContent = `${s.name}${book.barber === "any" ? "" : " avec " + barberName(book.barber)} · ${fmtLong(book.date)} à ${book.time}. À très vite au salon, ${data.name.split(" ")[0]} !`;
     el.statusText.textContent = `Rendez-vous confirmé · ${fmtLong(book.date)}, ${book.time}`;
-    show("done");
+    show("done"); keepPanelInView();
     el.form.reset();
   } catch (err) {
     console.error(err);

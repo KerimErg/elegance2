@@ -143,7 +143,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .intro .hero__actions { animation-delay: 2.45s; }
 .intro .hero__facts { animation-delay: 2.6s; }
 .intro .hero::after { animation: ledOn 1.2s ease 2.2s both; }
-.intro .header { animation: rise .8s ease 2.6s both; }
+.intro .header { animation: fadeIn .8s ease 2.6s both; }
+@keyframes fadeIn { from { opacity: 0; } }
 @keyframes rise { from { opacity: 0; transform: translateY(18px); } }
 @keyframes ledOn { 0% { opacity: 0; transform: scaleX(0); } 60% { opacity: 1; } 100% { opacity: .8; transform: none; } }
 
@@ -362,7 +363,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .nav a { font-family: var(--wide); text-transform: uppercase; font-size: clamp(1.3rem, 6vw, 2rem); color: var(--white); }
   .nav a::after { display: none; }
   .nav .nav__cta { display: inline-flex; align-self: flex-start; margin-top: 1.6rem; font-family: var(--font); text-transform: none; font-size: 1rem; font-weight: 600; padding: 1rem 1.6rem; background: var(--white); color: var(--bg); }
-  .carte__grid, .salon__grid { grid-template-columns: 1fr; }
+  .carte__grid, .salon__grid { grid-template-columns: minmax(0, 1fr); }
+  .carte__book, .carte__panel, .phone-wrap, .phone, .phone__screen, .phone__step { min-width: 0; }
   .carte__book { position: static; }
   .manifesto__grid { grid-template-columns: 1fr; }
   .rating { grid-template-columns: 1fr; }
@@ -623,3 +625,50 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .footer__grid--slim { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.2rem 2rem; }
 .footer__line { color: var(--mute); font-size: .92rem; }
 .footer__line a { color: var(--white); border-bottom: 1px solid var(--line-2); }
+
+/* =====================================================================
+   Mobile — finitions (≤ 720 px)
+   ===================================================================== */
+@media (max-width: 720px) {
+  /* Lisibilité des petites étiquettes */
+  .overline, .sec-head, .hero__facts dt, .final__facts dt { font-size: .8rem; letter-spacing: .2em; }
+  .lede, .hero__lead { font-size: 1.02rem; }
+  .hero__facts a { display: inline-block; padding-block: .5rem; }
+  .footer__line a { white-space: nowrap; }
+
+  /* Menu plein écran */
+  .nav { gap: .2rem; padding-top: calc(96px + env(safe-area-inset-top, 0px)); justify-content: flex-start; }
+  .nav a { padding: .55rem 0; }
+
+  /* Plafond : phrase sur deux lignes lisibles */
+  .ceiling__line { font-size: min(4.6vw, 1.32rem); line-height: 1.35; }
+  .ceiling__text { padding: 1.4rem 1rem; background: radial-gradient(ellipse at center, rgba(9, 9, 10, .82) 30%, rgba(9, 9, 10, 0) 72%); }
+
+  /* Réservation : plus de faux téléphone, un vrai panneau pleine largeur */
+  .phone-wrap { align-items: stretch; }
+  .phone { width: 100%; aspect-ratio: auto; border: 1px solid var(--line); border-radius: 0; background: var(--surface); box-shadow: none; overflow: visible; }
+  .phone__notch { display: none; }
+  .phone__screen { position: static; padding: 1.1rem; }
+  .phone__status { font-size: .9rem; padding: .85rem 1rem; border-radius: 0; }
+  .phone__label { font-size: .8rem; margin: 1.2rem 0 .55rem; }
+  .chips { margin-inline: -1.1rem; padding-inline: 1.1rem; gap: .5rem; }
+  .chip { font-size: .9rem; padding: .75rem .95rem; border-radius: 0; min-height: 46px; }
+  .chip small { font-size: .78rem; }
+  #pService { gap: .5rem; }
+  #pService .chip { padding: .8rem .85rem; }
+  #pBarber .av { width: 50px; height: 50px; font-size: 1.05rem; }
+  #pBarber .chip { min-height: 0; }
+  #pBarber .chip small { font-size: .72rem; overflow: visible; text-overflow: clip; white-space: normal; line-height: 1.2; text-align: center; }
+  .slots { gap: .5rem; }
+  .slot { font-size: .92rem; padding: 0; min-height: 46px; border-radius: 0; }
+  .phone__confirm { margin-top: 1.4rem; padding: 1.05rem; font-size: .95rem; border-radius: 0; min-height: 52px; }
+  .phone__back { font-size: .9rem; padding: .4rem 0 .8rem; }
+  .phone__recap { font-size: .95rem; border-radius: 0; }
+  .field span { font-size: .8rem; }
+  .field input { font-size: 16px; padding: .85rem .9rem; border-radius: 0; }   /* 16 px : pas de zoom automatique sur iPhone */
+  .phone__legal { font-size: .78rem; }
+  .phone__error { font-size: .85rem; }
+  .phone__done { padding-block: 1.6rem; }
+  .phone__done-text { font-size: .95rem; }
+  .phone__tag { font-size: .85rem; }
+}
