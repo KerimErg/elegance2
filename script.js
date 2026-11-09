@@ -404,7 +404,7 @@ if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
   requestAnimationFrame(follow);
 
   // Photos en relief avec reflet
-  $$(".hex, .rating__score, .salon__photo").forEach((el) => {
+  $$(".hex, .rating__score").forEach((el) => {
     el.classList.add("tilt");
     el.addEventListener("pointermove", (e) => {
       const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
