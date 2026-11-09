@@ -39,8 +39,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 :focus-visible { outline: 2px solid var(--led); outline-offset: 3px; }
 ::selection { background: var(--led); color: #fff; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.skip { position: fixed; z-index: 100; left: 16px; top: -60px; padding: .7rem 1rem; background: var(--white); color: var(--bg); font-weight: 600; transition: top .2s; }
-.skip:focus { top: calc(16px + env(safe-area-inset-top, 0px)); }
+.skip { position: fixed; z-index: 100; left: -9999px; top: 16px; padding: .7rem 1rem; background: var(--white); color: var(--bg); font-weight: 600; }
+.skip:focus { left: 16px; top: calc(16px + env(safe-area-inset-top, 0px)); }
 .wrap { width: 100%; max-width: 1320px; margin-inline: auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
 
 /* ---------- Typographie ---------- */
@@ -603,3 +603,23 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .crew__row:hover .crew__name, .crew__row:focus-within .crew__name { text-shadow: none; }
 .salon__photo img { box-shadow: none; border-color: var(--line); }
 .dot { display: none; }
+
+/* ---------- Équipe : prénoms pleins, sans décor ---------- */
+.crew__row { grid-template-columns: minmax(0, 1fr) auto; }
+.crew__name { font-size: clamp(1.9rem, 4.6vw, 3.6rem); color: rgba(243, 243, 241, .72); -webkit-text-stroke: 0; transition: color .3s ease; }
+.crew__row:hover .crew__name, .crew__row:focus-within .crew__name { color: var(--white); }
+
+/* ---------- Réserver : bloc pratique ---------- */
+.final { text-align: left; }
+.final__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 2.5rem clamp(2rem, 6vw, 6rem); align-items: start; }
+.final__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; padding-top: .6rem; }
+.final__facts dt { font-size: .7rem; letter-spacing: .24em; text-transform: uppercase; color: var(--mute); margin-bottom: .5rem; }
+.final__facts dd { font-weight: 500; line-height: 1.5; }
+.final__facts a { border-bottom: 1px solid var(--line-2); }
+.final__facts a:hover { border-color: var(--white); }
+.final__actions { justify-content: flex-start; margin-top: 2.2rem; }
+@media (max-width: 960px) { .final__grid { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .final__facts { grid-template-columns: 1fr 1fr; } }
+.footer__grid--slim { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.2rem 2rem; }
+.footer__line { color: var(--mute); font-size: .92rem; }
+.footer__line a { color: var(--white); border-bottom: 1px solid var(--line-2); }

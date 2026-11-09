@@ -351,7 +351,6 @@ rows[(today.getDay() + 6) % 7]?.classList.add("is-today");
 $("#team").innerHTML = BARBERS.map((b, k) => `
   <li class="crew__row" data-reveal>
     <span class="crew__name">${b.name}</span>
-    <span class="crew__hexwrap" aria-hidden="true"><span class="crew__hex">${b.name[0]}</span></span>
     <a href="#prestations" class="crew__book" data-pick-barber="${b.id}">Réserver<span class="sr-only"> avec ${b.name}</span> <span aria-hidden="true">→</span></a>
   </li>`).join("");
 $("#team").insertAdjacentHTML("afterend", `<p class="crew__any">Pas de préférence ? <a href="#prestations" data-pick-barber="any">Réserver avec le premier barbier disponible →</a></p>`);
