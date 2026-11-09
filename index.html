@@ -28,6 +28,7 @@
     "url": "https://elegance2-amber.vercel.app/",
     "image": "https://elegance2-amber.vercel.app/images/og.jpg",
     "telephone": "+33388977468",
+    "sameAs": ["https://www.instagram.com/elegance_strasbourg/"],
     "priceRange": "12 € – 28 €",
     "address": { "@type": "PostalAddress", "streetAddress": "162 Route de Bischwiller", "addressLocality": "Schiltigheim", "postalCode": "67300", "addressCountry": "FR" },
     "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
@@ -72,7 +73,7 @@
 
     <div class="hero__stage wrap">
       <figure class="hero__photo">
-        <div class="hex"><img src="images/salon.jpg" alt="L’intérieur du salon Elegance : fauteuil de barbier, miroirs et plafond lumineux en nid d’abeille" width="382" height="443"></div>
+        <div class="hex"><video class="hero__video" src="videos/neon-tondeuse.mp4" poster="videos/neon-tondeuse.jpg" autoplay muted loop playsinline preload="auto" aria-label="Un barbier passe la tondeuse sur la nuque d’un client, devant le néon Elegance Strasbourg"></video></div>
       </figure>
       <h1 class="hero__title">
         <span class="hero__word">ELEGANCE</span>
@@ -199,7 +200,7 @@
           <span class="sec-head__num">03</span>
           <span class="sec-head__label">Le travail</span>
           <span class="sec-head__rule" aria-hidden="true"></span>
-          <span class="sec-head__aside"><b class="hs-count" id="hsCount">01</b> / 03</span>
+          <span class="sec-head__aside"><b class="hs-count" id="hsCount">01</b> / 06</span>
         </header>
       </div>
       <div class="hscroll" id="hScroll">
@@ -208,18 +209,30 @@
             <h2 class="h1">Sorti<br>du fauteuil</h2>
             <p class="lede">Des coupes récentes, réalisées au salon. Continuez à descendre pour les faire défiler.</p>
           </div>
-            <figure class="work">
-              <div class="work__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" width="508" height="854" loading="lazy"></div>
-              <figcaption><b>01</b><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
-            </figure>
-            <figure class="work">
-              <div class="work__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" width="408" height="455" loading="lazy"></div>
-              <figcaption><b>02</b><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
-            </figure>
-            <figure class="work">
-              <div class="work__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" width="398" height="419" loading="lazy"></div>
-              <figcaption><b>03</b><span>Boucles décolorées</span><small>Contour net</small></figcaption>
-            </figure>
+          <figure class="work work--video">
+            <div class="work__img"><video src="videos/carte-blanche-platine.mp4" poster="videos/carte-blanche-platine.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : le résultat d’une coupe carte blanche, crop décoloré platine"></video><span class="work__tag" aria-hidden="true">Vidéo</span></div>
+            <figcaption><b>01</b><span>Carte blanche</span><small>Crop platine</small></figcaption>
+          </figure>
+          <figure class="work">
+            <div class="work__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" width="508" height="854" loading="lazy"></div>
+            <figcaption><b>02</b><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
+          </figure>
+          <figure class="work work--video">
+            <div class="work__img"><video src="videos/tresses-degrade.mp4" poster="videos/tresses-degrade.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : dégradé réalisé à la tondeuse autour de tresses"></video><span class="work__tag" aria-hidden="true">Vidéo</span></div>
+            <figcaption><b>03</b><span>Tresses & dégradé</span><small>Le geste</small></figcaption>
+          </figure>
+          <figure class="work">
+            <div class="work__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" width="408" height="455" loading="lazy"></div>
+            <figcaption><b>04</b><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
+          </figure>
+          <figure class="work work--video">
+            <div class="work__img"><video src="videos/taper-texture.mp4" poster="videos/taper-texture.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : résultat d’un taper avec dessus texturé"></video><span class="work__tag" aria-hidden="true">Vidéo</span></div>
+            <figcaption><b>05</b><span>Taper texturé</span><small>Résultat</small></figcaption>
+          </figure>
+          <figure class="work">
+            <div class="work__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" width="398" height="419" loading="lazy"></div>
+            <figcaption><b>06</b><span>Boucles décolorées</span><small>Contour net</small></figcaption>
+          </figure>
           <div class="hscroll__end">
             <p class="overline">Votre tour</p>
             <p class="hscroll__endtitle">La prochaine coupe,<br>c’est la vôtre<i class="dot" aria-hidden="true"></i></p>
@@ -320,13 +333,13 @@
         <span class="logo__script">Strasbourg</span>
       </div>
       <div><p class="footer__h">Adresse</p><p>162 route de Bischwiller<br>67300 Schiltigheim</p></div>
-      <div><p class="footer__h">Contact</p><p><a href="tel:+33388977468">03 88 97 74 68</a></p></div>
+      <div><p class="footer__h">Contact</p><p><a href="tel:+33388977468">03 88 97 74 68</a><br><a href="https://www.instagram.com/elegance_strasbourg/" target="_blank" rel="noopener">@elegance_strasbourg</a></p></div>
       <div><p class="footer__h">Horaires</p><p>Mardi – samedi<br>10:00 – 19:00</p></div>
     </div>
     <p class="footer__word" aria-hidden="true">ELEGANCE</p>
     <div class="footer__meta">
       <span>© <span id="year"></span> Elegance Strasbourg</span>
-      <span class="footer__links"><a href="legal.html">Mentions légales</a><a href="legal.html#confidentialite">Confidentialité</a></span>
+      <span class="footer__links"><a href="https://www.instagram.com/elegance_strasbourg/" target="_blank" rel="noopener">Instagram</a><a href="legal.html">Mentions légales</a><a href="legal.html#confidentialite">Confidentialité</a></span>
     </div>
   </div>
 </footer>

@@ -561,7 +561,7 @@ if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
 (() => {
   const sec = $("#realisations"), track = $("#hTrack"), bar = $("#hBar"), count = $("#hsCount");
   if (!sec || !track || reduced) return;
-  const works = [...track.querySelectorAll(".work")], imgs = works.map((w) => $("img", w));
+  const works = [...track.querySelectorAll(".work")], imgs = works.map((w) => $("img, video", w));
   let dist = 0, top = 0, shown = -1, anim = 0, lastIdx = -1;
 
   const measure = () => {
@@ -599,6 +599,18 @@ if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
   addEventListener("load", measure);
   addEventListener("scroll", onScroll, { passive: true });
   measure();
+})();
+
+// ===================== Vidéos : lecture seulement quand elles sont à l'écran =====================
+// Économise la batterie et le processeur ; aucune lecture automatique si l'appareil limite les animations.
+(() => {
+  const vids = $$("video");
+  if (reduced) { vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); v.controls = true; }); return; }
+  const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+    const v = en.target;
+    if (en.isIntersecting) { const p = v.play(); if (p) p.catch(() => {}); } else v.pause();
+  }), { threshold: .15 });
+  vids.forEach((v) => { v.muted = true; io.observe(v); });
 })();
 
 // ===================== Barre fixe mobile (Appeler / Réserver) =====================
