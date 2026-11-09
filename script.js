@@ -380,6 +380,48 @@ if (!reduced && "IntersectionObserver" in window) {
   });
 }
 
+// ===================== « Lumière dans le noir » (souris uniquement) =====================
+if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  const root = document.documentElement, cur = $(".cursor");
+  root.classList.add("has-fx");
+  let mx = -999, my = -999, cx = 0, cy = 0, shown = false;
+  addEventListener("pointermove", (e) => {
+    mx = e.clientX; my = e.clientY;
+    root.style.setProperty("--mx", mx + "px");
+    root.style.setProperty("--my", my + "px");
+    if (!shown) { shown = true; cx = mx; cy = my; root.classList.add("fx-on"); }
+    root.classList.toggle("in-hero", !!e.target.closest(".hero"));
+    cur.classList.toggle("is-hot", !!e.target.closest("a, button, .chip, .slot, input, select, label"));
+  }, { passive: true });
+  document.documentElement.addEventListener("pointerleave", () => { shown = false; root.classList.remove("fx-on"); });
+  addEventListener("pointerdown", () => cur.classList.add("is-down"));
+  addEventListener("pointerup", () => cur.classList.remove("is-down"));
+  const follow = () => {
+    cx += (mx - cx) * .22; cy += (my - cy) * .22;
+    cur.style.translate = `${cx}px ${cy}px`;
+    requestAnimationFrame(follow);
+  };
+  requestAnimationFrame(follow);
+
+  // Photos en relief avec reflet
+  $$(".hex, .rating__score, .salon__photo").forEach((el) => {
+    el.classList.add("tilt");
+    el.addEventListener("pointermove", (e) => {
+      const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      el.style.setProperty("--rx", `${(.5 - y) * 14}deg`);
+      el.style.setProperty("--ry", `${(x - .5) * 16}deg`);
+      el.style.setProperty("--gx", `${x * 100}%`);
+      el.style.setProperty("--gy", `${y * 100}%`);
+      el.classList.add("is-tilting");
+    });
+    el.addEventListener("pointerleave", () => {
+      el.classList.remove("is-tilting");
+      el.style.setProperty("--rx", "0deg");
+      el.style.setProperty("--ry", "0deg");
+    });
+  });
+}
+
 // ===================== Barre fixe mobile (Appeler / Réserver) =====================
 const mbar = $("#mbar");
 const phoneSec = $("#phone");
