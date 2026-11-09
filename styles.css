@@ -6,7 +6,7 @@
   --surface: #121214;
   --surface-2: #1b1b1e;
   --white: #f3f3f1;
-  --mute: #96969c;
+  --mute: #a4a4ab;
   --line: rgba(243, 243, 241, .12);
   --led: #9b4dff;          /* violet du logo, en touche */
 
@@ -360,3 +360,57 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .footer { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (max-width: 900px) { .team { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* =====================================================================
+   Passe esthétique
+   ===================================================================== */
+
+/* ---------- Carte : tous les prix visibles ---------- */
+.carte { position: relative; isolation: isolate; overflow: hidden; }
+.carte::before { content: ""; position: absolute; z-index: -1; right: -10%; top: 50%; width: min(900px, 90vw); aspect-ratio: 1; translate: 0 -50%;
+  background: radial-gradient(circle, rgba(155, 77, 255, .16), transparent 62%); pointer-events: none; }
+.carte::after { content: ""; position: absolute; z-index: -1; inset: 0; pointer-events: none; opacity: .5;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='180' viewBox='0 0 104 180'%3E%3Cpath d='M52 0l52 30v60l-52 30L0 90V30zM52 120l52 30M52 120L0 150M52 120v60' fill='none' stroke='%23ffffff' stroke-opacity='.05' stroke-width='1.2'/%3E%3C/svg%3E") right center / 104px 180px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 35%, #000 75%); mask-image: linear-gradient(90deg, transparent 35%, #000 75%); }
+.menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.4rem 2.6rem; margin-top: 2.6rem; }
+.menu__cat { min-width: 0; }
+.menu__head { display: flex; align-items: baseline; gap: .8rem; padding-bottom: .8rem; border-bottom: 1px solid rgba(243, 243, 241, .22); }
+.menu__num { font-size: .75rem; font-weight: 600; color: var(--led); }
+.menu__head h3 { font-family: var(--wide); font-weight: 400; font-size: 1.05rem; text-transform: uppercase; letter-spacing: .05em; }
+.menu__intro { font-size: .86rem; color: var(--mute); margin: .7rem 0 .4rem; line-height: 1.5; }
+.menu__item { display: flex; align-items: baseline; gap: .7rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.menu__item:last-child { border-bottom: 0; }
+.menu__name { font-weight: 500; display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
+.menu__name small { font-size: .74rem; color: var(--mute); font-weight: 400; letter-spacing: .04em; }
+.menu__item i { flex: 1; border-bottom: 1px dotted rgba(243, 243, 241, .2); translate: 0 -5px; min-width: 1rem; }
+.menu__price { font-family: var(--wide); font-weight: 400; font-size: 1.3rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* ---------- Citation : bandeau photo ---------- */
+.statement { position: relative; isolation: isolate; overflow: hidden; background: var(--bg); padding-block: clamp(110px, 14vw, 190px); }
+.statement__bg { position: absolute; inset: -40px; z-index: -1; background: var(--img) center 30% / cover; filter: blur(14px) saturate(.8) brightness(.32); }
+.statement__bg::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 20%, rgba(9, 9, 10, .85) 80%); }
+.statement__text { font-size: clamp(1.7rem, 5vw, 4.4rem); text-shadow: 0 2px 30px rgba(0, 0, 0, .6); }
+.statement__text span { color: #fff; text-shadow: 0 0 24px rgba(155, 77, 255, .7), 0 0 60px rgba(155, 77, 255, .35); }
+.statement__line { display: block; width: min(260px, 50%); height: 2px; margin: clamp(1.8rem, 3vw, 2.6rem) auto 0; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--led), transparent); box-shadow: 0 0 18px var(--led); }
+
+/* ---------- Le salon : grande photo, liseré LED ---------- */
+.salon__photo { max-width: none; }
+.salon__photo::before { display: none; }
+.salon__photo img { aspect-ratio: 4 / 5; border: 1px solid rgba(255, 255, 255, .14);
+  box-shadow: 0 0 0 1px rgba(155, 77, 255, .35), 0 0 40px rgba(155, 77, 255, .22), 0 40px 80px rgba(0, 0, 0, .5); }
+.salon__photo figcaption { position: absolute; left: 16px; bottom: 16px; right: 16px; width: fit-content; max-width: calc(100% - 32px); padding: .55rem .9rem; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; background: rgba(9, 9, 10, .78); backdrop-filter: blur(8px); border: 1px solid var(--line); }
+.salon__photo { position: relative; }
+
+/* ---------- Avis : note dans un hexagone lumineux ---------- */
+.rating__hexwrap { filter: drop-shadow(0 0 1px rgba(255, 255, 255, .9)) drop-shadow(0 0 26px rgba(155, 77, 255, .4)); }
+.rating__score { width: clamp(200px, 22vw, 260px); aspect-ratio: .866; justify-content: center; padding: 0; border: 0;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: linear-gradient(160deg, #222228, #0c0c0e); }
+.rating__score small { font-size: .7rem; letter-spacing: .24em; text-transform: uppercase; color: var(--mute); }
+
+@media (max-width: 1100px) { .menu { grid-template-columns: 1fr; } }
+@media (max-width: 960px) { .salon__photo img { aspect-ratio: 4 / 4.2; } }
+@media (max-width: 640px) { .rating__hexwrap { justify-self: start; } .rating__score { width: 190px; } }
+.menu__price .eur { font-family: var(--font); font-weight: 500; font-size: .8em; margin-left: .2em; }
+.menu__price { font-size: 1.25rem; }
+.salon__photo img { width: 100%; height: auto; object-fit: cover; }

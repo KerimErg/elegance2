@@ -96,7 +96,7 @@
         <p class="overline overline--num"><b>01</b> La carte</p>
         <h2 class="h2">Prestations</h2>
         <p class="muted">Réservez en ligne en moins d’une minute. Pour une coloration, appelez le salon.</p>
-        <div class="accordion" id="accordion"></div>
+        <div class="menu" id="menu"></div>
       </div>
       <div class="phone-wrap">
         <div class="phone" id="phone">
@@ -197,8 +197,10 @@
 
   <!-- ================= CITATION ================= -->
   <section class="statement">
+    <div class="statement__bg" style="--img:url('images/salon.jpg')" aria-hidden="true"></div>
     <div class="wrap">
       <p class="statement__text">Le dégradé parfait<br>se joue <span>au millimètre.</span></p>
+      <span class="statement__line" aria-hidden="true"></span>
     </div>
   </section>
 
@@ -207,6 +209,7 @@
     <div class="wrap salon__grid">
       <figure class="salon__photo">
         <img src="images/salon.jpg" alt="Le salon Elegance Strasbourg" loading="lazy" width="382" height="443">
+        <figcaption>162 route de Bischwiller · Schiltigheim</figcaption>
       </figure>
       <div class="salon__info">
         <p class="overline overline--num"><b>04</b> Le salon</p>
@@ -238,7 +241,7 @@
     <div class="wrap">
       <p class="overline overline--num"><b>05</b> Avis</p>
       <div class="rating">
-        <div class="rating__score"><b>4,8</b><span class="rating__stars" aria-hidden="true">★★★★★</span></div>
+        <div class="rating__hexwrap"><div class="rating__score"><b>4,8</b><span class="rating__stars" aria-hidden="true">★★★★★</span><small>sur Google</small></div></div>
         <div class="rating__text">
           <p class="rating__count">284 avis Google</p>
           <p class="muted">Ce sont nos clients qui en parlent le mieux. Lisez leurs avis, et laissez le vôtre après votre passage.</p>

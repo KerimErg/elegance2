@@ -103,24 +103,14 @@ addEventListener("resize", sizeHive);
 sizeHive();
 new IntersectionObserver(([en]) => { cancelAnimationFrame(raf); if (en.isIntersecting) raf = requestAnimationFrame(loop); }).observe(hive);
 
-// ===================== Carte (accordéon) =====================
-const acc = $("#accordion");
-acc.innerHTML = CARTE.map((c, k) => `
-  <div class="acc${k === 0 ? " is-open" : ""}">
-    <button class="acc__head" aria-expanded="${k === 0}" aria-controls="acc-${k}" id="acc-h-${k}"><span class="acc__num">${pad(k + 1)}</span>${c.title}</button>
-    <div class="acc__body" id="acc-${k}" role="region" aria-labelledby="acc-h-${k}">
-      <div class="acc__inner"><p>${c.intro}</p><ul>${c.items.map(([n, p]) => `<li class="price"><span>${n}</span><i></i><b>${p}</b></li>`).join("")}</ul></div>
-    </div>
-  </div>`).join("");
-acc.addEventListener("click", (e) => {
-  const head = e.target.closest(".acc__head"); if (!head) return;
-  const target = head.parentElement, wasOpen = target.classList.contains("is-open");
-  $$(".acc", acc).forEach((item) => {
-    const open = item === target && !wasOpen;
-    item.classList.toggle("is-open", open);
-    $(".acc__head", item).setAttribute("aria-expanded", open);
-  });
-});
+// ===================== Carte des prestations (tous les prix visibles) =====================
+$("#menu").innerHTML = CARTE.map((c, k) => `
+  <section class="menu__cat">
+    <header class="menu__head"><span class="menu__num">${pad(k + 1)}</span><h3>${c.title}</h3></header>
+    <p class="menu__intro">${c.intro}</p>
+    <ul>${c.items.map(([n, p]) => { const [name, dur] = n.split(" · ");
+      return `<li class="menu__item"><span class="menu__name">${name}${dur ? `<small>${dur}</small>` : ""}</span><i aria-hidden="true"></i><b class="menu__price">${p.replace(/(\d+)\s*€/, '$1<span class="eur">€</span>')}</b></li>`; }).join("")}</ul>
+  </section>`).join("");
 
 // ===================== Réservation (téléphone) =====================
 // Vraie réservation via Supabase quand config.js est rempli, sinon mode démonstration.
