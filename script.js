@@ -474,7 +474,7 @@ if (!reduced && "IntersectionObserver" in window) {
     g.clearRect(0, 0, cv.width, cv.height);
     g.drawImage(grid, 0, 0);                            // toute la grille éteinte, en une fois
     g.setTransform(cv.width / W, 0, 0, cv.height / H, 0, 0);
-    const on = p / .78;                                // tout le plafond est allumé aux trois quarts
+    const on = p / .5;                                 // tout le plafond est allumé à mi-parcours
     const sn = sprOn.half, sg = sprGlow.half;
     for (const c of cells) {                           // triés par ordre d'allumage
       const since = on - c.at;
@@ -488,15 +488,19 @@ if (!reduced && "IntersectionObserver" in window) {
   }
   const measure = () => { secTop = sec.offsetTop; secSpan = Math.max(1, sec.offsetHeight - innerHeight); };
   const current = () => Math.min(1, Math.max(0, (scrollY - secTop) / secSpan));
-  let tick = false;
+  // Mouvement lissé : la séquence glisse vers la position du défilement au lieu d'avancer par à-coups.
+  let shown = -1, anim = 0;
+  const step = () => {
+    const target = current();
+    shown = shown < 0 ? target : shown + (target - shown) * .2;
+    if (Math.abs(target - shown) < .0015) shown = target;
+    sec.style.setProperty("--p", shown.toFixed(4)); draw(shown);
+    anim = shown !== target ? requestAnimationFrame(step) : 0;
+  };
   const onScroll = () => {
-    if (tick) return; tick = true;
-    requestAnimationFrame(() => {
-      tick = false;
-      const p = current();
-      if (p === lastP && (p === 0 || p === 1)) return;    // hors de la séquence : rien à faire
-      sec.style.setProperty("--p", p.toFixed(4)); draw(p);
-    });
+    const target = current();
+    if (target === shown && !anim) return;               // hors de la séquence : rien à faire
+    if (!anim) anim = requestAnimationFrame(step);
   };
   if (reduced) { build(); draw(1); sec.style.setProperty("--p", "1"); return; }
   let rs = 0;
@@ -522,7 +526,7 @@ if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
   addEventListener("pointermove", (e) => {
     mx = e.clientX; my = e.clientY;
     if (!shown) { shown = true; cx = mx; cy = my; root.classList.add("fx-on"); }
-    const h = !!e.target.closest(".hero");
+    const h = !!e.target.closest(".hero, .ceiling");   // pas de lampe torche sur les néons
     if (h !== inHero) { inHero = h; root.classList.toggle("in-hero", h); }
     cur.classList.toggle("is-hot", !!e.target.closest("a, button, .chip, .slot, input, select, label"));
     if (!torchTick) torchTick = requestAnimationFrame(moveTorch);

@@ -500,7 +500,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    Allumage du plafond — séquence pilotée par le défilement
    --p (0 → 1) est posé en JS selon l'avancée dans la section.
    ===================================================================== */
-.ceiling { --p: 0; position: relative; height: 280vh; border-top: 1px solid var(--line); }
+.ceiling { --p: 0; position: relative; height: 175vh; border-top: 1px solid var(--line); }
 .ceiling__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center; isolation: isolate; }
 .ceiling__sticky::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(155, 77, 255, calc(.05 + var(--p) * .14)), transparent 70%), linear-gradient(var(--bg), transparent 18%, transparent 82%, var(--bg)); }
@@ -509,8 +509,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .ceiling__text { text-align: center; padding-inline: var(--gutter); text-shadow: 0 2px 40px rgba(0, 0, 0, .85); }
 .ceiling__kicker { font-size: .75rem; letter-spacing: .3em; text-transform: uppercase; color: var(--mute); opacity: clamp(0, 1 - var(--p) * 3, 1); }
 .ceiling__line { font-family: var(--wide); text-transform: uppercase; font-size: clamp(1.7rem, 5.6vw, 5rem); line-height: 1.15; }
-.ceiling__line--1 { opacity: clamp(0, (var(--p) - .55) * 6, 1); translate: 0 calc(clamp(0, 1 - (var(--p) - .55) * 6, 1) * 30px); filter: blur(calc(clamp(0, 1 - (var(--p) - .55) * 6, 1) * 10px)); }
-.ceiling__line--2 { opacity: clamp(0, (var(--p) - .68) * 6, 1); translate: 0 calc(clamp(0, 1 - (var(--p) - .68) * 6, 1) * 30px); filter: blur(calc(clamp(0, 1 - (var(--p) - .68) * 6, 1) * 10px)); }
+.ceiling__line--1 { opacity: clamp(0, (var(--p) - .4) * 6, 1); translate: 0 calc(clamp(0, 1 - (var(--p) - .4) * 6, 1) * 30px); filter: blur(calc(clamp(0, 1 - (var(--p) - .4) * 6, 1) * 10px)); }
+.ceiling__line--2 { opacity: clamp(0, (var(--p) - .52) * 6, 1); translate: 0 calc(clamp(0, 1 - (var(--p) - .52) * 6, 1) * 30px); filter: blur(calc(clamp(0, 1 - (var(--p) - .52) * 6, 1) * 10px)); }
 .ceiling__line span { font-family: var(--script); text-transform: none; font-size: 1.45em; color: #fff; text-shadow: 0 0 24px rgba(155, 77, 255, .8), 0 0 60px rgba(155, 77, 255, .4); }
 .ceiling__meter { position: absolute; left: 50%; bottom: calc(28px + env(safe-area-inset-bottom, 0px)); width: min(220px, 50vw); height: 2px; translate: -50% 0; background: var(--line); overflow: hidden; }
 .ceiling__meter span { display: block; height: 100%; width: 100%; transform-origin: left; transform: scaleX(var(--p)); background: var(--led); box-shadow: var(--glow-led); }
