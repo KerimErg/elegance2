@@ -301,18 +301,35 @@ track.innerHTML = set + set; // deux copies identiques -> boucle sans couture
 track.querySelectorAll(".reel__item").forEach((el, k) => { if (k >= track.children.length / 2) el.setAttribute("aria-hidden", "true"); });
 
 // ===================== L'équipe =====================
-$("#team").innerHTML = BARBERS.map((b) => `
-  <article class="barber">
-    <div class="barber__hexwrap"><div class="barber__hex" aria-hidden="true">${b.name[0]}</div></div>
-    <h3>${b.name}</h3>
-    <p>Barbier</p>
-    <a href="#prestations" class="barber__book" data-pick-barber="${b.id}">Réserver avec ${b.name}</a>
-  </article>`).join("");
-$("#team").addEventListener("click", (e) => {
+$("#team").innerHTML = BARBERS.map((b, k) => `
+  <li class="crew__row" data-reveal>
+    <span class="crew__num">${pad(k + 1)}</span>
+    <span class="crew__name">${b.name}</span>
+    <span class="crew__hexwrap" aria-hidden="true"><span class="crew__hex">${b.name[0]}</span></span>
+    <a href="#prestations" class="crew__book" data-pick-barber="${b.id}">Réserver<span class="sr-only"> avec ${b.name}</span> <span aria-hidden="true">→</span></a>
+  </li>`).join("");
+$("#team").insertAdjacentHTML("afterend", `<p class="crew__any">Pas de préférence ? <a href="#prestations" data-pick-barber="any">Réserver avec le premier barbier disponible →</a></p>`);
+document.addEventListener("click", (e) => {
   const a = e.target.closest("[data-pick-barber]"); if (!a) return;
   book.barber = a.dataset.pickBarber; book.time = null;
   show("pick"); renderPick();
 });
+
+// ===================== Apparitions à l'entrée dans l'écran =====================
+// Seuls les éléments encore hors écran au chargement sont masqués : la page reste complète sans script.
+if (!reduced && "IntersectionObserver" in window) {
+  const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+    if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+  }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
+  const groups = new Map();
+  $$("[data-reveal]").forEach((el) => {
+    if (el.getBoundingClientRect().top < innerHeight) return;
+    const parent = el.parentElement, n = groups.get(parent) || 0;
+    groups.set(parent, n + 1);
+    el.style.setProperty("--rd", `${Math.min(n, 6) * 0.08}s`);
+    el.classList.add("rv"); io.observe(el);
+  });
+}
 
 // ===================== Barre fixe mobile (Appeler / Réserver) =====================
 const mbar = $("#mbar");

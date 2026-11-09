@@ -37,6 +37,7 @@
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
+<a class="skip" href="#prestations">Aller à la réservation</a>
 
 <header class="header" id="header">
   <div class="header__inner">
@@ -46,15 +47,15 @@
     </a>
     <nav class="nav" id="nav" aria-label="Navigation principale">
       <a href="#prestations"><small>01</small>Prestations</a>
-      <a href="#realisations"><small>02</small>Réalisations</a>
-      <a href="#equipe"><small>03</small>L’équipe</a>
-      <a href="#salon"><small>04</small>Le salon</a>
+      <a href="#equipe"><small>02</small>L’équipe</a>
+      <a href="#realisations"><small>03</small>Le travail</a>
+      <a href="#salon"><small>04</small>Le lieu</a>
       <a href="#avis"><small>05</small>Avis</a>
       <a href="#prestations" class="nav__cta">Prendre rendez-vous</a>
     </nav>
     <div class="header__right">
       <a href="tel:+33388977468" class="header__tel">03 88 97 74 68</a>
-      <a href="#prestations" class="btn btn--light">Prendre rendez-vous</a>
+      <a href="#prestations" class="btn btn--light btn--sm">Réserver</a>
     </div>
     <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
   </div>
@@ -64,40 +65,58 @@
   <!-- ================= ACCUEIL ================= -->
   <section class="hero" id="accueil">
     <canvas class="hive" id="hive" aria-hidden="true"></canvas>
-    <div class="hero__inner">
-      <div class="hero__text">
-        <p class="overline">Barbier · Schiltigheim — Strasbourg</p>
-        <h1 class="hero__title">
-          <span class="hero__word">ELEGANCE</span>
-          <span class="hero__script">Strasbourg</span>
-        </h1>
-        <p class="hero__lead">Coupe homme, dégradé au millimètre, taille de barbe et soin du visage à la vapeur. Dès 18 €, sans attendre : réservez en ligne.</p>
-        <div class="hero__actions">
-          <a href="#prestations" class="btn btn--light">Réserver mon créneau</a>
-          <a href="#realisations" class="btn btn--line">Voir le travail</a>
-        </div>
-      </div>
+    <div class="hero__top wrap">
+      <p class="overline">Barbier — Schiltigheim, Strasbourg</p>
+      <p class="overline hero__hours">Mar – Sam · 10:00 – 19:00</p>
+    </div>
+
+    <div class="hero__stage wrap">
       <figure class="hero__photo">
         <div class="hex"><img src="images/salon.jpg" alt="L’intérieur du salon Elegance : fauteuil de barbier, miroirs et plafond lumineux en nid d’abeille" width="382" height="443"></div>
-        <figcaption>Le salon · plafond nid d’abeille</figcaption>
       </figure>
+      <h1 class="hero__title">
+        <span class="hero__word">ELEGANCE</span>
+        <span class="hero__script">Strasbourg</span>
+      </h1>
     </div>
-    <dl class="hero__facts">
-      <div><dt>Horaires</dt><dd>Mar – Sam · 10h – 19h</dd></div>
-      <div><dt>Tarifs</dt><dd>Coupe 18 € · Coupe & barbe 28 €</dd></div>
-      <div><dt>Avis Google</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener">4,8 ★ · 284 avis</a></dd></div>
-    </dl>
+
+    <div class="hero__bottom wrap">
+      <p class="hero__lead">Coupe homme, dégradé au millimètre, taille de barbe et soin du visage à la vapeur. Quatre barbiers, un seul souci&nbsp;: le détail.</p>
+      <div class="hero__actions">
+        <a href="#prestations" class="btn btn--light">Réserver un créneau <span class="btn__arrow" aria-hidden="true">→</span></a>
+        <a href="tel:+33388977468" class="btn btn--line">03 88 97 74 68</a>
+      </div>
+      <dl class="hero__facts">
+        <div><dt>Google</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener">4,8 ★ · 284 avis</a></dd></div>
+        <div><dt>Coupe</dt><dd>dès 18 €</dd></div>
+      </dl>
+    </div>
   </section>
 
-  <!-- ================= PRESTATIONS + RÉSERVATION ================= -->
+  <!-- ================= MANIFESTE ================= -->
+  <section class="manifesto">
+    <div class="wrap manifesto__grid">
+      <p class="overline" data-reveal>Le salon</p>
+      <p class="manifesto__text" data-reveal>Une pièce noire. Une lumière blanche. Quatre barbiers. <span>Ici, chaque coupe se travaille au détail.</span></p>
+    </div>
+  </section>
+
+  <!-- ================= CARTE + RÉSERVATION ================= -->
   <section class="carte" id="prestations">
-    <div class="wrap carte__grid">
-      <div class="carte__panel">
-        <p class="overline overline--num"><b>01</b> La carte</p>
-        <h2 class="h2">Prestations</h2>
-        <p class="muted">Réservez en ligne en moins d’une minute. Pour une coloration, appelez le salon.</p>
-        <div class="menu" id="menu"></div>
-      </div>
+    <div class="wrap">
+      <header class="sec-head" data-reveal>
+        <span class="sec-head__num">01</span>
+        <span class="sec-head__label">La carte</span>
+        <span class="sec-head__rule" aria-hidden="true"></span>
+        <span class="sec-head__aside">Réservation en ligne</span>
+      </header>
+      <div class="carte__grid">
+        <div class="carte__panel">
+          <h2 class="h1" data-reveal>Prestations</h2>
+          <p class="lede" data-reveal>Réservez en moins d’une minute, avec le barbier de votre choix. Pour une coloration, appelez le salon.</p>
+          <div class="menu" id="menu" data-reveal></div>
+        </div>
+        <div class="carte__book">
       <div class="phone-wrap">
         <div class="phone" id="phone">
           <div class="phone__notch"></div>
@@ -140,43 +159,7 @@
         </div>
         <p class="phone__tag" id="phoneTag">Paiement au salon · Pour annuler, appelez le salon</p>
       </div>
-    </div>
-  </section>
-
-  <!-- ================= RÉALISATIONS ================= -->
-  <section class="travail" id="realisations">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="overline overline--num"><b>02</b> Réalisations</p>
-        <h2 class="h2 h2--xl">Le travail</h2>
-      </div>
-    </div>
-    <div class="reel" aria-label="Réalisations du salon">
-      <div class="reel__track" id="reelTrack">
-          <figure class="reel__item">
-            <div class="reel__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" width="508" height="854"></div>
-            <figcaption><b>01</b>Crop texturé · dégradé haut</figcaption>
-          </figure>
-          <figure class="reel__item">
-            <div class="reel__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" width="408" height="455"></div>
-            <figcaption><b>02</b>Crop platine · trait</figcaption>
-          </figure>
-          <figure class="reel__item">
-            <div class="reel__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" width="398" height="419"></div>
-            <figcaption><b>03</b>Boucles décolorées · contour</figcaption>
-          </figure>
-          <figure class="reel__item">
-            <div class="reel__img"><img src="images/look-texture.jpg" alt="" width="508" height="854"></div>
-            <figcaption><b>01</b>Crop texturé · dégradé haut</figcaption>
-          </figure>
-          <figure class="reel__item">
-            <div class="reel__img"><img src="images/look-platine.jpg" alt="" width="408" height="455"></div>
-            <figcaption><b>02</b>Crop platine · trait</figcaption>
-          </figure>
-          <figure class="reel__item">
-            <div class="reel__img"><img src="images/look-boucles.jpg" alt="" width="398" height="419"></div>
-            <figcaption><b>03</b>Boucles décolorées · contour</figcaption>
-          </figure>
+        </div>
       </div>
     </div>
   </section>
@@ -184,54 +167,92 @@
   <!-- ================= ÉQUIPE ================= -->
   <section class="equipe" id="equipe">
     <div class="wrap">
-      <div class="section-head section-head--split">
-        <div>
-          <p class="overline overline--num"><b>03</b> L’équipe</p>
-          <h2 class="h2 h2--xl">Quatre barbiers</h2>
-        </div>
-        <p class="muted">Choisissez votre coiffeur au moment de réserver, ou laissez-nous vous placer avec le premier disponible.</p>
-      </div>
-      <div class="team" id="team"></div>
+      <header class="sec-head" data-reveal>
+        <span class="sec-head__num">02</span>
+        <span class="sec-head__label">L’équipe</span>
+        <span class="sec-head__rule" aria-hidden="true"></span>
+        <span class="sec-head__aside">4 barbiers</span>
+      </header>
+      <h2 class="h1" data-reveal>Choisissez<br>votre barbier</h2>
+      <ol class="crew" id="team"></ol>
     </div>
   </section>
 
-  <!-- ================= CITATION ================= -->
-  <section class="statement">
-    <div class="statement__bg" style="--img:url('images/salon.jpg')" aria-hidden="true"></div>
+  <!-- ================= LE TRAVAIL ================= -->
+  <section class="travail" id="realisations">
     <div class="wrap">
-      <p class="statement__text">Le dégradé parfait<br>se joue <span>au millimètre.</span></p>
-      <span class="statement__line" aria-hidden="true"></span>
+      <header class="sec-head" data-reveal>
+        <span class="sec-head__num">03</span>
+        <span class="sec-head__label">Le travail</span>
+        <span class="sec-head__rule" aria-hidden="true"></span>
+        <span class="sec-head__aside">Coupes récentes</span>
+      </header>
+      <h2 class="h1" data-reveal>Sorti<br>du fauteuil</h2>
+    </div>
+    <div class="reel" aria-label="Réalisations du salon">
+      <div class="reel__track" id="reelTrack">
+        <figure class="reel__item">
+          <div class="reel__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" width="508" height="854" loading="lazy"></div>
+          <figcaption><b>01</b><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
+        </figure>
+        <figure class="reel__item">
+          <div class="reel__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" width="408" height="455" loading="lazy"></div>
+          <figcaption><b>02</b><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
+        </figure>
+        <figure class="reel__item">
+          <div class="reel__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" width="398" height="419" loading="lazy"></div>
+          <figcaption><b>03</b><span>Boucles décolorées</span><small>Contour net</small></figcaption>
+        </figure>
+        <figure class="reel__item">
+          <div class="reel__img"><img src="images/look-texture.jpg" alt="" width="508" height="854" loading="lazy"></div>
+          <figcaption><b>01</b><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
+        </figure>
+        <figure class="reel__item">
+          <div class="reel__img"><img src="images/look-platine.jpg" alt="" width="408" height="455" loading="lazy"></div>
+          <figcaption><b>02</b><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
+        </figure>
+        <figure class="reel__item">
+          <div class="reel__img"><img src="images/look-boucles.jpg" alt="" width="398" height="419" loading="lazy"></div>
+          <figcaption><b>03</b><span>Boucles décolorées</span><small>Contour net</small></figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
-  <!-- ================= LE SALON ================= -->
+  <!-- ================= LE LIEU ================= -->
   <section class="salon" id="salon">
-    <div class="wrap salon__grid">
-      <figure class="salon__photo">
-        <img src="images/salon.jpg" alt="Le salon Elegance Strasbourg" loading="lazy" width="382" height="443">
-        <figcaption>162 route de Bischwiller · Schiltigheim</figcaption>
-      </figure>
-      <div class="salon__info">
-        <p class="overline overline--num"><b>04</b> Le salon</p>
-        <h2 class="h2">Venez nous voir</h2>
-        <address class="salon__addr">162 route de Bischwiller<br>67300 Schiltigheim</address>
-        <table class="hours">
-          <caption class="sr-only">Horaires d’ouverture</caption>
-          <tbody>
-            <tr><th>Lundi</th><td>Fermé</td></tr>
-            <tr><th>Mardi</th><td>10:00 – 19:00</td></tr>
-            <tr><th>Mercredi</th><td>10:00 – 19:00</td></tr>
-            <tr><th>Jeudi</th><td>10:00 – 19:00</td></tr>
-            <tr><th>Vendredi</th><td>10:00 – 19:00</td></tr>
-            <tr><th>Samedi</th><td>10:00 – 19:00</td></tr>
-            <tr><th>Dimanche</th><td>Fermé</td></tr>
-          </tbody>
-        </table>
-        <div class="salon__actions">
-          <a href="#prestations" class="btn btn--light">Prendre rendez-vous</a>
-          <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--line" target="_blank" rel="noopener">Itinéraire →</a>
+    <div class="wrap">
+      <header class="sec-head" data-reveal>
+        <span class="sec-head__num">04</span>
+        <span class="sec-head__label">Le lieu</span>
+        <span class="sec-head__rule" aria-hidden="true"></span>
+        <span class="sec-head__aside">Schiltigheim</span>
+      </header>
+      <div class="salon__grid">
+        <figure class="salon__photo" data-reveal>
+          <img src="images/salon.jpg" alt="Le salon Elegance Strasbourg" loading="lazy" width="382" height="443">
+          <figcaption>Plafond nid d’abeille · 162 route de Bischwiller</figcaption>
+        </figure>
+        <div class="salon__info">
+          <h2 class="h1" data-reveal>Venez<br>nous voir</h2>
+          <address class="salon__addr" data-reveal>162 route de Bischwiller<br>67300 Schiltigheim</address>
+          <table class="hours" data-reveal>
+            <caption class="sr-only">Horaires d’ouverture</caption>
+            <tbody>
+              <tr><th>Lundi</th><td>Fermé</td></tr>
+              <tr><th>Mardi</th><td>10:00 – 19:00</td></tr>
+              <tr><th>Mercredi</th><td>10:00 – 19:00</td></tr>
+              <tr><th>Jeudi</th><td>10:00 – 19:00</td></tr>
+              <tr><th>Vendredi</th><td>10:00 – 19:00</td></tr>
+              <tr><th>Samedi</th><td>10:00 – 19:00</td></tr>
+              <tr><th>Dimanche</th><td>Fermé</td></tr>
+            </tbody>
+          </table>
+          <div class="salon__actions" data-reveal>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--light" target="_blank" rel="noopener">Itinéraire <span class="btn__arrow" aria-hidden="true">↗</span></a>
+            <a href="tel:+33388977468" class="btn btn--line">03 88 97 74 68</a>
+          </div>
         </div>
-        <p class="salon__contact"><a href="tel:+33388977468">03 88 97 74 68</a><span>·</span><span>À 5 minutes du centre de Strasbourg</span></p>
       </div>
     </div>
   </section>
@@ -239,16 +260,33 @@
   <!-- ================= AVIS ================= -->
   <section class="avis" id="avis">
     <div class="wrap">
-      <p class="overline overline--num"><b>05</b> Avis</p>
+      <header class="sec-head" data-reveal>
+        <span class="sec-head__num">05</span>
+        <span class="sec-head__label">Avis</span>
+        <span class="sec-head__rule" aria-hidden="true"></span>
+        <span class="sec-head__aside">Google</span>
+      </header>
       <div class="rating">
-        <div class="rating__hexwrap"><div class="rating__score"><b>4,8</b><span class="rating__stars" aria-hidden="true">★★★★★</span><small>sur Google</small></div></div>
+        <div class="rating__hexwrap" data-reveal><div class="rating__score"><b>4,8</b><span class="rating__stars" aria-hidden="true">★★★★★</span><small>sur Google</small></div></div>
         <div class="rating__text">
-          <p class="rating__count">284 avis Google</p>
-          <p class="muted">Ce sont nos clients qui en parlent le mieux. Lisez leurs avis, et laissez le vôtre après votre passage.</p>
-          <div class="rating__actions">
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--light" target="_blank" rel="noopener">Lire les avis sur Google</a>
+          <p class="rating__count" data-reveal>284 avis</p>
+          <p class="lede" data-reveal>Ce sont nos clients qui en parlent le mieux. Lisez leurs avis, et laissez le vôtre après votre passage.</p>
+          <div class="rating__actions" data-reveal>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--line" target="_blank" rel="noopener">Lire les avis sur Google <span class="btn__arrow" aria-hidden="true">↗</span></a>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL ================= -->
+  <section class="final">
+    <div class="wrap final__inner">
+      <p class="overline" data-reveal>Mardi – samedi · 10:00 – 19:00</p>
+      <h2 class="final__title" data-reveal>Prenez<br>place<i class="dot" aria-hidden="true"></i></h2>
+      <div class="final__actions" data-reveal>
+        <a href="#prestations" class="btn btn--light btn--lg">Réserver un créneau <span class="btn__arrow" aria-hidden="true">→</span></a>
+        <a href="tel:+33388977468" class="btn btn--line btn--lg">Appeler le salon</a>
       </div>
     </div>
   </section>
@@ -260,8 +298,17 @@
 </div>
 
 <footer class="footer">
-  <div class="wrap footer__inner">
-    <p class="footer__word">ELEGANCE<span>Strasbourg</span></p>
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <span class="logo__word">ELEGANCE</span>
+        <span class="logo__script">Strasbourg</span>
+      </div>
+      <div><p class="footer__h">Adresse</p><p>162 route de Bischwiller<br>67300 Schiltigheim</p></div>
+      <div><p class="footer__h">Contact</p><p><a href="tel:+33388977468">03 88 97 74 68</a></p></div>
+      <div><p class="footer__h">Horaires</p><p>Mardi – samedi<br>10:00 – 19:00</p></div>
+    </div>
+    <p class="footer__word" aria-hidden="true">ELEGANCE</p>
     <div class="footer__meta">
       <span>© <span id="year"></span> Elegance Strasbourg</span>
       <span class="footer__links"><a href="legal.html">Mentions légales</a><a href="legal.html#confidentialite">Confidentialité</a></span>
