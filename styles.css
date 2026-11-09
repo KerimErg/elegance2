@@ -563,3 +563,19 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .work__img video { width: 116%; max-width: none; height: 100%; object-fit: cover; margin-left: -8%; display: block; filter: contrast(1.04); will-change: transform; }
 .work__tag { position: absolute; left: 12px; top: 12px; z-index: 1; display: inline-flex; align-items: center; gap: .45rem; padding: .35rem .65rem; font-size: .66rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; background: rgba(9, 9, 10, .72); backdrop-filter: blur(6px); border: 1px solid var(--line); }
 .work__tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--led); box-shadow: var(--glow-led); }
+
+/* =====================================================================
+   Finitions éditoriales
+   ===================================================================== */
+/* Grain pellicule très léger, fixe (aucun calcul au défilement) */
+.grain { position: fixed; inset: 0; z-index: 60; pointer-events: none; background: url("images/grain.png") 0 0 / 160px 160px; opacity: .5; mix-blend-mode: overlay; }
+
+/* Un mot manuscrit par grand titre, comme « Strasbourg » dans le logo */
+.h1 em { font-family: var(--script); font-style: normal; text-transform: none; font-size: 1.32em; line-height: .8; letter-spacing: 0; color: var(--white); text-shadow: 0 0 26px rgba(155, 77, 255, .55); padding-right: .08em; }
+
+/* Pied de page : ELEGANCE s'allume comme un néon, lettre par lettre */
+.footer__word span { display: inline-block; transition: color .5s ease, -webkit-text-stroke-color .5s ease, text-shadow .7s ease; transition-delay: calc(var(--i) * 90ms); }
+.footer__word.is-lit span { color: rgba(243, 243, 241, .92); -webkit-text-stroke-color: rgba(243, 243, 241, .92); text-shadow: 0 0 18px rgba(255, 255, 255, .45), 0 0 60px rgba(155, 77, 255, .5); }
+.footer__word.is-lit span:nth-child(3) { animation: flicker 2.4s steps(1) 1.4s 1; }
+@keyframes flicker { 0%, 100% { opacity: 1; } 10% { opacity: .35; } 14% { opacity: 1; } 20% { opacity: .5; } 24% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .footer__word span { transition: none; } .footer__word.is-lit span:nth-child(3) { animation: none; } }

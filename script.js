@@ -362,6 +362,14 @@ document.addEventListener("click", (e) => {
   show("pick"); renderPick();
 });
 
+// ===================== Pied de page : ELEGANCE s'allume en néon =====================
+(() => {
+  const fw = $("#footerWord"); if (!fw) return;
+  fw.innerHTML = [...fw.textContent].map((ch, i) => `<span style="--i:${i}">${ch}</span>`).join("");
+  if (reduced) { fw.classList.add("is-lit"); return; }
+  new IntersectionObserver(([en], obs) => { if (en.isIntersecting) { fw.classList.add("is-lit"); obs.disconnect(); } }, { threshold: .6 }).observe(fw);
+})();
+
 // ===================== Mise en scène : préparation du texte =====================
 // Grands titres : une ligne par <br>, chacune derrière un cache.
 $$(".h1").forEach((el) => {
