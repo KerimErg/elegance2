@@ -159,7 +159,7 @@ new IntersectionObserver(([en]) => { hiveVisible = en.isIntersecting; if (hiveVi
 // ===================== Carte des prestations (tous les prix visibles) =====================
 $("#menu").innerHTML = CARTE.map((c, k) => `
   <section class="menu__cat">
-    <header class="menu__head"><span class="menu__num">${pad(k + 1)}</span><h3>${c.title}</h3></header>
+    <header class="menu__head"><h3>${c.title}</h3></header>
     <p class="menu__intro">${c.intro}</p>
     <ul>${c.items.map(([n, p]) => { const [name, dur] = n.split(" · ");
       return `<li class="menu__item"><span class="menu__name">${name}${dur ? `<small>${dur}</small>` : ""}</span><i aria-hidden="true"></i><b class="menu__price">${p.replace(/(\d+)\s*€/, '$1<span class="eur">€</span>')}</b></li>`; }).join("")}</ul>
@@ -350,7 +350,6 @@ rows[(today.getDay() + 6) % 7]?.classList.add("is-today");
 // ===================== L'équipe =====================
 $("#team").innerHTML = BARBERS.map((b, k) => `
   <li class="crew__row" data-reveal>
-    <span class="crew__num">${pad(k + 1)}</span>
     <span class="crew__name">${b.name}</span>
     <span class="crew__hexwrap" aria-hidden="true"><span class="crew__hex">${b.name[0]}</span></span>
     <a href="#prestations" class="crew__book" data-pick-barber="${b.id}">Réserver<span class="sr-only"> avec ${b.name}</span> <span aria-hidden="true">→</span></a>
@@ -362,68 +361,11 @@ document.addEventListener("click", (e) => {
   show("pick"); renderPick();
 });
 
-// ===================== Pied de page : ELEGANCE s'allume en néon =====================
-(() => {
-  const fw = $("#footerWord"); if (!fw) return;
-  fw.innerHTML = [...fw.textContent].map((ch, i) => `<span style="--i:${i}">${ch}</span>`).join("");
-  if (reduced) { fw.classList.add("is-lit"); return; }
-  new IntersectionObserver(([en], obs) => { if (en.isIntersecting) { fw.classList.add("is-lit"); obs.disconnect(); } }, { threshold: .6 }).observe(fw);
-})();
-
-// ===================== Mise en scène : préparation du texte =====================
-// Grands titres : une ligne par <br>, chacune derrière un cache.
-$$(".h1").forEach((el) => {
-  el.innerHTML = el.innerHTML.split(/<br\s*\/?>/i).map((p, i) => `<span class="ln"><span style="--li:${i}">${p.trim()}</span></span>`).join("");
-});
-// « Prenez place. » : lettre par lettre, pour l'allumage néon.
-$$(".final__title").forEach((el) => {
-  let i = 0;
-  el.setAttribute("aria-label", "Prenez place");
-  el.innerHTML = el.innerHTML.split(/<br\s*\/?>/i).map((line) => line.trim()
-    .replace(/(<i[^>]*><\/i>)|([^<\s])/g, (m) => `<span class="nl" aria-hidden="true" style="--i:${i++}">${m}</span>`)).join("<br>");
-});
-// Manifeste : mot par mot.
-$$(".manifesto__text").forEach((el) => {
-  let i = 0;
-  const words = (txt, dim) => txt.split(/(\s+)/).map((w) => (!w.trim() ? w : `<span class="w${dim ? " w--dim" : ""}" style="--i:${i++}">${w}</span>`)).join("");
-  const dim = el.querySelector("span");
-  el.innerHTML = words(el.childNodes[0].textContent, false) + words(dim ? dim.textContent : "", true);
-});
-// Étoiles de la note : une par une.
-$$(".rating__stars").forEach((s) => { s.innerHTML = [...s.textContent].map((c, i) => `<span class="st" style="--i:${i}">${c}</span>`).join(""); });
-
-// Compteurs (note Google, nombre d'avis)
-const countUp = (el, to, { dec = 0, suffix = "", dur = 1400, delay = 0 } = {}) => {
-  const t0 = performance.now() + delay;
-  el.textContent = (0).toFixed(dec).replace(".", ",") + suffix;
-  const step = (t) => {
-    const k = Math.max(0, Math.min(1, (t - t0) / dur)), e = 1 - Math.pow(1 - k, 3);
-    el.textContent = (to * e).toFixed(dec).replace(".", ",") + suffix;
-    if (k < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-};
-const onReveal = (el) => {
-  if (el.classList.contains("rating__hexwrap")) countUp($("b", el), 4.8, { dec: 1, delay: 250 });
-  if (el.classList.contains("rating__count")) countUp(el, 284, { suffix: " avis", dur: 1700, delay: 150 });
-};
-
-// Boutons « aimantés » (souris uniquement)
-if (!reduced && matchMedia("(pointer: fine)").matches) {
-  $$(".btn--light, .btn--lg, .crew__book").forEach((b) => {
-    b.addEventListener("pointermove", (e) => {
-      const r = b.getBoundingClientRect();
-      b.style.translate = `${((e.clientX - r.left) / r.width - .5) * 10}px ${((e.clientY - r.top) / r.height - .5) * 8}px`;
-    });
-    b.addEventListener("pointerleave", () => { b.style.translate = ""; });
-  });
-}
-
 // ===================== Apparitions à l'entrée dans l'écran =====================
 // Seuls les éléments encore hors écran au chargement sont masqués : la page reste complète sans script.
 if (!reduced && "IntersectionObserver" in window) {
   const io = new IntersectionObserver((entries) => entries.forEach((en) => {
-    if (en.isIntersecting) { en.target.classList.add("in"); onReveal(en.target); io.unobserve(en.target); }
+    if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
   }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
   const groups = new Map();
   $$("[data-reveal]").forEach((el) => {
@@ -512,62 +454,10 @@ if (!reduced && "IntersectionObserver" in window) {
   build(); onScroll();
 })();
 
-// ===================== « Lumière dans le noir » (souris uniquement) =====================
-if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
-  const root = document.documentElement, cur = $(".cursor");
-  root.classList.add("has-fx");
-  const torch = $(".torch");
-  let mx = -999, my = -999, cx = 0, cy = 0, shown = false, inHero = false, torchTick = 0;
-  // La lampe torche est déplacée directement (aucune variable globale : pas de recalcul de toute la page)
-  const moveTorch = () => {
-    torchTick = 0;
-    if (inHero) return;
-    torch.style.translate = `${mx - 260}px ${my - 260}px`;
-    torch.style.backgroundPosition = `${260 - mx}px ${260 - my}px`;
-  };
-  addEventListener("pointermove", (e) => {
-    mx = e.clientX; my = e.clientY;
-    if (!shown) { shown = true; cx = mx; cy = my; root.classList.add("fx-on"); }
-    const h = !!e.target.closest(".hero, .ceiling");   // pas de lampe torche sur les néons
-    if (h !== inHero) { inHero = h; root.classList.toggle("in-hero", h); }
-    cur.classList.toggle("is-hot", !!e.target.closest("a, button, .chip, .slot, input, select, label"));
-    if (!torchTick) torchTick = requestAnimationFrame(moveTorch);
-  }, { passive: true });
-  document.documentElement.addEventListener("pointerleave", () => { shown = false; root.classList.remove("fx-on"); });
-  addEventListener("pointerdown", () => cur.classList.add("is-down"));
-  addEventListener("pointerup", () => cur.classList.remove("is-down"));
-  // Le curseur suit la souris, puis s'arrête dès qu'il l'a rejointe (aucune boucle à l'arrêt).
-  let following = 0;
-  const follow = () => {
-    cx += (mx - cx) * .22; cy += (my - cy) * .22;
-    cur.style.translate = `${cx}px ${cy}px`;
-    following = Math.abs(mx - cx) + Math.abs(my - cy) > .3 ? requestAnimationFrame(follow) : 0;
-  };
-  addEventListener("pointermove", () => { if (!following) following = requestAnimationFrame(follow); }, { passive: true });
-
-  // Photos en relief avec reflet
-  $$(".hex, .rating__score").forEach((el) => {
-    el.classList.add("tilt");
-    el.addEventListener("pointermove", (e) => {
-      const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-      el.style.setProperty("--rx", `${(.5 - y) * 14}deg`);
-      el.style.setProperty("--ry", `${(x - .5) * 16}deg`);
-      el.style.setProperty("--gx", `${x * 100}%`);
-      el.style.setProperty("--gy", `${y * 100}%`);
-      el.classList.add("is-tilting");
-    });
-    el.addEventListener("pointerleave", () => {
-      el.classList.remove("is-tilting");
-      el.style.setProperty("--rx", "0deg");
-      el.style.setProperty("--ry", "0deg");
-    });
-  });
-}
-
 // ===================== Le travail : galerie horizontale pilotée par le défilement =====================
 // La section se fige à l'écran et le défilement vertical fait avancer les photos de droite à gauche.
 (() => {
-  const sec = $("#realisations"), track = $("#hTrack"), bar = $("#hBar"), count = $("#hsCount");
+  const sec = $("#realisations"), track = $("#hTrack"), bar = $("#hBar");
   if (!sec || !track || reduced) return;
   const works = [...track.querySelectorAll(".work")], imgs = works.map((w) => $("img, video", w));
   let dist = 0, top = 0, shown = -1, anim = 0, lastIdx = -1;
@@ -591,7 +481,6 @@ if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
       imgs[i].style.transform = `translate3d(${(-d * 6).toFixed(2)}%,0,0)`;
       if (c < innerWidth * .62) best = i;                // photo « en cours » : la dernière passée au centre
     });
-    if (best !== lastIdx) { lastIdx = best; count.textContent = pad(best + 1); }
   };
   // mouvement lissé : la galerie glisse vers la position du défilement
   const step = () => {

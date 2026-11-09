@@ -51,7 +51,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .dot { display: inline-block; width: .16em; height: .16em; margin-left: .12em; background: var(--led); box-shadow: var(--glow-led); vertical-align: .08em; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
 
 /* En-tête de section : 01 LA CARTE ———— aside */
-.sec-head { display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 1rem; font-size: .75rem; letter-spacing: .28em; text-transform: uppercase; margin-bottom: clamp(2.5rem, 5vw, 4.5rem); }
+.sec-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; font-size: .75rem; letter-spacing: .28em; text-transform: uppercase; margin-bottom: clamp(2.5rem, 5vw, 4.5rem); }
 .sec-head__num { color: var(--led); font-weight: 600; letter-spacing: .1em; }
 .sec-head__label { color: var(--white); }
 .sec-head__rule { height: 1px; background: var(--line); }
@@ -249,7 +249,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    ===================================================================== */
 .equipe { padding-block: var(--section); border-top: 1px solid var(--line); }
 .crew { margin-top: clamp(2.5rem, 5vw, 4rem); border-top: 1px solid var(--line-2); }
-.crew__row { position: relative; display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto auto; align-items: center; gap: 1rem 2rem; padding: clamp(1.1rem, 2.4vw, 1.8rem) 0; border-bottom: 1px solid var(--line); }
+.crew__row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 1rem 2rem; padding: clamp(1.1rem, 2.4vw, 1.8rem) 0; border-bottom: 1px solid var(--line); }
 .crew__num { font-size: .75rem; font-weight: 600; color: var(--led); }
 .crew__name { font-family: var(--wide); font-weight: 400; text-transform: uppercase; font-size: clamp(2.2rem, 7.5vw, 6.25rem); line-height: 1; letter-spacing: .02em; color: transparent; -webkit-text-stroke: 1px rgba(243, 243, 241, .55); transition: color .45s var(--ease), -webkit-text-stroke-color .45s, text-shadow .45s; }
 .crew__hex { width: clamp(56px, 6vw, 84px); aspect-ratio: .866; display: grid; place-items: center; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: linear-gradient(160deg, #26262b, #0e0e10); font-family: var(--wide); font-size: clamp(1.1rem, 1.6vw, 1.5rem); opacity: .35; scale: .85; transition: opacity .4s, scale .45s var(--ease); }
@@ -383,13 +383,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .hero__word { font-size: 11.2vw; }
   .hero__script { font-size: 12vw; }
   .hero__bottom { grid-template-columns: 1fr; }
-  .sec-head { grid-template-columns: auto auto 1fr; }
+  .sec-head { grid-template-columns: auto 1fr; }
   .h1 { font-size: min(8vw, 2.25rem); }
   .rating__count { font-size: 8vw; }
   .sec-head__aside { display: none; }
   .menu__cat { grid-template-columns: 1fr; }
   .menu__intro, .menu__cat ul { grid-column: 1; grid-row: auto; }
-  .crew__row { grid-template-columns: 2rem minmax(0, 1fr) auto; }
+  .crew__row { grid-template-columns: minmax(0, 1fr) auto; }
   .crew__hexwrap { display: none; }
   .crew__name { -webkit-text-stroke: 0; color: var(--white); }
   .crew__book { padding: .7rem .9rem; font-size: .82rem; }
@@ -579,3 +579,27 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .footer__word.is-lit span:nth-child(3) { animation: flicker 2.4s steps(1) 1.4s 1; }
 @keyframes flicker { 0%, 100% { opacity: 1; } 10% { opacity: .35; } 14% { opacity: 1; } 20% { opacity: .5; } 24% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .footer__word span { transition: none; } .footer__word.is-lit span:nth-child(3) { animation: none; } }
+
+/* =====================================================================
+   Sobriété : pas de halos, de lueurs ni de dégradés décoratifs.
+   La lumière reste celle du salon (néons de l'accueil et du plafond).
+   ===================================================================== */
+.hero__word { text-shadow: none; }
+.hero__word::after { display: none; }
+.intro .hero__word span { animation: rise .9s var(--ease) both; animation-delay: calc(1.05s + var(--i) * 40ms); }
+.hero::after { box-shadow: none; opacity: .6; }
+.hero__photo::before, .rating__hexwrap::before { display: none; }
+.carte::before, .final::before { display: none; }
+.ceiling__sticky::after { background: linear-gradient(var(--bg), transparent 18%, transparent 82%, var(--bg)); }
+.ceiling__line span { font-family: inherit; text-transform: uppercase; font-size: 1em; color: var(--white); text-shadow: none; }
+.ceiling__meter span, .hscroll__bar span, .work__img::after, .reel__img::after { box-shadow: none; }
+.final__title { text-shadow: none; }
+.btn--light:hover { box-shadow: none; background: #fff; }
+.phone { box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 40px 80px rgba(0, 0, 0, .55); }
+.phone__bigcheck { box-shadow: none; }
+#pBarber .chip.is-on .av { box-shadow: none; }
+.rating__stars { text-shadow: none; }
+.crew__hexwrap { filter: none; }
+.crew__row:hover .crew__name, .crew__row:focus-within .crew__name { text-shadow: none; }
+.salon__photo img { box-shadow: none; border-color: var(--line); }
+.dot { display: none; }
