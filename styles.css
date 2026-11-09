@@ -520,3 +520,40 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .ceiling__sticky { position: relative; height: auto; padding-block: var(--section); }
   .ceiling__meter, .ceiling__kicker { display: none; }
 }
+
+/* =====================================================================
+   Le travail — galerie horizontale pilotée par le défilement
+   La hauteur de la section est calculée en JS (= distance à parcourir).
+   ===================================================================== */
+.travail { position: relative; padding-block: 0; overflow: visible; }
+.travail__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: clamp(1rem, 3vh, 2.5rem); padding-top: 72px; }
+.travail__sticky .sec-head { margin-bottom: 0; }
+.hs-count { color: var(--white); font-weight: 600; font-variant-numeric: tabular-nums; }
+.hscroll { overflow: visible; }
+.hscroll__track { display: flex; align-items: center; gap: clamp(1rem, 3vw, 3rem); width: max-content; padding-inline: max(var(--gutter), calc((100vw - 1320px) / 2 + 16px)); will-change: transform; }
+.hscroll__intro { width: min(420px, 78vw); flex-shrink: 0; display: grid; gap: 1.4rem; }
+.work { --h: min(62vh, 640px); flex-shrink: 0; height: var(--h); width: calc(var(--h) * .78); display: flex; flex-direction: column; }
+.work__img { flex: 1; min-height: 0; width: 100%; overflow: hidden; background: var(--surface); position: relative; }
+.work__img img { width: 116%; max-width: none; height: 100%; object-fit: cover; margin-left: -8%; filter: grayscale(.15) contrast(1.05); will-change: transform; transition: filter .5s; }
+.work:hover .work__img img { filter: none; }
+.work__img::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--led); box-shadow: var(--glow-led); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); }
+.work:hover .work__img::after { transform: scaleX(1); }
+.work figcaption { display: grid; grid-template-columns: auto 1fr; gap: .1rem .8rem; margin-top: 1rem; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; }
+.work figcaption b { grid-row: span 2; color: var(--led); }
+.work figcaption small { color: var(--mute); letter-spacing: .1em; }
+.work:nth-of-type(even) { --h: min(52vh, 540px); align-self: flex-end; }
+.hscroll__end { width: min(460px, 82vw); flex-shrink: 0; display: grid; gap: 1.4rem; justify-items: start; padding-left: clamp(1rem, 3vw, 3rem); border-left: 1px solid var(--line); }
+.hscroll__endtitle { font-family: var(--wide); text-transform: uppercase; font-size: clamp(1.6rem, 3.2vw, 2.8rem); line-height: 1.1; }
+.hscroll__bar { width: min(260px, 50vw); height: 2px; margin-inline: auto; background: var(--line); overflow: hidden; }
+.hscroll__bar span { display: block; height: 100%; transform: scaleX(0); transform-origin: left; background: var(--led); box-shadow: var(--glow-led); }
+@media (max-width: 720px) {
+  .work { --h: min(52vh, 460px); }
+  .work:nth-of-type(even) { --h: min(44vh, 400px); }
+  .travail__sticky { padding-top: 64px; }
+}
+/* Sans animation : simple galerie qu'on fait glisser */
+@media (prefers-reduced-motion: reduce) {
+  .travail__sticky { position: relative; height: auto; padding-block: var(--section); }
+  .hscroll { overflow-x: auto; }
+  .hscroll__bar { display: none; }
+}

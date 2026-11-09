@@ -191,44 +191,43 @@
     </div>
   </section>
 
-  <!-- ================= LE TRAVAIL ================= -->
+  <!-- ================= LE TRAVAIL (galerie horizontale pilotée par le défilement) ================= -->
   <section class="travail" id="realisations">
-    <div class="wrap">
-      <header class="sec-head" data-reveal>
-        <span class="sec-head__num">03</span>
-        <span class="sec-head__label">Le travail</span>
-        <span class="sec-head__rule" aria-hidden="true"></span>
-        <span class="sec-head__aside">Coupes récentes</span>
-      </header>
-      <h2 class="h1" data-reveal>Sorti<br>du fauteuil</h2>
-    </div>
-    <div class="reel" aria-label="Réalisations du salon">
-      <div class="reel__track" id="reelTrack">
-        <figure class="reel__item">
-          <div class="reel__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" width="508" height="854" loading="lazy"></div>
-          <figcaption><b>01</b><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
-        </figure>
-        <figure class="reel__item">
-          <div class="reel__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" width="408" height="455" loading="lazy"></div>
-          <figcaption><b>02</b><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
-        </figure>
-        <figure class="reel__item">
-          <div class="reel__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" width="398" height="419" loading="lazy"></div>
-          <figcaption><b>03</b><span>Boucles décolorées</span><small>Contour net</small></figcaption>
-        </figure>
-        <figure class="reel__item">
-          <div class="reel__img"><img src="images/look-texture.jpg" alt="" width="508" height="854" loading="lazy"></div>
-          <figcaption><b>01</b><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
-        </figure>
-        <figure class="reel__item">
-          <div class="reel__img"><img src="images/look-platine.jpg" alt="" width="408" height="455" loading="lazy"></div>
-          <figcaption><b>02</b><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
-        </figure>
-        <figure class="reel__item">
-          <div class="reel__img"><img src="images/look-boucles.jpg" alt="" width="398" height="419" loading="lazy"></div>
-          <figcaption><b>03</b><span>Boucles décolorées</span><small>Contour net</small></figcaption>
-        </figure>
+    <div class="travail__sticky">
+      <div class="wrap">
+        <header class="sec-head" data-reveal>
+          <span class="sec-head__num">03</span>
+          <span class="sec-head__label">Le travail</span>
+          <span class="sec-head__rule" aria-hidden="true"></span>
+          <span class="sec-head__aside"><b class="hs-count" id="hsCount">01</b> / 03</span>
+        </header>
       </div>
+      <div class="hscroll" id="hScroll">
+        <div class="hscroll__track" id="hTrack">
+          <div class="hscroll__intro">
+            <h2 class="h1">Sorti<br>du fauteuil</h2>
+            <p class="lede">Des coupes récentes, réalisées au salon. Continuez à descendre pour les faire défiler.</p>
+          </div>
+            <figure class="work">
+              <div class="work__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" width="508" height="854" loading="lazy"></div>
+              <figcaption><b>01</b><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
+            </figure>
+            <figure class="work">
+              <div class="work__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" width="408" height="455" loading="lazy"></div>
+              <figcaption><b>02</b><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
+            </figure>
+            <figure class="work">
+              <div class="work__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" width="398" height="419" loading="lazy"></div>
+              <figcaption><b>03</b><span>Boucles décolorées</span><small>Contour net</small></figcaption>
+            </figure>
+          <div class="hscroll__end">
+            <p class="overline">Votre tour</p>
+            <p class="hscroll__endtitle">La prochaine coupe,<br>c’est la vôtre<i class="dot" aria-hidden="true"></i></p>
+            <a href="#prestations" class="btn btn--light">Réserver un créneau <span class="btn__arrow" aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+      <div class="hscroll__bar" aria-hidden="true"><span id="hBar"></span></div>
     </div>
   </section>
 
