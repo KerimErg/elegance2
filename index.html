@@ -51,7 +51,6 @@
       <a href="#equipe">L’équipe</a>
       <a href="#realisations">Le travail</a>
       <a href="#salon">Le lieu</a>
-      <a href="#avis">Avis</a>
       <a href="#prestations" class="nav__cta">Prendre rendez-vous</a>
     </nav>
     <div class="header__right">
@@ -65,32 +64,18 @@
 <main>
   <!-- ================= ACCUEIL ================= -->
   <section class="hero" id="accueil">
-    <canvas class="hive" id="hive" aria-hidden="true"></canvas>
-    <div class="hero__top wrap">
-      <p class="overline">Barbier — Schiltigheim, Strasbourg</p>
-      <p class="overline hero__hours">Mar – Sam · 10:00 – 19:00</p>
-    </div>
-
-    <div class="hero__stage wrap">
-      <figure class="hero__photo">
-        <div class="hex"><img src="images/salon.jpg" alt="L’intérieur du salon Elegance : fauteuil de barbier, miroirs et plafond lumineux en nid d’abeille" width="382" height="443"></div>
-      </figure>
-      <h1 class="hero__title">
-        <span class="hero__word">ELEGANCE</span>
-        <span class="hero__script">Strasbourg</span>
-      </h1>
-    </div>
-
-    <div class="hero__bottom wrap">
-      <p class="hero__lead">Barbier à Schiltigheim, route de Bischwiller. Coupe homme, dégradé, taille de barbe et soin du visage, du mardi au samedi.</p>
-      <div class="hero__actions">
-        <a href="#prestations" class="btn btn--light">Réserver un créneau <span class="btn__arrow" aria-hidden="true">→</span></a>
-        <a href="tel:+33388977468" class="btn btn--line">03 88 97 74 68</a>
+    <div class="wrap hero__grid">
+      <div class="hero__text">
+        <h1 class="hero__title">
+          <span class="hero__word">ELEGANCE</span>
+          <span class="hero__script">Strasbourg</span>
+        </h1>
+        <p class="hero__lead">Barbier à Schiltigheim. Coupe dès 18 €.</p>
+        <a href="#prestations" class="btn btn--light">Réserver <span class="btn__arrow" aria-hidden="true">→</span></a>
       </div>
-      <dl class="hero__facts">
-        <div><dt>Google</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener">4,8 ★ · 284 avis</a></dd></div>
-        <div><dt>Coupe</dt><dd>dès 18 €</dd></div>
-      </dl>
+      <figure class="hero__photo">
+        <img src="images/salon.jpg" alt="L’intérieur du salon Elegance : fauteuil de barbier, miroirs et plafond lumineux en nid d’abeille" width="382" height="443">
+      </figure>
     </div>
   </section>
 
@@ -108,17 +93,11 @@
   </section>
 
   <!-- ================= CARTE + RÉSERVATION ================= -->
-  <section class="carte" id="prestations">
+  <section class="carte is-light" id="prestations">
     <div class="wrap">
-      <header class="sec-head" data-reveal>
-        <span class="sec-head__label">La carte</span>
-        <span class="sec-head__rule" aria-hidden="true"></span>
-        <span class="sec-head__aside">Réservation en ligne</span>
-      </header>
       <div class="carte__grid">
         <div class="carte__panel">
           <h2 class="h1" data-reveal>Nos prestations</h2>
-          <p class="lede" data-reveal>Réservez en moins d’une minute, avec le barbier de votre choix. Pour une coloration, appelez le salon.</p>
           <div class="menu" id="menu" data-reveal></div>
         </div>
         <div class="carte__book">
@@ -162,7 +141,7 @@
             </div>
           </div>
         </div>
-        <p class="phone__tag" id="phoneTag">Paiement au salon · Pour annuler, appelez le salon</p>
+        <p class="phone__tag" id="phoneTag" hidden></p>
       </div>
         </div>
       </div>
@@ -172,11 +151,6 @@
   <!-- ================= ÉQUIPE ================= -->
   <section class="equipe" id="equipe">
     <div class="wrap">
-      <header class="sec-head" data-reveal>
-        <span class="sec-head__label">L’équipe</span>
-        <span class="sec-head__rule" aria-hidden="true"></span>
-        <span class="sec-head__aside">4 barbiers</span>
-      </header>
       <h2 class="h1" data-reveal>Choisissez<br>votre barbier</h2>
       <ol class="crew" id="team"></ol>
     </div>
@@ -186,17 +160,11 @@
   <section class="travail" id="realisations">
     <div class="travail__sticky">
       <div class="wrap">
-        <header class="sec-head" data-reveal>
-          <span class="sec-head__label">Le travail</span>
-          <span class="sec-head__rule" aria-hidden="true"></span>
-          <span class="sec-head__aside">Coupes récentes</span>
-        </header>
       </div>
       <div class="hscroll" id="hScroll">
         <div class="hscroll__track" id="hTrack">
           <div class="hscroll__intro">
             <h2 class="h1">Sorti<br>du fauteuil</h2>
-            <p class="lede">Des coupes réalisées au salon.</p>
           </div>
           <figure class="work work--video">
             <div class="work__img"><video src="videos/carte-blanche-platine.mp4" poster="videos/carte-blanche-platine.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : le résultat d’une coupe carte blanche, crop décoloré platine"></video></div>
@@ -233,80 +201,21 @@
   </section>
 
   <!-- ================= LE LIEU ================= -->
-  <section class="salon" id="salon">
-    <div class="wrap">
-      <header class="sec-head" data-reveal>
-        <span class="sec-head__label">Le lieu</span>
-        <span class="sec-head__rule" aria-hidden="true"></span>
-        <span class="sec-head__aside">Schiltigheim</span>
-      </header>
-      <div class="salon__grid">
-        <figure class="salon__photo">
-          <img src="images/salon.jpg" alt="Le salon Elegance Strasbourg" loading="lazy" width="382" height="443">
-          <figcaption>Plafond nid d’abeille · 162 route de Bischwiller</figcaption>
-        </figure>
-        <div class="salon__info">
-          <h2 class="h1" data-reveal>Venez<br>nous voir</h2>
-          <address class="salon__addr" data-reveal>162 route de Bischwiller<br>67300 Schiltigheim</address>
-          <table class="hours" data-reveal>
-            <caption class="sr-only">Horaires d’ouverture</caption>
-            <tbody>
-              <tr><th>Lundi</th><td>Fermé</td></tr>
-              <tr><th>Mardi</th><td>10:00 – 19:00</td></tr>
-              <tr><th>Mercredi</th><td>10:00 – 19:00</td></tr>
-              <tr><th>Jeudi</th><td>10:00 – 19:00</td></tr>
-              <tr><th>Vendredi</th><td>10:00 – 19:00</td></tr>
-              <tr><th>Samedi</th><td>10:00 – 19:00</td></tr>
-              <tr><th>Dimanche</th><td>Fermé</td></tr>
-            </tbody>
-          </table>
-          <div class="salon__actions" data-reveal>
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--light" target="_blank" rel="noopener">Itinéraire <span class="btn__arrow" aria-hidden="true">↗</span></a>
-            <a href="tel:+33388977468" class="btn btn--line">03 88 97 74 68</a>
-          </div>
-        </div>
+  <section class="salon is-light" id="salon">
+    <div class="wrap salon__grid">
+      <h2 class="h1" data-reveal>Venez<br>nous voir</h2>
+      <dl class="salon__facts" data-reveal>
+        <div><dt>Adresse</dt><dd>162 route de Bischwiller<br>67300 Schiltigheim</dd></div>
+        <div><dt>Horaires</dt><dd>Mardi – samedi<br>10:00 – 19:00</dd></div>
+        <div><dt>Avis Google</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener">4,8 ★ · 284 avis</a></dd></div>
+      </dl>
+      <div class="salon__actions" data-reveal>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--light" target="_blank" rel="noopener">Itinéraire <span class="btn__arrow" aria-hidden="true">↗</span></a>
+        <a href="tel:+33388977468" class="btn btn--line">03 88 97 74 68</a>
       </div>
     </div>
   </section>
 
-  <!-- ================= AVIS ================= -->
-  <section class="avis" id="avis">
-    <div class="wrap">
-      <header class="sec-head" data-reveal>
-        <span class="sec-head__label">Avis</span>
-        <span class="sec-head__rule" aria-hidden="true"></span>
-        <span class="sec-head__aside">Google</span>
-      </header>
-      <div class="rating">
-        <div class="rating__hexwrap" data-reveal><div class="rating__score"><b>4,8</b><span class="rating__stars" aria-hidden="true">★★★★★</span><small>sur Google</small></div></div>
-        <div class="rating__text">
-          <p class="rating__count" data-reveal>284 avis</p>
-          <p class="lede" data-reveal>Ce sont nos clients qui en parlent le mieux. Lisez leurs avis, et laissez le vôtre après votre passage.</p>
-          <div class="rating__actions" data-reveal>
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--line" target="_blank" rel="noopener">Lire les avis sur Google <span class="btn__arrow" aria-hidden="true">↗</span></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= RÉSERVER ================= -->
-  <section class="final">
-    <div class="wrap final__grid">
-      <h2 class="h1" data-reveal>Réserver<br>votre créneau</h2>
-      <div class="final__info" data-reveal>
-        <dl class="final__facts">
-          <div><dt>Adresse</dt><dd>162 route de Bischwiller<br>67300 Schiltigheim</dd></div>
-          <div><dt>Horaires</dt><dd>Mardi – samedi<br>10:00 – 19:00</dd></div>
-          <div><dt>Téléphone</dt><dd><a href="tel:+33388977468">03 88 97 74 68</a></dd></div>
-        </dl>
-        <div class="final__actions">
-          <a href="#prestations" class="btn btn--light">Réserver en ligne <span class="btn__arrow" aria-hidden="true">→</span></a>
-          <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--line" target="_blank" rel="noopener">Itinéraire <span class="btn__arrow" aria-hidden="true">↗</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
 </main>
 
 

@@ -1,12 +1,12 @@
 // ===================== Données du salon (à adapter) =====================
 const CARTE = [
-  { title: "Coupe", intro: "Coupe aux ciseaux ou à la tondeuse, dégradé compris.", items: [
+  { title: "Coupe", intro: "", items: [
     ["Coupe homme · 30 min", "18 €"], ["Coupe & taille de barbe · 30 min", "28 €"] ] },
-  { title: "Barbe", intro: "Taille, contours et finitions.", items: [
+  { title: "Barbe", intro: "", items: [
     ["Taillage barbe · 15 min", "12 €"] ] },
-  { title: "Soin", intro: "Un moment de détente pour la peau.", items: [
+  { title: "Soin", intro: "", items: [
     ["Soin du visage à la vapeur · 30 min", "25 €"] ] },
-  { title: "Coloration", intro: "Sur rendez-vous par téléphone uniquement : appelez le 03 88 97 74 68.", items: [
+  { title: "Coloration", intro: "Par téléphone uniquement.", items: [
     ["Coloration · 30 min", "15 €"] ] },
 ]
 
@@ -78,89 +78,13 @@ const hexSprite = (R, glow, dpr, lw = 1.4, blur = 16) => {
   return s;
 };
 
-const hive = $("#hive"), ctx = hive.getContext("2d");
-const heroEl = hive.parentElement;
-let mouse = { x: -999, y: -999 }, cells = [], hiveW = 0, hiveH = 0, sprLine = null, sprGlow = null, baseLayer = null, introDone = 0;
-const introStart = performance.now();
-const introOn = document.documentElement.classList.contains("intro");
-let lastMove = -1e9, raf = 0, hiveVisible = true;
-
-function sizeHive() {
-  const dpr = Math.min(devicePixelRatio || 1, 1.5);
-  hiveW = hive.offsetWidth; hiveH = hive.offsetHeight;
-  hive.width = Math.round(hiveW * dpr); hive.height = Math.round(hiveH * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const R = Math.max(46, Math.min(80, hiveW / 18)), w = Math.sqrt(3) * R, h = 1.5 * R;
-  sprLine = hexSprite(R, false, dpr); sprGlow = hexSprite(R, true, dpr);
-  cells = [];
-  for (let row = -1; row * h < hiveH + R; row++)
-    for (let col = -1; col * w < hiveW + w; col++) {
-      const x = col * w + (row % 2 ? w / 2 : 0), y = row * h, seed = Math.random();
-      cells.push({ x, y, seed,
-        onAt: 150 + Math.hypot(x - hiveW * .62, y + R) / Math.hypot(hiveW, hiveH) * 1500 + seed * 300,
-        fadeY: Math.max(0, 1 - y / (hiveH * .95)) });   // plus lumineux en haut, comme un plafond
-    }
-  introDone = Math.max(...cells.map((c) => c.onAt)) + 1200;   // fin de l'allumage (dernier flash éteint)
-  // grille au repos, figée une fois pour toutes dans une seule image
-  baseLayer = document.createElement("canvas"); baseLayer.width = hive.width; baseLayer.height = hive.height;
-  { const b = baseLayer.getContext("2d"), sl = sprLine.half; b.setTransform(dpr, 0, 0, dpr, 0, 0);
-    for (const c of cells) { const a = .08 * c.fadeY; if (a > .01) { b.globalAlpha = a; b.drawImage(sprLine, c.x - sl, c.y - sl, sl * 2, sl * 2); } } }
-  kickHive();
-}
-function drawHive(t) {
-  const el = introOn ? t - introStart : 1e9;
-  ctx.clearRect(0, 0, hiveW, hiveH);
-  const sl = sprLine.half, sg = sprGlow.half;
-  if (el > introDone) {
-    // Après l'allumage : la grille figée en une fois, puis seulement les néons proches de la souris
-    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(baseLayer, 0, 0);
-    ctx.setTransform(hive.width / hiveW, 0, 0, hive.height / hiveH, 0, 0);
-    if (mouse.x > -500) for (const c of cells) {
-      const dx = c.x - mouse.x, dy = c.y - mouse.y;
-      if (dx * dx + dy * dy > 67600) continue;               // au-delà de 260 px : rien à faire
-      const near = 1 - Math.sqrt(dx * dx + dy * dy) / 260;
-      ctx.globalAlpha = near * .35; ctx.drawImage(sprLine, c.x - sl, c.y - sl, sl * 2, sl * 2);
-      ctx.globalAlpha = near * .7; ctx.drawImage(sprGlow, c.x - sg, c.y - sg, sg * 2, sg * 2);
-    }
-    ctx.globalAlpha = 1;
-    return;
-  }
-  for (const c of cells) {
-    const since = el - c.onAt;
-    if (since < 0) continue;
-    if (since < 240 && Math.sin(since * .11 + c.seed * 40) < 0) continue;   // grésillement
-    const flash = Math.max(0, 1 - (since - 240) / 900);
-    const near = Math.max(0, 1 - Math.hypot(c.x - mouse.x, c.y - mouse.y) / 260);
-    const base = (.08 + flash * .7) * c.fadeY + near * .35;
-    if (base > .01) { ctx.globalAlpha = Math.min(1, base); ctx.drawImage(sprLine, c.x - sl, c.y - sl, sl * 2, sl * 2); }
-    const glow = Math.max(near * .7, flash * c.fadeY * .85);
-    if (glow > .03) { ctx.globalAlpha = Math.min(1, glow); ctx.drawImage(sprGlow, c.x - sg, c.y - sg, sg * 2, sg * 2); }
-  }
-  ctx.globalAlpha = 1;
-}
-function hiveFrame(t) {
-  raf = 0;
-  drawHive(t);
-  const busy = (introOn && t - introStart < 3800) || t - lastMove < 450;
-  if (busy && hiveVisible) raf = requestAnimationFrame(hiveFrame);
-}
-function kickHive() { if (!raf && hiveVisible) raf = requestAnimationFrame(hiveFrame); }
-heroEl.addEventListener("pointermove", (e) => {
-  const r = hive.getBoundingClientRect();
-  mouse = { x: e.clientX - r.left, y: e.clientY - r.top }; lastMove = performance.now(); kickHive();
-});
-heroEl.addEventListener("pointerleave", () => { mouse = { x: -999, y: -999 }; lastMove = performance.now(); kickHive(); });
-let hiveResize = 0;
-addEventListener("resize", () => { clearTimeout(hiveResize); hiveResize = setTimeout(sizeHive, 150); });
-sizeHive();
-new IntersectionObserver(([en]) => { hiveVisible = en.isIntersecting; if (hiveVisible) kickHive(); }).observe(hive);
 
 
 // ===================== Carte des prestations (tous les prix visibles) =====================
 $("#menu").innerHTML = CARTE.map((c, k) => `
   <section class="menu__cat">
     <header class="menu__head"><h3>${c.title}</h3></header>
-    <p class="menu__intro">${c.intro}</p>
+    ${c.intro ? `<p class="menu__intro">${c.intro}</p>` : ""}
     <ul>${c.items.map(([n, p]) => { const [name, dur] = n.split(" · ");
       return `<li class="menu__item"><span class="menu__name">${name}${dur ? `<small>${dur}</small>` : ""}</span><i aria-hidden="true"></i><b class="menu__price">${p.replace(/(\d+)\s*€/, '$1<span class="eur">€</span>')}</b></li>`; }).join("")}</ul>
   </section>`).join("");
@@ -359,7 +283,6 @@ $("#team").innerHTML = BARBERS.map((b, k) => `
     <span class="crew__name">${b.name}</span>
     <a href="#prestations" class="crew__book" data-pick-barber="${b.id}">Réserver<span class="sr-only"> avec ${b.name}</span> <span aria-hidden="true">→</span></a>
   </li>`).join("");
-$("#team").insertAdjacentHTML("afterend", `<p class="crew__any">Pas de préférence ? <a href="#prestations" data-pick-barber="any">Réserver avec le premier barbier disponible →</a></p>`);
 document.addEventListener("click", (e) => {
   const a = e.target.closest("[data-pick-barber]"); if (!a) return;
   book.barber = a.dataset.pickBarber; book.time = null;

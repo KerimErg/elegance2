@@ -4,9 +4,9 @@
    ===================================================================== */
 :root {
   color-scheme: dark;
-  --bg: #09090a;
-  --surface: #121214;
-  --surface-2: #1b1b1e;
+  --bg: #111113;
+  --surface: #19191c;
+  --surface-2: #232327;
   --white: #f3f3f1;
   --mute: #a4a4ab;
   --faint: rgba(243, 243, 241, .42);
@@ -671,4 +671,64 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .phone__done { padding-block: 1.6rem; }
   .phone__done-text { font-size: .95rem; }
   .phone__tag { font-size: .85rem; }
+}
+
+/* =====================================================================
+   Version simplifiée : bannière, sections claires, moins de texte
+   ===================================================================== */
+/* ---------- Bannière ---------- */
+.hero { min-height: auto; display: block; padding-block: calc(110px + env(safe-area-inset-top, 0px)) clamp(64px, 9vw, 120px); background: var(--bg); }
+.hero::after { display: none; }
+.hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+.hero__text { display: flex; flex-direction: column; align-items: flex-start; gap: 1.6rem; }
+.hero__title { margin-top: 0; }
+.hero__word { font-size: min(4.7vw, 4.6rem); line-height: .95; }
+.hero__script { font-size: min(3.6vw, 3.4rem); margin-top: -.12em; }
+.hero__lead { font-size: 1.15rem; color: var(--mute); max-width: none; }
+.hero__photo { position: static; translate: none; width: 100%; filter: none; }
+.hero__photo img { width: 100%; height: min(76vh, 680px); object-fit: cover; }
+.intro .hero__photo { animation: fadeIn 1.2s ease .3s both; }
+.intro .hero__word span { animation-delay: calc(.2s + var(--i) * 40ms); }
+.intro .hero__script { animation-delay: .7s; }
+.intro .hero__lead, .intro .hero__text > .btn { animation: rise .8s var(--ease) 1s both; }
+
+/* ---------- Sections claires ---------- */
+.is-light { --bg: #efede8; --surface: #e5e2dc; --surface-2: #dcd8d1; --white: #121214; --mute: #5e5d63; --faint: rgba(18, 18, 20, .45); --line: rgba(18, 18, 20, .12); --line-2: rgba(18, 18, 20, .22);
+  background: var(--bg); color: var(--white); border-top: 0; }
+.is-light .btn--light { background: #121214; color: #efede8; }
+.is-light .btn--light:hover { background: #000; }
+.is-light .btn--line { border-color: rgba(18, 18, 20, .35); color: #121214; }
+.is-light .btn--line:hover { border-color: #121214; }
+/* la réservation garde ses couleurs sombres */
+.is-light .phone { --bg: #111113; --surface: #19191c; --surface-2: #232327; --white: #f3f3f1; --mute: #a4a4ab; --line: rgba(243, 243, 241, .12); --line-2: rgba(243, 243, 241, .24); color: var(--white); }
+
+/* ---------- Le lieu ---------- */
+.salon__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 2rem clamp(2rem, 6vw, 6rem); align-items: start; }
+.salon__facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; padding-top: .5rem; }
+.salon__facts dt { font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: var(--mute); margin-bottom: .5rem; }
+.salon__facts dd { font-weight: 500; line-height: 1.5; }
+.salon__facts a { border-bottom: 1px solid var(--line-2); }
+.salon__actions { grid-column: 2; margin-top: 0; }
+
+/* ---------- Moins de texte ---------- */
+.carte__panel .h1 + .menu { margin-top: clamp(2rem, 4vw, 3rem); }
+.equipe .h1, .travail .h1 { margin-bottom: 0; }
+.crew { margin-top: clamp(2rem, 4vw, 3rem); }
+
+@media (max-width: 960px) {
+  .hero__grid { grid-template-columns: 1fr; }
+  .hero__photo { order: -1; }
+  .hero__photo img { height: min(52vh, 460px); }
+  .hero__word { font-size: 10.6vw; }
+  .hero__script { font-size: 8vw; }
+  .salon__grid { grid-template-columns: 1fr; }
+  .salon__actions { grid-column: auto; }
+}
+@media (max-width: 560px) {
+  .hero { padding-top: calc(88px + env(safe-area-inset-top, 0px)); }
+  .salon__facts { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 720px) {
+  .menu__cat { grid-template-columns: 1fr; }
+  .menu__intro, .menu__cat ul { grid-column: 1; grid-row: auto; }
 }
