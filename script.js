@@ -20,16 +20,26 @@ const pad = (n) => String(n).padStart(2, "0");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ===================== Header, menu, lien actif =====================
+// Un seul calcul par image affichée ; positions des sections mesurées une fois (et au redimensionnement).
 const header = $("#header"), nav = $("#nav"), burger = $("#burger");
 const navLinks = $$(".nav a:not(.nav__cta)");
+let navTops = [], scrollTick = false, lastSolid = null, lastActive = null;
+const measureNav = () => { navTops = navLinks.map((a) => { const s = $(a.getAttribute("href")); return s ? s.offsetTop : Infinity; }); };
+const scrollWork = [];                       // autres tâches liées au défilement (barre mobile…)
 const onScroll = () => {
-  header.classList.toggle("is-solid", scrollY > 30);
+  scrollTick = false;
+  const solid = scrollY > 30;
+  if (solid !== lastSolid) { header.classList.toggle("is-solid", solid); lastSolid = solid; }
   const y = scrollY + innerHeight * .4;
-  let active = null;
-  navLinks.forEach((a) => { const s = $(a.getAttribute("href")); if (s && s.offsetTop <= y) active = a; });
-  navLinks.forEach((a) => a.classList.toggle("is-active", a === active));
+  let active = -1;
+  navTops.forEach((top, i) => { if (top <= y) active = i; });
+  if (active !== lastActive) { navLinks.forEach((a, i) => a.classList.toggle("is-active", i === active)); lastActive = active; }
+  scrollWork.forEach((fn) => fn());
 };
-addEventListener("scroll", onScroll, { passive: true }); onScroll();
+addEventListener("scroll", () => { if (!scrollTick) { scrollTick = true; requestAnimationFrame(onScroll); } }, { passive: true });
+addEventListener("resize", () => { measureNav(); onScroll(); });
+addEventListener("load", () => { measureNav(); onScroll(); });
+measureNav(); onScroll();
 const setMenu = (open) => {
   nav.classList.toggle("is-open", open);
   burger.setAttribute("aria-expanded", open);
@@ -46,62 +56,105 @@ word.setAttribute("data-text", word.textContent);
 word.innerHTML = [...word.textContent].map((ch, i) => `<span style="--i:${i}">${ch}</span>`).join("");
 $(".hero__title").setAttribute("aria-label", "Elegance Strasbourg");
 
-const hive = $("#hive"), ctx = hive.getContext("2d");
-let mouse = { x: -999, y: -999 }, cells = [];
-function sizeHive() {
-  const r = hive.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
-  hive.width = r.width * dpr; hive.height = r.height * dpr;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const R = Math.max(46, Math.min(80, r.width / 18)), w = Math.sqrt(3) * R, h = 1.5 * R;
-  cells = [];
-  for (let row = -1; row * h < r.height + R; row++)
-    for (let col = -1; col * w < r.width + w; col++)
-      cells.push({ x: col * w + (row % 2 ? w / 2 : 0), y: row * h, R, seed: Math.random() });
-  drawHive(0);
-}
-function hexPath(x, y, R) {
-  ctx.beginPath();
+// Rendu rapide : chaque hexagone (net et lumineux) est dessiné une seule fois dans une petite
+// image, puis simplement recopié. L'animation ne tourne que pendant l'allumage et quand la souris bouge.
+const hexTrace = (c, x, y, R) => {
+  c.beginPath();
   for (let k = 0; k < 6; k++) {
-    const a = Math.PI / 180 * (60 * k - 30);
-    if (k) ctx.lineTo(x + R * Math.cos(a), y + R * Math.sin(a)); else ctx.moveTo(x + R * Math.cos(a), y + R * Math.sin(a));
+    const a = Math.PI / 180 * (60 * k - 30), px = x + R * Math.cos(a), py = y + R * Math.sin(a);
+    if (k) c.lineTo(px, py); else c.moveTo(px, py);
   }
-  ctx.closePath();
-}
-// Allumage : chaque néon s'allume à son tour en partant du haut, grésille puis flashe
+  c.closePath();
+};
+const hexSprite = (R, glow, dpr, lw = 1.4, blur = 16) => {
+  const pad = glow ? blur * 1.6 : 4, size = Math.ceil((R + pad) * 2), s = document.createElement("canvas");
+  s.width = Math.ceil(size * dpr); s.height = Math.ceil(size * dpr);
+  const c = s.getContext("2d"); c.scale(dpr, dpr);
+  hexTrace(c, size / 2, size / 2, R * .94);
+  c.lineWidth = lw; c.strokeStyle = "#fff";
+  if (glow) { c.shadowColor = "rgba(255,255,255,.95)"; c.shadowBlur = blur; c.stroke(); }
+  c.stroke();
+  s.half = size / 2;
+  return s;
+};
+
+const hive = $("#hive"), ctx = hive.getContext("2d");
+const heroEl = hive.parentElement;
+let mouse = { x: -999, y: -999 }, cells = [], hiveW = 0, hiveH = 0, sprLine = null, sprGlow = null, baseLayer = null, introDone = 0;
 const introStart = performance.now();
 const introOn = document.documentElement.classList.contains("intro");
+let lastMove = -1e9, raf = 0, hiveVisible = true;
+
+function sizeHive() {
+  const dpr = Math.min(devicePixelRatio || 1, 1.5);
+  hiveW = hive.offsetWidth; hiveH = hive.offsetHeight;
+  hive.width = Math.round(hiveW * dpr); hive.height = Math.round(hiveH * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const R = Math.max(46, Math.min(80, hiveW / 18)), w = Math.sqrt(3) * R, h = 1.5 * R;
+  sprLine = hexSprite(R, false, dpr); sprGlow = hexSprite(R, true, dpr);
+  cells = [];
+  for (let row = -1; row * h < hiveH + R; row++)
+    for (let col = -1; col * w < hiveW + w; col++) {
+      const x = col * w + (row % 2 ? w / 2 : 0), y = row * h, seed = Math.random();
+      cells.push({ x, y, seed,
+        onAt: 150 + Math.hypot(x - hiveW * .62, y + R) / Math.hypot(hiveW, hiveH) * 1500 + seed * 300,
+        fadeY: Math.max(0, 1 - y / (hiveH * .95)) });   // plus lumineux en haut, comme un plafond
+    }
+  introDone = Math.max(...cells.map((c) => c.onAt)) + 1200;   // fin de l'allumage (dernier flash éteint)
+  // grille au repos, figée une fois pour toutes dans une seule image
+  baseLayer = document.createElement("canvas"); baseLayer.width = hive.width; baseLayer.height = hive.height;
+  { const b = baseLayer.getContext("2d"), sl = sprLine.half; b.setTransform(dpr, 0, 0, dpr, 0, 0);
+    for (const c of cells) { const a = .08 * c.fadeY; if (a > .01) { b.globalAlpha = a; b.drawImage(sprLine, c.x - sl, c.y - sl, sl * 2, sl * 2); } } }
+  kickHive();
+}
 function drawHive(t) {
-  const W = hive.clientWidth, H = hive.clientHeight;
-  const el = introOn ? (t || performance.now()) - introStart : 1e9;
-  ctx.clearRect(0, 0, W, H);
+  const el = introOn ? t - introStart : 1e9;
+  ctx.clearRect(0, 0, hiveW, hiveH);
+  const sl = sprLine.half, sg = sprGlow.half;
+  if (el > introDone) {
+    // Après l'allumage : la grille figée en une fois, puis seulement les néons proches de la souris
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(baseLayer, 0, 0);
+    ctx.setTransform(hive.width / hiveW, 0, 0, hive.height / hiveH, 0, 0);
+    if (mouse.x > -500) for (const c of cells) {
+      const dx = c.x - mouse.x, dy = c.y - mouse.y;
+      if (dx * dx + dy * dy > 67600) continue;               // au-delà de 260 px : rien à faire
+      const near = 1 - Math.sqrt(dx * dx + dy * dy) / 260;
+      ctx.globalAlpha = near * .35; ctx.drawImage(sprLine, c.x - sl, c.y - sl, sl * 2, sl * 2);
+      ctx.globalAlpha = near * .7; ctx.drawImage(sprGlow, c.x - sg, c.y - sg, sg * 2, sg * 2);
+    }
+    ctx.globalAlpha = 1;
+    return;
+  }
   for (const c of cells) {
-    if (c.onAt === undefined) c.onAt = 150 + Math.hypot(c.x - W * .62, c.y + c.R) / Math.hypot(W, H) * 1500 + c.seed * 300;
     const since = el - c.onAt;
     if (since < 0) continue;
-    if (since < 240 && Math.sin(since * .11 + c.seed * 40) < 0) continue; // grésillement
+    if (since < 240 && Math.sin(since * .11 + c.seed * 40) < 0) continue;   // grésillement
     const flash = Math.max(0, 1 - (since - 240) / 900);
     const near = Math.max(0, 1 - Math.hypot(c.x - mouse.x, c.y - mouse.y) / 260);
-    const fadeY = Math.max(0, 1 - c.y / (H * .95)); // plus lumineux en haut, comme un plafond
-    const pulse = reduced ? 0 : (Math.sin(t / 1400 + c.seed * 12) + 1) / 2 * .05;
-    const a = (.06 + pulse + flash * .7) * fadeY + near * .55;
-    if (a < .01) continue;
-    hexPath(c.x, c.y, c.R * .94);
-    ctx.lineWidth = 1.4;
-    ctx.strokeStyle = `rgba(255,255,255,${Math.min(a, 1)})`;
-    ctx.shadowColor = "rgba(255,255,255,.85)";
-    const glow = Math.max(near, flash * fadeY);
-    ctx.shadowBlur = glow > .05 ? 16 * glow : 0;
-    ctx.stroke();
+    const base = (.08 + flash * .7) * c.fadeY + near * .35;
+    if (base > .01) { ctx.globalAlpha = Math.min(1, base); ctx.drawImage(sprLine, c.x - sl, c.y - sl, sl * 2, sl * 2); }
+    const glow = Math.max(near * .7, flash * c.fadeY * .85);
+    if (glow > .03) { ctx.globalAlpha = Math.min(1, glow); ctx.drawImage(sprGlow, c.x - sg, c.y - sg, sg * 2, sg * 2); }
   }
+  ctx.globalAlpha = 1;
 }
-let raf;
-const loop = (t) => { drawHive(t); raf = requestAnimationFrame(loop); };
-const heroEl = hive.parentElement;
-heroEl.addEventListener("pointermove", (e) => { const r = hive.getBoundingClientRect(); mouse = { x: e.clientX - r.left, y: e.clientY - r.top }; });
-heroEl.addEventListener("pointerleave", () => (mouse = { x: -999, y: -999 }));
-addEventListener("resize", sizeHive);
+function hiveFrame(t) {
+  raf = 0;
+  drawHive(t);
+  const busy = (introOn && t - introStart < 3800) || t - lastMove < 450;
+  if (busy && hiveVisible) raf = requestAnimationFrame(hiveFrame);
+}
+function kickHive() { if (!raf && hiveVisible) raf = requestAnimationFrame(hiveFrame); }
+heroEl.addEventListener("pointermove", (e) => {
+  const r = hive.getBoundingClientRect();
+  mouse = { x: e.clientX - r.left, y: e.clientY - r.top }; lastMove = performance.now(); kickHive();
+});
+heroEl.addEventListener("pointerleave", () => { mouse = { x: -999, y: -999 }; lastMove = performance.now(); kickHive(); });
+let hiveResize = 0;
+addEventListener("resize", () => { clearTimeout(hiveResize); hiveResize = setTimeout(sizeHive, 150); });
 sizeHive();
-new IntersectionObserver(([en]) => { cancelAnimationFrame(raf); if (en.isIntersecting) raf = requestAnimationFrame(loop); }).observe(hive);
+new IntersectionObserver(([en]) => { hiveVisible = en.isIntersecting; if (hiveVisible) kickHive(); }).observe(hive);
+
 
 // ===================== Carte des prestations (tous les prix visibles) =====================
 $("#menu").innerHTML = CARTE.map((c, k) => `
@@ -380,28 +433,111 @@ if (!reduced && "IntersectionObserver" in window) {
   });
 }
 
+// ===================== Allumage du plafond (piloté par le défilement) =====================
+(() => {
+  const sec = $("#ceiling"), cv = $("#ceilingCanvas");
+  if (!sec || !cv) return;
+  const g = cv.getContext("2d");
+  let cells = [], W = 0, H = 0, lastP = -1, sprOff = null, sprOn = null, sprGlow = null, grid = null, secTop = 0, secSpan = 1;
+
+  function build() {
+    const dpr = 1;                                     // le halo des néons masque la résolution
+    W = cv.offsetWidth; H = cv.offsetHeight;          // taille réelle, avant la mise en perspective
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const R = Math.max(40, Math.min(66, W / 30)), w = Math.sqrt(3) * R, h = 1.5 * R;
+    sprGlow = hexSprite(R, true, dpr, 2, 20);
+    // néon allumé = trait net + halo, réunis dans une seule image
+    sprOn = document.createElement("canvas"); sprOn.width = sprGlow.width; sprOn.height = sprGlow.height; sprOn.half = sprGlow.half;
+    { const c = sprOn.getContext("2d"), line = hexSprite(R, false, dpr, 1.8), o = (sprGlow.width - line.width) / 2;
+      c.globalAlpha = .4; c.drawImage(sprGlow, 0, 0); c.globalAlpha = .8; c.drawImage(line, o, o); }
+    sprOff = hexSprite(R, false, dpr, 1.2);
+    const cx = W / 2, cy = H * .42;
+    cells = [];
+    for (let row = -1; row * h < H + R; row++)
+      for (let col = -1; col * w < W + w; col++) {
+        const x = col * w + (row % 2 ? w / 2 : 0), y = row * h;
+        cells.push({ x, y, d: Math.hypot(x - cx, (y - cy) * 1.15), seed: Math.random() * 40 });
+      }
+    // ordre d'allumage : du centre vers l'extérieur, réparti sur toute la séquence
+    const maxD = Math.max(...cells.map((c) => c.d));
+    cells.forEach((c) => { c.at = .02 + Math.pow(c.d / maxD, .6) * .9 + (Math.random() - .5) * .06; });   // étalé sur la partie visible
+    // grille éteinte dessinée une seule fois
+    grid = document.createElement("canvas"); grid.width = cv.width; grid.height = cv.height;
+    { const c = grid.getContext("2d"), so = sprOff.half; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.globalAlpha = .08;
+      for (const cell of cells) c.drawImage(sprOff, cell.x - so, cell.y - so, so * 2, so * 2); }
+    cells.sort((a, b) => a.at - b.at);
+    measure(); lastP = -1; draw(current());
+  }
+  function draw(p) {
+    if (Math.abs(p - lastP) < .0015) return; lastP = p;
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.clearRect(0, 0, cv.width, cv.height);
+    g.drawImage(grid, 0, 0);                            // toute la grille éteinte, en une fois
+    g.setTransform(cv.width / W, 0, 0, cv.height / H, 0, 0);
+    const on = p / .78;                                // tout le plafond est allumé aux trois quarts
+    const sn = sprOn.half, sg = sprGlow.half;
+    for (const c of cells) {                           // triés par ordre d'allumage
+      const since = on - c.at;
+      if (since <= 0) break;
+      if (since < .035 && Math.sin(since * 900 + c.seed) < 0) continue;   // grésillement
+      g.globalAlpha = 1; g.drawImage(sprOn, c.x - sn, c.y - sn, sn * 2, sn * 2);
+      const flash = 1 - since / .12;
+      if (flash > .02) { g.globalAlpha = flash * .7; g.drawImage(sprGlow, c.x - sg, c.y - sg, sg * 2, sg * 2); }
+    }
+    g.globalAlpha = 1;
+  }
+  const measure = () => { secTop = sec.offsetTop; secSpan = Math.max(1, sec.offsetHeight - innerHeight); };
+  const current = () => Math.min(1, Math.max(0, (scrollY - secTop) / secSpan));
+  let tick = false;
+  const onScroll = () => {
+    if (tick) return; tick = true;
+    requestAnimationFrame(() => {
+      tick = false;
+      const p = current();
+      if (p === lastP && (p === 0 || p === 1)) return;    // hors de la séquence : rien à faire
+      sec.style.setProperty("--p", p.toFixed(4)); draw(p);
+    });
+  };
+  if (reduced) { build(); draw(1); sec.style.setProperty("--p", "1"); return; }
+  let rs = 0;
+  addEventListener("resize", () => { clearTimeout(rs); rs = setTimeout(build, 150); });
+  addEventListener("load", measure);
+  addEventListener("scroll", onScroll, { passive: true });
+  build(); onScroll();
+})();
+
 // ===================== « Lumière dans le noir » (souris uniquement) =====================
 if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
   const root = document.documentElement, cur = $(".cursor");
   root.classList.add("has-fx");
-  let mx = -999, my = -999, cx = 0, cy = 0, shown = false;
+  const torch = $(".torch");
+  let mx = -999, my = -999, cx = 0, cy = 0, shown = false, inHero = false, torchTick = 0;
+  // La lampe torche est déplacée directement (aucune variable globale : pas de recalcul de toute la page)
+  const moveTorch = () => {
+    torchTick = 0;
+    if (inHero) return;
+    torch.style.translate = `${mx - 260}px ${my - 260}px`;
+    torch.style.backgroundPosition = `${260 - mx}px ${260 - my}px`;
+  };
   addEventListener("pointermove", (e) => {
     mx = e.clientX; my = e.clientY;
-    root.style.setProperty("--mx", mx + "px");
-    root.style.setProperty("--my", my + "px");
     if (!shown) { shown = true; cx = mx; cy = my; root.classList.add("fx-on"); }
-    root.classList.toggle("in-hero", !!e.target.closest(".hero"));
+    const h = !!e.target.closest(".hero");
+    if (h !== inHero) { inHero = h; root.classList.toggle("in-hero", h); }
     cur.classList.toggle("is-hot", !!e.target.closest("a, button, .chip, .slot, input, select, label"));
+    if (!torchTick) torchTick = requestAnimationFrame(moveTorch);
   }, { passive: true });
   document.documentElement.addEventListener("pointerleave", () => { shown = false; root.classList.remove("fx-on"); });
   addEventListener("pointerdown", () => cur.classList.add("is-down"));
   addEventListener("pointerup", () => cur.classList.remove("is-down"));
+  // Le curseur suit la souris, puis s'arrête dès qu'il l'a rejointe (aucune boucle à l'arrêt).
+  let following = 0;
   const follow = () => {
     cx += (mx - cx) * .22; cy += (my - cy) * .22;
     cur.style.translate = `${cx}px ${cy}px`;
-    requestAnimationFrame(follow);
+    following = Math.abs(mx - cx) + Math.abs(my - cy) > .3 ? requestAnimationFrame(follow) : 0;
   };
-  requestAnimationFrame(follow);
+  addEventListener("pointermove", () => { if (!following) following = requestAnimationFrame(follow); }, { passive: true });
 
   // Photos en relief avec reflet
   $$(".hex, .rating__score").forEach((el) => {
@@ -427,10 +563,12 @@ const mbar = $("#mbar");
 const phoneSec = $("#phone");
 let phoneInView = false;
 new IntersectionObserver(([en]) => { phoneInView = en.isIntersecting; toggleMbar(); }, { threshold: .15 }).observe(phoneSec);
+let mbarOn = null;
 function toggleMbar() {
   const on = scrollY > innerHeight * .6 && !phoneInView;
+  if (on === mbarOn) return; mbarOn = on;
   mbar.classList.toggle("is-on", on);
   mbar.setAttribute("aria-hidden", String(!on));
   mbar.querySelectorAll("a").forEach((a) => (on ? a.removeAttribute("tabindex") : a.setAttribute("tabindex", "-1")));
 }
-addEventListener("scroll", toggleMbar, { passive: true });
+scrollWork.push(toggleMbar);
