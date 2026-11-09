@@ -315,11 +315,60 @@ document.addEventListener("click", (e) => {
   show("pick"); renderPick();
 });
 
+// ===================== Mise en scène : préparation du texte =====================
+// Grands titres : une ligne par <br>, chacune derrière un cache.
+$$(".h1").forEach((el) => {
+  el.innerHTML = el.innerHTML.split(/<br\s*\/?>/i).map((p, i) => `<span class="ln"><span style="--li:${i}">${p.trim()}</span></span>`).join("");
+});
+// « Prenez place. » : lettre par lettre, pour l'allumage néon.
+$$(".final__title").forEach((el) => {
+  let i = 0;
+  el.setAttribute("aria-label", "Prenez place");
+  el.innerHTML = el.innerHTML.split(/<br\s*\/?>/i).map((line) => line.trim()
+    .replace(/(<i[^>]*><\/i>)|([^<\s])/g, (m) => `<span class="nl" aria-hidden="true" style="--i:${i++}">${m}</span>`)).join("<br>");
+});
+// Manifeste : mot par mot.
+$$(".manifesto__text").forEach((el) => {
+  let i = 0;
+  const words = (txt, dim) => txt.split(/(\s+)/).map((w) => (!w.trim() ? w : `<span class="w${dim ? " w--dim" : ""}" style="--i:${i++}">${w}</span>`)).join("");
+  const dim = el.querySelector("span");
+  el.innerHTML = words(el.childNodes[0].textContent, false) + words(dim ? dim.textContent : "", true);
+});
+// Étoiles de la note : une par une.
+$$(".rating__stars").forEach((s) => { s.innerHTML = [...s.textContent].map((c, i) => `<span class="st" style="--i:${i}">${c}</span>`).join(""); });
+
+// Compteurs (note Google, nombre d'avis)
+const countUp = (el, to, { dec = 0, suffix = "", dur = 1400, delay = 0 } = {}) => {
+  const t0 = performance.now() + delay;
+  el.textContent = (0).toFixed(dec).replace(".", ",") + suffix;
+  const step = (t) => {
+    const k = Math.max(0, Math.min(1, (t - t0) / dur)), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = (to * e).toFixed(dec).replace(".", ",") + suffix;
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+};
+const onReveal = (el) => {
+  if (el.classList.contains("rating__hexwrap")) countUp($("b", el), 4.8, { dec: 1, delay: 250 });
+  if (el.classList.contains("rating__count")) countUp(el, 284, { suffix: " avis", dur: 1700, delay: 150 });
+};
+
+// Boutons « aimantés » (souris uniquement)
+if (!reduced && matchMedia("(pointer: fine)").matches) {
+  $$(".btn--light, .btn--lg, .crew__book").forEach((b) => {
+    b.addEventListener("pointermove", (e) => {
+      const r = b.getBoundingClientRect();
+      b.style.translate = `${((e.clientX - r.left) / r.width - .5) * 10}px ${((e.clientY - r.top) / r.height - .5) * 8}px`;
+    });
+    b.addEventListener("pointerleave", () => { b.style.translate = ""; });
+  });
+}
+
 // ===================== Apparitions à l'entrée dans l'écran =====================
 // Seuls les éléments encore hors écran au chargement sont masqués : la page reste complète sans script.
 if (!reduced && "IntersectionObserver" in window) {
   const io = new IntersectionObserver((entries) => entries.forEach((en) => {
-    if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+    if (en.isIntersecting) { en.target.classList.add("in"); onReveal(en.target); io.unobserve(en.target); }
   }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
   const groups = new Map();
   $$("[data-reveal]").forEach((el) => {
