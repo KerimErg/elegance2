@@ -562,6 +562,41 @@ if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
   });
 }
 
+// ===================== Le travail : ruban qui réagit au défilement =====================
+// Défile seul en continu ; le défilement de la page l'accélère (ou l'inverse en remontant)
+// et incline légèrement les photos selon la vitesse. Ne tourne que lorsque le ruban est visible.
+(() => {
+  const reel = $(".reel"), trk = $("#reelTrack");
+  if (!reel || !trk || reduced) return;
+  reel.classList.add("is-js");
+  const BASE = 40;                                       // vitesse de croisière (px/s)
+  let x = 0, half = 0, vel = 0, skew = 0, lastY = scrollY, lastT = 0, hover = false, visible = false, raf = 0;
+  const measure = () => {
+    const items = trk.children, n = items.length / 2;   // le ruban contient deux copies identiques
+    half = n ? items[n].offsetLeft - items[0].offsetLeft : 0;
+  };
+  const frame = (t) => {
+    const dt = lastT ? Math.min(.05, (t - lastT) / 1000) : .016; lastT = t;
+    const dy = scrollY - lastY; lastY = scrollY;
+    vel += (dy / dt - vel) * .12;                        // vitesse de défilement lissée (px/s)
+    if (Math.abs(vel) < 1) vel = 0;
+    x -= ((hover ? 0 : BASE) + vel * .45) * dt;
+    if (half) { x %= half; if (x > 0) x -= half; }
+    skew += (Math.max(-6, Math.min(6, -vel * .005)) - skew) * .12;
+    trk.style.transform = `translate3d(${x.toFixed(2)}px,0,0) skewX(${skew.toFixed(2)}deg)`;
+    raf = visible ? requestAnimationFrame(frame) : 0;
+  };
+  reel.addEventListener("pointerenter", () => (hover = true));
+  reel.addEventListener("pointerleave", () => (hover = false));
+  new IntersectionObserver(([en]) => {
+    visible = en.isIntersecting;
+    if (visible && !raf) { lastT = 0; lastY = scrollY; raf = requestAnimationFrame(frame); }
+  }).observe(reel);
+  addEventListener("resize", measure);
+  addEventListener("load", measure);
+  measure();
+})();
+
 // ===================== Barre fixe mobile (Appeler / Réserver) =====================
 const mbar = $("#mbar");
 const phoneSec = $("#phone");
