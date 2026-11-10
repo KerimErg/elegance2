@@ -796,13 +796,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* ---------- Bannière : photo nette (image tirée de la vidéo du salon) ---------- */
 .hero__photo { width: 44%; }
-.hero__photo img { object-position: 55% 6%; }
+.hero__photo img { object-position: 50% 30%; }
 .hero__photo::after { background: linear-gradient(90deg, var(--bg) 0%, rgba(17, 17, 19, .5) 18%, rgba(17, 17, 19, 0) 40%), linear-gradient(0deg, rgba(17, 17, 19, .55), transparent 28%), linear-gradient(180deg, rgba(17, 17, 19, .55), transparent 18%); }
 .hero__cap { position: absolute; z-index: 2; left: 8%; bottom: clamp(16px, 3vw, 40px); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(243, 243, 241, .8); }
 .intro .hero__cap { animation: rise .8s var(--ease) 1.7s both; }
 @media (max-width: 960px) {
   .hero__photo { width: 100%; height: min(68vh, 600px); }
-  .hero__photo img { object-position: 55% 4%; }
+  .hero__photo img { object-position: 50% 12%; }
   .hero__photo::after { background: linear-gradient(0deg, var(--bg) 0%, rgba(17, 17, 19, 0) 42%), linear-gradient(180deg, rgba(17, 17, 19, .55), transparent 22%); }
   .hero__cap { display: none; }
 }
