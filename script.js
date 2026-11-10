@@ -269,6 +269,14 @@ $("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); s
   await loadAvailability();
   book.date = days.find(dayHasSlot) || days[0];
   renderPick();
+  // Bannière : prochain créneau réellement libre
+  const d0 = days.find(dayHasSlot), t0 = d0 && SLOT_TIMES.find((t) => slotFree(d0, t));
+  if (t0) {
+    const tomorrow = iso(new Date(today.getTime() + 864e5));
+    const when = d0 === iso(today) ? "Aujourd’hui" : d0 === tomorrow ? "Demain" : fmtLong(d0).replace(/^\w/, (c) => c.toUpperCase());
+    $("#heroSlotText").textContent = `${when} · ${t0.replace(":", "h")}`;
+    $("#heroSlot").hidden = false;
+  }
 })();
 
 // ===================== Divers =====================
