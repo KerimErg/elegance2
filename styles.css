@@ -5,8 +5,8 @@
    ===================================================================== */
 :root {
   color-scheme: light;
-  --paper: #f5f4f1;
-  --paper-2: #ecebe7;
+  --paper: #efebe4;
+  --paper-2: #e5e0d7;
   --card: #ffffff;
   --ink: #0e0e10;
   --ink-2: #1a1a1d;
@@ -122,6 +122,10 @@ button { background: none; border: 0; cursor: pointer; }
    ===================================================================== */
 .sec { padding-block: var(--section); }
 .sec--tint { background: var(--paper-2); }
+.sec--dark { background: var(--ink); color: #fff; }
+.sec--dark .sec__aside { color: rgba(255, 255, 255, .6); }
+.sec--dark .shot__media { background: var(--ink-2); }
+.sec--dark .shot figcaption span { color: rgba(255, 255, 255, .55); }
 .sec__head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.2rem 2rem; margin-bottom: clamp(2.2rem, 4vw, 3.4rem); }
 .sec__aside { color: var(--muted); max-width: 22rem; }
 
@@ -312,7 +316,7 @@ button { background: none; border: 0; cursor: pointer; }
   .salon__badge { top: auto; bottom: -14px; }
   .footer__grid { grid-template-columns: 1fr 1fr; }
   .footer__brand { grid-column: 1 / -1; }
-  .mbar { position: fixed; z-index: 45; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: auto 1fr; gap: .5rem; padding: .7rem var(--gutter-r) calc(.7rem + env(safe-area-inset-bottom, 0px)) var(--gutter); background: rgba(245, 244, 241, .94); backdrop-filter: blur(14px); border-top: 1px solid var(--line); transform: translateY(110%); transition: transform .35s var(--ease); }
+  .mbar { position: fixed; z-index: 45; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: auto 1fr; gap: .5rem; padding: .7rem var(--gutter-r) calc(.7rem + env(safe-area-inset-bottom, 0px)) var(--gutter); background: rgba(239, 235, 228, .94); backdrop-filter: blur(14px); border-top: 1px solid var(--line); transform: translateY(110%); transition: transform .35s var(--ease); }
   .mbar.is-on { transform: none; }
   .mbar a { display: flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 1.3rem; border-radius: 999px; font-weight: 600; }
   .mbar__call { border: 1px solid var(--line-2); }
