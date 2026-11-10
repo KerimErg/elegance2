@@ -81,63 +81,59 @@
   </section>
 
   <!-- ================= PRESTATIONS ================= -->
-  <section class="sec" id="prestations">
+  <section class="sec sec--tint" id="prestations">
     <div class="wrap">
       <div class="sec__head">
         <h2 class="h1" data-reveal>Nos prestations</h2>
         <p class="sec__aside" data-reveal>Barbier à Schiltigheim, du mardi au samedi.</p>
       </div>
-      <div class="svcs">
-        <ul class="svcs__list" id="svcList">
-          <li data-reveal><a class="svc" href="#reserver" data-pick-service="coupe" data-img="0">
-            <img class="svc__thumb" src="images/svc-coupe.jpg" alt="" loading="lazy">
-            <span class="svc__name">Coupe homme</span>
-            <span class="svc__meta">30 min</span>
-            <span class="svc__price">18<small>€</small></span>
-            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-          </a></li>
-          <li data-reveal><a class="svc" href="#reserver" data-pick-service="coupe-barbe" data-img="1">
-            <img class="svc__thumb" src="images/look-platine.jpg" alt="" loading="lazy">
-            <span class="svc__name">Coupe & barbe</span>
-            <span class="svc__meta">30 min</span>
-            <span class="svc__price">28<small>€</small></span>
-            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-          </a></li>
-          <li data-reveal><a class="svc" href="#reserver" data-pick-service="barbe" data-img="2">
-            <img class="svc__thumb" src="images/card-barbe.jpg" alt="" loading="lazy">
-            <span class="svc__name">Taillage barbe</span>
-            <span class="svc__meta">15 min</span>
-            <span class="svc__price">12<small>€</small></span>
-            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-          </a></li>
-          <li data-reveal><a class="svc" href="#reserver" data-pick-service="soin" data-img="3">
-            <img class="svc__thumb" src="images/look-texture.jpg" alt="" loading="lazy">
-            <span class="svc__name">Soin du visage</span>
-            <span class="svc__meta">30 min · à la vapeur</span>
-            <span class="svc__price">25<small>€</small></span>
-            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-          </a></li>
-          <li data-reveal><a class="svc" href="tel:+33388977468" data-img="4">
-            <img class="svc__thumb" src="images/look-boucles.jpg" alt="" loading="lazy">
-            <span class="svc__name">Coloration</span>
-            <span class="svc__meta">30 min · par téléphone</span>
-            <span class="svc__price">15<small>€</small></span>
-            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-          </a></li>
-        </ul>
-        <figure class="svcs__view" id="svcView" aria-hidden="true">
-          <img src="images/svc-coupe.jpg" alt="Coupe homme : dégradé bas et dessus texturé" loading="lazy" class="is-on">
-          <img src="images/look-platine.jpg" alt="Coupe et barbe taillée" loading="lazy">
-          <img src="images/card-barbe.jpg" alt="Barbe taillée au salon" loading="lazy">
-          <img src="images/look-texture.jpg" alt="Client au salon Elegance" loading="lazy">
-          <img src="images/look-boucles.jpg" alt="Boucles décolorées" loading="lazy">
-        </figure>
+      <div class="cards">
+        <a class="card" href="#reserver" data-pick-service="coupe" data-reveal>
+          <span class="card__img"><img src="images/svc-coupe.jpg" alt="Dégradé bas et dessus texturé" loading="lazy"></span>
+          <span class="card__body">
+            <span class="card__name">Coupe homme</span>
+            <span class="card__meta">30 min</span>
+            <span class="card__foot"><span class="card__price">18<small>€</small></span><span class="card__cta">Réserver</span></span>
+          </span>
+        </a>
+        <a class="card" href="#reserver" data-pick-service="coupe-barbe" data-reveal>
+          <span class="card__img"><img src="images/look-platine.jpg" alt="Coupe et barbe taillée" loading="lazy"></span>
+          <span class="card__body">
+            <span class="card__name">Coupe & barbe</span>
+            <span class="card__meta">30 min</span>
+            <span class="card__foot"><span class="card__price">28<small>€</small></span><span class="card__cta">Réserver</span></span>
+          </span>
+        </a>
+        <a class="card" href="#reserver" data-pick-service="barbe" data-reveal>
+          <span class="card__img"><img src="images/card-barbe.jpg" alt="Barbe taillée au salon" loading="lazy"></span>
+          <span class="card__body">
+            <span class="card__name">Taillage barbe</span>
+            <span class="card__meta">15 min</span>
+            <span class="card__foot"><span class="card__price">12<small>€</small></span><span class="card__cta">Réserver</span></span>
+          </span>
+        </a>
+        <a class="card" href="#reserver" data-pick-service="soin" data-reveal>
+          <span class="card__img"><img src="images/look-texture.jpg" alt="Client au salon Elegance" loading="lazy"></span>
+          <span class="card__body">
+            <span class="card__name">Soin du visage</span>
+            <span class="card__meta">30 min · à la vapeur</span>
+            <span class="card__foot"><span class="card__price">25<small>€</small></span><span class="card__cta">Réserver</span></span>
+          </span>
+        </a>
+        <a class="card" href="tel:+33388977468" data-reveal>
+          <span class="card__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées" loading="lazy"></span>
+          <span class="card__body">
+            <span class="card__name">Coloration</span>
+            <span class="card__meta">30 min · par téléphone</span>
+            <span class="card__foot"><span class="card__price">15<small>€</small></span><span class="card__cta">Appeler</span></span>
+          </span>
+        </a>
       </div>
     </div>
   </section>
 
   <!-- ================= L'ÉQUIPE ================= -->
-  <section class="sec sec--tint" id="equipe">
+  <section class="sec" id="equipe">
     <div class="wrap">
       <div class="sec__head">
         <h2 class="h1" data-reveal>Choisissez<br>votre barbier</h2>
@@ -158,38 +154,34 @@
   </section>
 
   <!-- ================= LE TRAVAIL ================= -->
-  <section class="travail" id="realisations">
-    <div class="travail__sticky">
-      <div class="hscroll" id="hScroll">
-        <div class="hscroll__track" id="hTrack">
-          <div class="hscroll__intro">
-            <h2 class="h1">Sorti<br>du fauteuil</h2>
-            <p class="lede">Quelques coupes récentes, réalisées au salon.</p>
-          </div>
-          <figure class="work">
-            <div class="work__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" width="508" height="854" loading="lazy"></div>
-            <figcaption><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
-          </figure>
-          <figure class="work">
-            <div class="work__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" width="1151" height="1466" loading="lazy"></div>
-            <figcaption><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
-          </figure>
-          <figure class="work work--video">
-            <div class="work__img"><video src="videos/taper-texture.mp4" poster="videos/taper-texture.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : résultat d’un taper avec dessus texturé"></video></div>
-            <figcaption><span>Taper texturé</span><small>Résultat</small></figcaption>
-          </figure>
-          <figure class="work">
-            <div class="work__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" width="1179" height="1428" loading="lazy"></div>
-            <figcaption><span>Boucles décolorées</span><small>Contour net</small></figcaption>
-          </figure>
-        </div>
+  <section class="sec" id="realisations">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 class="h1" data-reveal>Au fauteuil</h2>
+        <p class="sec__aside" data-reveal>Quelques gestes filmés au salon, pendant la coupe.</p>
       </div>
-      <div class="hscroll__bar" aria-hidden="true"><span id="hBar"></span></div>
+      <div class="shots">
+        <figure class="shot" data-reveal>
+          <div class="shot__media"><video src="videos/travail-tresses.mp4" poster="videos/travail-tresses.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : Dégradé réalisé à la tondeuse autour de tresses"></video></div>
+          <figcaption><b>Tresses & dégradé</b><span>Dégradé à la tondeuse</span></figcaption>
+        </figure>
+        <figure class="shot" data-reveal>
+          <div class="shot__media"><video src="videos/travail-rasoir.mp4" poster="videos/travail-rasoir.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : Contour tracé au rasoir sur un dégradé"></video></div>
+          <figcaption><b>Contours au rasoir</b><span>Tracé net</span></figcaption>
+        </figure>
+        <figure class="shot" data-reveal>
+          <div class="shot__media"><video src="videos/travail-platine.mp4" poster="videos/travail-platine.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : Crop décoloré platine avec dégradé"></video></div>
+          <figcaption><b>Crop platine</b><span>Décoloration et dégradé</span></figcaption>
+        </figure>
+        <figure class="shot" data-reveal>
+          <div class="shot__media"><video src="videos/travail-nuque.mp4" poster="videos/travail-nuque.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : Finition de la nuque à la tondeuse devant le néon Elegance"></video></div>
+          <figcaption><b>Finitions</b><span>Nuque à la tondeuse</span></figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
-  <!-- ================= RÉSERVER ================= -->
-  <section class="sec" id="reserver">
+  <section class="sec sec--tint" id="reserver">
     <div class="wrap book">
       <div class="book__intro">
         <h2 class="h1" data-reveal>Réservez<br>votre créneau</h2>

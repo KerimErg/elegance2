@@ -46,18 +46,6 @@ word.innerHTML = [...word.textContent].map((ch, i) => `<span style="--i:${i}">${
 $(".hero__title").setAttribute("aria-label", "Elegance Strasbourg");
 
 
-// ===================== Prestations : la photo suit la ligne survolée =====================
-(() => {
-  const rows = $$("#svcList .svc"), pics = $$("#svcView img");
-  if (!rows.length || !pics.length) return;
-  const on = (i) => {
-    pics.forEach((p, k) => p.classList.toggle("is-on", k === i));
-    rows.forEach((r, k) => r.classList.toggle("is-on", k === i));
-  };
-  rows.forEach((r, i) => { r.addEventListener("mouseenter", () => on(i)); r.addEventListener("focus", () => on(i)); });
-  on(0);
-})();
-
 // ===================== Réservation (téléphone) =====================
 // Vraie réservation via Supabase quand config.js est rempli, sinon mode démonstration.
 const db = CFG.supabaseUrl && CFG.supabaseAnonKey && window.supabase
@@ -288,50 +276,6 @@ if (!reduced && "IntersectionObserver" in window) {
     el.classList.add("rv"); io.observe(el);
   });
 }
-
-// ===================== Le travail : galerie horizontale pilotée par le défilement =====================
-// La section se fige à l'écran et le défilement vertical fait avancer les photos de droite à gauche.
-(() => {
-  const sec = $("#realisations"), track = $("#hTrack"), bar = $("#hBar");
-  if (!sec || !track || reduced) return;
-  const works = [...track.querySelectorAll(".work")], imgs = works.map((w) => $("img, video", w));
-  let dist = 0, top = 0, shown = -1, anim = 0, lastIdx = -1;
-
-  const measure = () => {
-    dist = Math.max(0, track.scrollWidth - innerWidth);
-    sec.style.height = `${innerHeight + dist}px`;          // autant de défilement que de galerie
-    top = sec.offsetTop;
-    shown = -1; render(target());
-  };
-  const target = () => Math.min(1, Math.max(0, (scrollY - top) / Math.max(1, dist)));
-  const render = (p) => {
-    const x = -p * dist;
-    track.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
-    bar.style.transform = `scaleX(${p.toFixed(4)})`;
-    // léger décalage de chaque photo dans son cadre : effet de profondeur
-    const mid = innerWidth / 2;
-    let best = 0;
-    works.forEach((w, i) => {
-      const r = w.getBoundingClientRect(), c = r.left + r.width / 2, d = (c - mid) / innerWidth;
-      imgs[i].style.transform = `translate3d(${(-d * 6).toFixed(2)}%,0,0)`;
-      if (c < innerWidth * .62) best = i;                // photo « en cours » : la dernière passée au centre
-    });
-  };
-  // mouvement lissé : la galerie glisse vers la position du défilement
-  const step = () => {
-    const t = target();
-    shown = shown < 0 ? t : shown + (t - shown) * .16;
-    if (Math.abs(t - shown) < .0008) shown = t;
-    render(shown);
-    anim = shown !== t ? requestAnimationFrame(step) : 0;
-  };
-  const onScroll = () => { if (!anim && target() !== shown) anim = requestAnimationFrame(step); };
-  let rs = 0;
-  addEventListener("resize", () => { clearTimeout(rs); rs = setTimeout(measure, 150); });
-  addEventListener("load", measure);
-  addEventListener("scroll", onScroll, { passive: true });
-  measure();
-})();
 
 // ===================== Bannière : vidéo adaptée à l'écran =====================
 // Ordinateur : version horizontale plein écran ; téléphone : version verticale pleine résolution.
