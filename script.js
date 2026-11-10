@@ -1,15 +1,4 @@
 // ===================== Données du salon (à adapter) =====================
-const CARTE = [
-  { title: "Coupe", intro: "", items: [
-    ["Coupe homme · 30 min", "18 €"], ["Coupe & taille de barbe · 30 min", "28 €"] ] },
-  { title: "Barbe", intro: "", items: [
-    ["Taillage barbe · 15 min", "12 €"] ] },
-  { title: "Soin", intro: "", items: [
-    ["Soin du visage à la vapeur · 30 min", "25 €"] ] },
-  { title: "Coloration", intro: "Par téléphone uniquement.", items: [
-    ["Coloration · 30 min", "15 €"] ] },
-]
-
 // Prestations, horaires et clés Supabase : voir config.js
 const CFG = window.ELEGANCE;
 const SERVICES = CFG.services, OPEN = CFG.open, SLOT_TIMES = CFG.slots;
@@ -57,14 +46,17 @@ word.innerHTML = [...word.textContent].map((ch, i) => `<span style="--i:${i}">${
 $(".hero__title").setAttribute("aria-label", "Elegance Strasbourg");
 
 
-// ===================== Carte des prestations (tous les prix visibles) =====================
-$("#menu").innerHTML = CARTE.map((c, k) => `
-  <section class="menu__cat">
-    <header class="menu__head"><h3>${c.title}</h3></header>
-    ${c.intro ? `<p class="menu__intro">${c.intro}</p>` : ""}
-    <ul>${c.items.map(([n, p]) => { const [name, dur] = n.split(" · ");
-      return `<li class="menu__item"><span class="menu__name">${name}${dur ? `<small>${dur}</small>` : ""}</span><i aria-hidden="true"></i><b class="menu__price">${p.replace(/(\d+)\s*€/, '$1<span class="eur">€</span>')}</b></li>`; }).join("")}</ul>
-  </section>`).join("");
+// ===================== Prestations : la photo suit la ligne survolée =====================
+(() => {
+  const rows = $$("#svcList .svc"), pics = $$("#svcView img");
+  if (!rows.length || !pics.length) return;
+  const on = (i) => {
+    pics.forEach((p, k) => p.classList.toggle("is-on", k === i));
+    rows.forEach((r, k) => r.classList.toggle("is-on", k === i));
+  };
+  rows.forEach((r, i) => { r.addEventListener("mouseenter", () => on(i)); r.addEventListener("focus", () => on(i)); });
+  on(0);
+})();
 
 // ===================== Réservation (téléphone) =====================
 // Vraie réservation via Supabase quand config.js est rempli, sinon mode démonstration.

@@ -87,27 +87,51 @@
         <h2 class="h1" data-reveal>Nos prestations</h2>
         <p class="sec__aside" data-reveal>Barbier à Schiltigheim, du mardi au samedi.</p>
       </div>
-      <div class="cats">
-        <a class="cat" href="#reserver" data-pick-service="coupe" data-reveal>
-          <img src="images/card-degrade.jpg" alt="Dégradé réalisé à la tondeuse" loading="lazy">
-          <span class="cat__title">Coupe</span>
-          <span class="cat__foot"><span class="cat__price">dès 18 €</span><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
-        </a>
-        <a class="cat" href="#reserver" data-pick-service="barbe" data-reveal>
-          <img src="images/card-barbe.jpg" alt="Taille de barbe au salon" loading="lazy">
-          <span class="cat__title">Barbe</span>
-          <span class="cat__foot"><span class="cat__price">12 €</span><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
-        </a>
-        <a class="cat" href="#reserver" data-pick-service="soin" data-reveal>
-          <img src="images/salon.jpg" alt="Le salon Elegance" loading="lazy">
-          <span class="cat__title">Soin du visage</span>
-          <span class="cat__foot"><span class="cat__price">25 €</span><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
-        </a>
-        <a class="cat" href="tel:+33388977468" data-reveal>
+      <div class="svcs">
+        <ul class="svcs__list" id="svcList">
+          <li data-reveal><a class="svc" href="#reserver" data-pick-service="coupe" data-img="0">
+            <img class="svc__thumb" src="images/card-degrade.jpg" alt="" loading="lazy">
+            <span class="svc__name">Coupe homme</span>
+            <span class="svc__meta">30 min</span>
+            <span class="svc__price">18<small>€</small></span>
+            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </a></li>
+          <li data-reveal><a class="svc" href="#reserver" data-pick-service="coupe-barbe" data-img="1">
+            <img class="svc__thumb" src="images/look-platine.jpg" alt="" loading="lazy">
+            <span class="svc__name">Coupe & barbe</span>
+            <span class="svc__meta">30 min</span>
+            <span class="svc__price">28<small>€</small></span>
+            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </a></li>
+          <li data-reveal><a class="svc" href="#reserver" data-pick-service="barbe" data-img="2">
+            <img class="svc__thumb" src="images/card-barbe.jpg" alt="" loading="lazy">
+            <span class="svc__name">Taillage barbe</span>
+            <span class="svc__meta">15 min</span>
+            <span class="svc__price">12<small>€</small></span>
+            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </a></li>
+          <li data-reveal><a class="svc" href="#reserver" data-pick-service="soin" data-img="3">
+            <img class="svc__thumb" src="images/look-texture.jpg" alt="" loading="lazy">
+            <span class="svc__name">Soin du visage</span>
+            <span class="svc__meta">30 min · à la vapeur</span>
+            <span class="svc__price">25<small>€</small></span>
+            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </a></li>
+          <li data-reveal><a class="svc" href="tel:+33388977468" data-img="4">
+            <img class="svc__thumb" src="images/look-boucles.jpg" alt="" loading="lazy">
+            <span class="svc__name">Coloration</span>
+            <span class="svc__meta">30 min · par téléphone</span>
+            <span class="svc__price">15<small>€</small></span>
+            <span class="svc__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </a></li>
+        </ul>
+        <figure class="svcs__view" id="svcView" aria-hidden="true">
+          <img src="images/card-degrade.jpg" alt="Dégradé réalisé à la tondeuse" loading="lazy" class="is-on">
+          <img src="images/look-platine.jpg" alt="Coupe et barbe taillée" loading="lazy">
+          <img src="images/card-barbe.jpg" alt="Barbe taillée au salon" loading="lazy">
+          <img src="images/look-texture.jpg" alt="Client au salon Elegance" loading="lazy">
           <img src="images/look-boucles.jpg" alt="Boucles décolorées" loading="lazy">
-          <span class="cat__title">Coloration</span>
-          <span class="cat__foot"><span class="cat__price">15 €</span><span class="cat__note">Par téléphone</span><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
-        </a>
+        </figure>
       </div>
     </div>
   </section>
@@ -170,7 +194,7 @@
       <div class="book__intro">
         <h2 class="h1" data-reveal>Réservez<br>votre créneau</h2>
         <p class="lede" data-reveal>Choisissez la prestation, le barbier et l’heure. La confirmation est immédiate.</p>
-        <div class="menu" id="menu" data-reveal></div>
+        <p class="book__note" data-reveal>Paiement au salon. Pour la coloration ou une question : <a href="tel:+33388977468">03 88 97 74 68</a></p>
       </div>
       <div class="book__panel">
 <div class="phone-wrap">
