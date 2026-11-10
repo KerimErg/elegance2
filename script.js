@@ -49,35 +49,12 @@ burger.addEventListener("click", () => setMenu(!nav.classList.contains("is-open"
 nav.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
 addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
 
-// ===================== Plafond nid d'abeille (accueil) =====================
+// ===================== Bannière : logo =====================
 // Lettres du nom découpées pour l'apparition une à une
 const word = $(".hero__word");
 word.setAttribute("data-text", word.textContent);
 word.innerHTML = [...word.textContent].map((ch, i) => `<span style="--i:${i}">${ch}</span>`).join("");
 $(".hero__title").setAttribute("aria-label", "Elegance Strasbourg");
-
-// Rendu rapide : chaque hexagone (net et lumineux) est dessiné une seule fois dans une petite
-// image, puis simplement recopié. L'animation ne tourne que pendant l'allumage et quand la souris bouge.
-const hexTrace = (c, x, y, R) => {
-  c.beginPath();
-  for (let k = 0; k < 6; k++) {
-    const a = Math.PI / 180 * (60 * k - 30), px = x + R * Math.cos(a), py = y + R * Math.sin(a);
-    if (k) c.lineTo(px, py); else c.moveTo(px, py);
-  }
-  c.closePath();
-};
-const hexSprite = (R, glow, dpr, lw = 1.4, blur = 16) => {
-  const pad = glow ? blur * 1.6 : 4, size = Math.ceil((R + pad) * 2), s = document.createElement("canvas");
-  s.width = Math.ceil(size * dpr); s.height = Math.ceil(size * dpr);
-  const c = s.getContext("2d"); c.scale(dpr, dpr);
-  hexTrace(c, size / 2, size / 2, R * .94);
-  c.lineWidth = lw; c.strokeStyle = "#fff";
-  if (glow) { c.shadowColor = "rgba(255,255,255,.95)"; c.shadowBlur = blur; c.stroke(); }
-  c.stroke();
-  s.half = size / 2;
-  return s;
-};
-
 
 
 // ===================== Carte des prestations (tous les prix visibles) =====================
@@ -200,7 +177,7 @@ el.pick.addEventListener("click", (e) => {
   if (c && !c.disabled) {
     const box = c.parentElement, left = box.scrollLeft;
     book[c.dataset.g] = c.dataset.v;
-    renderPick(); $("#" + box.id).scrollLeft = left;
+    renderPick(); syncQuick(); $("#" + box.id).scrollLeft = left;
   } else if (sl && !sl.disabled) { book.time = sl.dataset.t; renderPick(); }
 });
 
@@ -268,25 +245,40 @@ $("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); s
   renderPick();
   await loadAvailability();
   book.date = days.find(dayHasSlot) || days[0];
-  renderPick();
+  renderPick(); syncQuick();
 })();
 
 // ===================== Divers =====================
 $("#year").textContent = today.getFullYear();
-const rows = $$(".hours tbody tr");
-rows.forEach((r) => { if (r.cells[1].textContent.trim() === "Fermé") r.classList.add("is-closed"); });
-rows[(today.getDay() + 6) % 7]?.classList.add("is-today");
 
 // ===================== L'équipe =====================
-$("#team").innerHTML = BARBERS.map((b, k) => `
-  <li class="crew__row" data-reveal>
-    <span class="crew__name">${b.name}</span>
-    <a href="#prestations" class="crew__book" data-pick-barber="${b.id}">Réserver<span class="sr-only"> avec ${b.name}</span> <span aria-hidden="true">→</span></a>
-  </li>`).join("");
+$("#team").innerHTML = BARBERS.map((b) => `
+  <article class="crew__card" data-reveal>
+    <h3 class="crew__name">${b.name}</h3>
+    <p class="crew__role">Barbier</p>
+    <span class="crew__mono" aria-hidden="true">${b.name[0]}</span>
+    <div class="crew__foot"><small>Mardi au samedi</small><a href="#reserver" class="crew__book" data-pick-barber="${b.id}">Réserver<span class="sr-only"> avec ${b.name}</span></a></div>
+  </article>`).join("");
+
+// Choix d'un barbier ou d'une prestation depuis la page : le module de réservation suit
 document.addEventListener("click", (e) => {
-  const a = e.target.closest("[data-pick-barber]"); if (!a) return;
-  book.barber = a.dataset.pickBarber; book.time = null;
+  const a = e.target.closest("[data-pick-barber], [data-pick-service]"); if (!a) return;
+  if (a.dataset.pickBarber) book.barber = a.dataset.pickBarber;
+  if (a.dataset.pickService) book.service = a.dataset.pickService;
+  book.time = null; show("pick"); renderPick(); syncQuick();
+});
+
+// ===================== Réservation rapide (bannière) =====================
+const qS = $("#qService"), qB = $("#qBarber"), qD = $("#qDay");
+qS.innerHTML = SERVICES.map((s) => `<option value="${s.id}">${s.name} · ${s.price} €</option>`).join("");
+qB.innerHTML = `<option value="any">Peu importe</option>` + BARBERS.map((b) => `<option value="${b.id}">${b.name}</option>`).join("");
+qD.innerHTML = days.map((d) => `<option value="${d}">${d === iso(today) ? "Aujourd’hui" : fmtLong(d).replace(/^./, (c) => c.toUpperCase())}</option>`).join("");
+function syncQuick() { qS.value = book.service; qB.value = book.barber; if (book.date) qD.value = book.date; }
+$("#quick").addEventListener("submit", (e) => {
+  e.preventDefault();
+  book.service = qS.value; book.barber = qB.value; book.date = qD.value; book.time = null;
   show("pick"); renderPick();
+  $("#reserver").scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
 });
 
 // ===================== Apparitions à l'entrée dans l'écran =====================
@@ -304,83 +296,6 @@ if (!reduced && "IntersectionObserver" in window) {
     el.classList.add("rv"); io.observe(el);
   });
 }
-
-// ===================== Allumage du plafond (piloté par le défilement) =====================
-(() => {
-  const sec = $("#ceiling"), cv = $("#ceilingCanvas");
-  if (!sec || !cv) return;
-  const g = cv.getContext("2d");
-  let cells = [], W = 0, H = 0, lastP = -1, sprOff = null, sprOn = null, sprGlow = null, grid = null, secTop = 0, secSpan = 1;
-
-  function build() {
-    const dpr = 1;                                     // le halo des néons masque la résolution
-    W = cv.offsetWidth; H = cv.offsetHeight;          // taille réelle, avant la mise en perspective
-    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const R = Math.max(40, Math.min(66, W / 30)), w = Math.sqrt(3) * R, h = 1.5 * R;
-    sprGlow = hexSprite(R, true, dpr, 2, 20);
-    // néon allumé = trait net + halo, réunis dans une seule image
-    sprOn = document.createElement("canvas"); sprOn.width = sprGlow.width; sprOn.height = sprGlow.height; sprOn.half = sprGlow.half;
-    { const c = sprOn.getContext("2d"), line = hexSprite(R, false, dpr, 1.8), o = (sprGlow.width - line.width) / 2;
-      c.globalAlpha = .4; c.drawImage(sprGlow, 0, 0); c.globalAlpha = .8; c.drawImage(line, o, o); }
-    sprOff = hexSprite(R, false, dpr, 1.2);
-    const cx = W / 2, cy = H * .42;
-    cells = [];
-    for (let row = -1; row * h < H + R; row++)
-      for (let col = -1; col * w < W + w; col++) {
-        const x = col * w + (row % 2 ? w / 2 : 0), y = row * h;
-        cells.push({ x, y, d: Math.hypot(x - cx, (y - cy) * 1.15), seed: Math.random() * 40 });
-      }
-    // ordre d'allumage : du centre vers l'extérieur, réparti sur toute la séquence
-    const maxD = Math.max(...cells.map((c) => c.d));
-    cells.forEach((c) => { c.at = .02 + Math.pow(c.d / maxD, .6) * .9 + (Math.random() - .5) * .06; });   // étalé sur la partie visible
-    // grille éteinte dessinée une seule fois
-    grid = document.createElement("canvas"); grid.width = cv.width; grid.height = cv.height;
-    { const c = grid.getContext("2d"), so = sprOff.half; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.globalAlpha = .08;
-      for (const cell of cells) c.drawImage(sprOff, cell.x - so, cell.y - so, so * 2, so * 2); }
-    cells.sort((a, b) => a.at - b.at);
-    measure(); lastP = -1; draw(current());
-  }
-  function draw(p) {
-    if (Math.abs(p - lastP) < .0015) return; lastP = p;
-    g.setTransform(1, 0, 0, 1, 0, 0);
-    g.clearRect(0, 0, cv.width, cv.height);
-    g.drawImage(grid, 0, 0);                            // toute la grille éteinte, en une fois
-    g.setTransform(cv.width / W, 0, 0, cv.height / H, 0, 0);
-    const on = p / .5;                                 // tout le plafond est allumé à mi-parcours
-    const sn = sprOn.half, sg = sprGlow.half;
-    for (const c of cells) {                           // triés par ordre d'allumage
-      const since = on - c.at;
-      if (since <= 0) break;
-      if (since < .035 && Math.sin(since * 900 + c.seed) < 0) continue;   // grésillement
-      g.globalAlpha = 1; g.drawImage(sprOn, c.x - sn, c.y - sn, sn * 2, sn * 2);
-      const flash = 1 - since / .12;
-      if (flash > .02) { g.globalAlpha = flash * .7; g.drawImage(sprGlow, c.x - sg, c.y - sg, sg * 2, sg * 2); }
-    }
-    g.globalAlpha = 1;
-  }
-  const measure = () => { secTop = sec.offsetTop; secSpan = Math.max(1, sec.offsetHeight - innerHeight); };
-  const current = () => Math.min(1, Math.max(0, (scrollY - secTop) / secSpan));
-  // Mouvement lissé : la séquence glisse vers la position du défilement au lieu d'avancer par à-coups.
-  let shown = -1, anim = 0;
-  const step = () => {
-    const target = current();
-    shown = shown < 0 ? target : shown + (target - shown) * .2;
-    if (Math.abs(target - shown) < .0015) shown = target;
-    sec.style.setProperty("--p", shown.toFixed(4)); draw(shown);
-    anim = shown !== target ? requestAnimationFrame(step) : 0;
-  };
-  const onScroll = () => {
-    const target = current();
-    if (target === shown && !anim) return;               // hors de la séquence : rien à faire
-    if (!anim) anim = requestAnimationFrame(step);
-  };
-  if (reduced) { build(); draw(1); sec.style.setProperty("--p", "1"); return; }
-  let rs = 0;
-  addEventListener("resize", () => { clearTimeout(rs); rs = setTimeout(build, 150); });
-  addEventListener("load", measure);
-  addEventListener("scroll", onScroll, { passive: true });
-  build(); onScroll();
-})();
 
 // ===================== Le travail : galerie horizontale pilotée par le défilement =====================
 // La section se fige à l'écran et le défilement vertical fait avancer les photos de droite à gauche.

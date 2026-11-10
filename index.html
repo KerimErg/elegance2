@@ -7,7 +7,7 @@
   <meta name="description" content="Elegance Strasbourg, barbier à Schiltigheim (162 route de Bischwiller) : coupe homme, dégradé, taille de barbe et soin du visage. Noté 4,8/5 sur Google. Réservez en ligne.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Allura&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112..125,500..800&family=Michroma&family=Allura&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#09090a">
   <meta property="og:type" content="website">
@@ -38,24 +38,21 @@
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
-<a class="skip" href="#prestations">Aller à la réservation</a>
+<a class="skip" href="#reserver">Aller à la réservation</a>
 
 <header class="header" id="header">
-  <div class="header__inner">
-    <a href="#accueil" class="logo" aria-label="Elegance Strasbourg, accueil">
-      <span class="logo__word">ELEGANCE</span>
-      <span class="logo__script">Strasbourg</span>
-    </a>
+  <div class="header__bar">
+    <a href="#accueil" class="logo" aria-label="Elegance Strasbourg, accueil"><span class="logo__word">ELEGANCE</span><span class="logo__script">Strasbourg</span></a>
     <nav class="nav" id="nav" aria-label="Navigation principale">
       <a href="#prestations">Prestations</a>
       <a href="#equipe">L’équipe</a>
       <a href="#realisations">Le travail</a>
-      <a href="#salon">Le lieu</a>
-      <a href="#prestations" class="nav__cta">Prendre rendez-vous</a>
+      <a href="#salon">Le salon</a>
+      <a href="#reserver" class="nav__cta">Prendre rendez-vous</a>
     </nav>
     <div class="header__right">
       <a href="tel:+33388977468" class="header__tel">03 88 97 74 68</a>
-      <a href="#prestations" class="btn btn--light btn--sm">Réserver</a>
+      <a href="#reserver" class="pill pill--dark">Réserver</a>
     </div>
     <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
   </div>
@@ -63,9 +60,9 @@
 
 <main>
   <!-- ================= ACCUEIL ================= -->
-  <section class="hero hero--lux" id="accueil">
+  <section class="hero" id="accueil">
     <div class="hero__media" aria-hidden="true">
-      <video class="hero__video" id="heroVideo" poster="videos/accueil-large.jpg" data-src-large="videos/accueil-large.mp4" data-poster-large="videos/accueil-large.jpg" data-src-small="videos/accueil.mp4" data-poster-small="videos/accueil.jpg" autoplay muted loop playsinline preload="auto" aria-label="Vidéo du salon Elegance : l’équipe au travail, coupes et taille de barbe"></video>
+      <video class="hero__video" id="heroVideo" poster="videos/accueil-large.jpg" data-src-large="videos/accueil-large.mp4" data-poster-large="videos/accueil-large.jpg" data-src-small="videos/accueil.mp4" data-poster-small="videos/accueil.jpg" autoplay muted loop playsinline preload="auto"></video>
     </div>
     <div class="hero__center">
       <h1 class="hero__title" aria-label="Elegance Strasbourg">
@@ -73,34 +70,118 @@
         <span class="hero__rule" aria-hidden="true"></span>
         <span class="hero__script">Strasbourg</span>
       </h1>
-      <a href="#prestations" class="hero__cta">Prendre rendez-vous</a>
     </div>
-    <a href="#prestations" class="hero__scroll" aria-label="Découvrir"><span></span></a>
+
+    <form class="quick" id="quick" aria-label="Réservation rapide">
+      <label class="quick__field"><span>Prestation</span><select id="qService"></select></label>
+      <label class="quick__field"><span>Barbier</span><select id="qBarber"></select></label>
+      <label class="quick__field"><span>Jour</span><select id="qDay"></select></label>
+      <button class="quick__go" type="submit">Voir les créneaux</button>
+    </form>
   </section>
 
-
-  <!-- ================= ALLUMAGE DU PLAFOND (piloté par le défilement) ================= -->
-  <section class="ceiling" id="ceiling" aria-label="Le dégradé parfait se joue au millimètre">
-    <div class="ceiling__sticky">
-      <div class="ceiling__stage" aria-hidden="true"><canvas class="ceiling__canvas" id="ceilingCanvas"></canvas></div>
-      <div class="ceiling__text">
-        <p class="ceiling__line ceiling__line--1">Le dégradé parfait</p>
-        <p class="ceiling__line ceiling__line--2">se joue <span>au millimètre.</span></p>
-      </div>
-      <div class="ceiling__meter" aria-hidden="true"><span></span></div>
-    </div>
-  </section>
-
-  <!-- ================= CARTE + RÉSERVATION ================= -->
-  <section class="carte is-light" id="prestations">
+  <!-- ================= PRESTATIONS ================= -->
+  <section class="sec" id="prestations">
     <div class="wrap">
-      <div class="carte__grid">
-        <div class="carte__panel">
-          <h2 class="h1" data-reveal>Nos prestations</h2>
-          <div class="menu" id="menu" data-reveal></div>
+      <div class="sec__head">
+        <h2 class="h1" data-reveal>Nos prestations</h2>
+        <p class="sec__aside" data-reveal>Barbier à Schiltigheim, du mardi au samedi.</p>
+      </div>
+      <div class="cats">
+        <a class="cat" href="#reserver" data-pick-service="coupe" data-reveal>
+          <img src="images/card-degrade.jpg" alt="Dégradé réalisé à la tondeuse" loading="lazy">
+          <span class="cat__title">Coupe</span>
+          <span class="cat__foot"><span class="cat__price">dès 18 €</span><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
+        </a>
+        <a class="cat" href="#reserver" data-pick-service="barbe" data-reveal>
+          <img src="images/card-barbe.jpg" alt="Taille de barbe au salon" loading="lazy">
+          <span class="cat__title">Barbe</span>
+          <span class="cat__foot"><span class="cat__price">12 €</span><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
+        </a>
+        <a class="cat" href="#reserver" data-pick-service="soin" data-reveal>
+          <img src="images/salon.jpg" alt="Le salon Elegance" loading="lazy">
+          <span class="cat__title">Soin du visage</span>
+          <span class="cat__foot"><span class="cat__price">25 €</span><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
+        </a>
+        <a class="cat" href="tel:+33388977468" data-reveal>
+          <img src="images/look-boucles.jpg" alt="Boucles décolorées" loading="lazy">
+          <span class="cat__title">Coloration</span>
+          <span class="cat__foot"><span class="cat__price">15 €</span><span class="cat__note">Par téléphone</span><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= L'ÉQUIPE ================= -->
+  <section class="sec sec--tint" id="equipe">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 class="h1" data-reveal>Choisissez<br>votre barbier</h2>
+        <a href="#reserver" class="pill pill--accent" data-pick-barber="any" data-reveal>Premier disponible <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="crew" id="team"></div>
+    </div>
+  </section>
+
+  <!-- ================= ATOUTS ================= -->
+  <section class="perks" aria-label="Pourquoi Elegance">
+    <div class="wrap perks__grid">
+      <div class="perk" data-reveal><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="4" width="22" height="32" rx="3"/><path d="M17 31h6M14 15l4 4 8-8"/></svg><p>Réservation en ligne<br>24h/24</p></div>
+      <div class="perk" data-reveal><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="13" cy="28" r="5"/><circle cx="27" cy="28" r="5"/><path d="M16 24 30 5M24 24 10 5"/></svg><p>Quatre barbiers<br>au salon</p></div>
+      <div class="perk" data-reveal><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="10" width="32" height="21" rx="3"/><path d="M4 17h32M10 25h7"/></svg><p>Paiement<br>au salon</p></div>
+      <div class="perk" data-reveal><svg viewBox="0 0 40 40" aria-hidden="true"><path d="m20 5 4.6 9.4 10.4 1.5-7.5 7.3 1.8 10.3L20 28.6l-9.3 4.9 1.8-10.3L5 15.9l10.4-1.5Z"/></svg><p>4,8 ★ · 284 avis<br>sur Google</p></div>
+    </div>
+  </section>
+
+  <!-- ================= LE TRAVAIL ================= -->
+  <section class="travail" id="realisations">
+    <div class="travail__sticky">
+      <div class="hscroll" id="hScroll">
+        <div class="hscroll__track" id="hTrack">
+          <div class="hscroll__intro">
+            <h2 class="h1">Sorti<br>du fauteuil</h2>
+            <p class="lede">Six coupes récentes, réalisées au salon.</p>
+          </div>
+          <figure class="work work--video">
+            <div class="work__img"><video src="videos/carte-blanche-platine.mp4" poster="videos/carte-blanche-platine.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : le résultat d’une coupe carte blanche, crop décoloré platine"></video></div>
+            <figcaption><span>Carte blanche</span><small>Crop platine</small></figcaption>
+          </figure>
+          <figure class="work">
+            <div class="work__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" width="508" height="854" loading="lazy"></div>
+            <figcaption><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
+          </figure>
+          <figure class="work work--video">
+            <div class="work__img"><video src="videos/tresses-degrade.mp4" poster="videos/tresses-degrade.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : dégradé réalisé à la tondeuse autour de tresses"></video></div>
+            <figcaption><span>Tresses & dégradé</span><small>Le geste</small></figcaption>
+          </figure>
+          <figure class="work">
+            <div class="work__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" width="1151" height="1466" loading="lazy"></div>
+            <figcaption><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
+          </figure>
+          <figure class="work work--video">
+            <div class="work__img"><video src="videos/taper-texture.mp4" poster="videos/taper-texture.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : résultat d’un taper avec dessus texturé"></video></div>
+            <figcaption><span>Taper texturé</span><small>Résultat</small></figcaption>
+          </figure>
+          <figure class="work">
+            <div class="work__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" width="1179" height="1428" loading="lazy"></div>
+            <figcaption><span>Boucles décolorées</span><small>Contour net</small></figcaption>
+          </figure>
         </div>
-        <div class="carte__book">
-      <div class="phone-wrap">
+      </div>
+      <div class="hscroll__bar" aria-hidden="true"><span id="hBar"></span></div>
+    </div>
+  </section>
+
+  <!-- ================= RÉSERVER ================= -->
+  <section class="sec" id="reserver">
+    <div class="wrap book">
+      <div class="book__intro">
+        <h2 class="h1" data-reveal>Réservez<br>votre créneau</h2>
+        <p class="lede" data-reveal>Choisissez la prestation, le barbier et l’heure. La confirmation est immédiate.</p>
+        <div class="menu" id="menu" data-reveal></div>
+      </div>
+      <div class="book__panel">
+<div class="phone-wrap">
         <div class="phone" id="phone">
           <div class="phone__notch"></div>
           <div class="phone__screen">
@@ -142,100 +223,50 @@
         </div>
         <p class="phone__tag" id="phoneTag" hidden></p>
       </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LE SALON ================= -->
+  <section class="salon" id="salon">
+    <div class="wrap salon__inner">
+      <div class="salon__text">
+        <h2 class="h1" data-reveal>Venez<br>nous voir</h2>
+        <dl class="salon__facts" data-reveal>
+          <div><dt>Adresse</dt><dd>162 route de Bischwiller<br>67300 Schiltigheim</dd></div>
+          <div><dt>Horaires</dt><dd>Mardi – samedi<br>10:00 – 19:00</dd></div>
+        </dl>
+        <div class="salon__actions" data-reveal>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="pill pill--light" target="_blank" rel="noopener">Itinéraire <span aria-hidden="true">↗</span></a>
+          <a href="tel:+33388977468" class="pill pill--ghost">03 88 97 74 68</a>
         </div>
       </div>
+      <figure class="salon__photo" data-reveal>
+        <img src="images/salon.jpg" alt="Le salon Elegance : plafond lumineux en nid d’abeille, fauteuil de barbier et miroirs" loading="lazy">
+      </figure>
+      <a class="salon__badge" href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener" data-reveal><b>4,8</b><span>sur Google<br>284 avis</span></a>
     </div>
   </section>
-
-  <!-- ================= ÉQUIPE ================= -->
-  <section class="equipe" id="equipe">
-    <div class="wrap">
-      <h2 class="h1" data-reveal>Choisissez<br>votre barbier</h2>
-      <ol class="crew" id="team"></ol>
-    </div>
-  </section>
-
-  <!-- ================= LE TRAVAIL (galerie horizontale pilotée par le défilement) ================= -->
-  <section class="travail" id="realisations">
-    <div class="travail__sticky">
-      <div class="wrap">
-      </div>
-      <div class="hscroll" id="hScroll">
-        <div class="hscroll__track" id="hTrack">
-          <div class="hscroll__intro">
-            <h2 class="h1">Sorti<br>du fauteuil</h2>
-          </div>
-          <figure class="work work--video">
-            <div class="work__img"><video src="videos/carte-blanche-platine.mp4" poster="videos/carte-blanche-platine.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : le résultat d’une coupe carte blanche, crop décoloré platine"></video></div>
-            <figcaption><b>01</b><span>Carte blanche</span><small>Crop platine</small></figcaption>
-          </figure>
-          <figure class="work">
-            <div class="work__img"><img src="images/look-texture.jpg" alt="Coupe texturée avec dégradé haut, devant le logo Elegance" width="508" height="854" loading="lazy"></div>
-            <figcaption><b>02</b><span>Crop texturé</span><small>Dégradé haut</small></figcaption>
-          </figure>
-          <figure class="work work--video">
-            <div class="work__img"><video src="videos/tresses-degrade.mp4" poster="videos/tresses-degrade.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : dégradé réalisé à la tondeuse autour de tresses"></video></div>
-            <figcaption><b>03</b><span>Tresses & dégradé</span><small>Le geste</small></figcaption>
-          </figure>
-          <figure class="work">
-            <div class="work__img"><img src="images/look-platine.jpg" alt="Crop décoloré platine avec dégradé bas et trait" width="1151" height="1466" loading="lazy"></div>
-            <figcaption><b>04</b><span>Crop platine</span><small>Trait au rasoir</small></figcaption>
-          </figure>
-          <figure class="work work--video">
-            <div class="work__img"><video src="videos/taper-texture.mp4" poster="videos/taper-texture.jpg" muted loop playsinline preload="metadata" aria-label="Vidéo : résultat d’un taper avec dessus texturé"></video></div>
-            <figcaption><b>05</b><span>Taper texturé</span><small>Résultat</small></figcaption>
-          </figure>
-          <figure class="work">
-            <div class="work__img"><img src="images/look-boucles.jpg" alt="Boucles décolorées et dégradé avec contour net" width="1179" height="1428" loading="lazy"></div>
-            <figcaption><b>06</b><span>Boucles décolorées</span><small>Contour net</small></figcaption>
-          </figure>
-          <div class="hscroll__end">
-                        <p class="hscroll__endtitle">La prochaine coupe,<br>c’est la vôtre</p>
-            <a href="#prestations" class="btn btn--light">Réserver un créneau <span class="btn__arrow" aria-hidden="true">→</span></a>
-          </div>
-        </div>
-      </div>
-      <div class="hscroll__bar" aria-hidden="true"><span id="hBar"></span></div>
-    </div>
-  </section>
-
-  <!-- ================= LE LIEU ================= -->
-  <section class="salon is-light" id="salon">
-    <div class="wrap salon__grid">
-      <h2 class="h1" data-reveal>Venez<br>nous voir</h2>
-      <dl class="salon__facts" data-reveal>
-        <div><dt>Adresse</dt><dd>162 route de Bischwiller<br>67300 Schiltigheim</dd></div>
-        <div><dt>Horaires</dt><dd>Mardi – samedi<br>10:00 – 19:00</dd></div>
-        <div><dt>Avis Google</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener">4,8 ★ · 284 avis</a></dd></div>
-      </dl>
-      <div class="salon__actions" data-reveal>
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--light" target="_blank" rel="noopener">Itinéraire <span class="btn__arrow" aria-hidden="true">↗</span></a>
-        <a href="tel:+33388977468" class="btn btn--line">03 88 97 74 68</a>
-      </div>
-    </div>
-  </section>
-
 </main>
-
 
 <div class="mbar" id="mbar" aria-hidden="true">
   <a href="tel:+33388977468" class="mbar__call" tabindex="-1">Appeler</a>
-  <a href="#prestations" class="mbar__book" tabindex="-1">Réserver un créneau</a>
+  <a href="#reserver" class="mbar__book" tabindex="-1">Réserver</a>
 </div>
 
 <footer class="footer">
-  <div class="wrap">
-    <div class="footer__grid footer__grid--slim">
-      <div class="footer__brand">
-        <span class="logo__word">ELEGANCE</span>
-        <span class="logo__script">Strasbourg</span>
-      </div>
-      <p class="footer__line">Barbier · 162 route de Bischwiller, Schiltigheim · <a href="tel:+33388977468">03 88 97 74 68</a></p>
+  <div class="wrap footer__grid">
+    <div class="footer__brand">
+      <a href="#accueil" class="logo"><span class="logo__word">ELEGANCE</span><span class="logo__script">Strasbourg</span></a>
+      <a href="#reserver" class="pill pill--dark">Prendre rendez-vous</a>
     </div>
-    <div class="footer__meta">
-      <span>© <span id="year"></span> Elegance Strasbourg</span>
-      <span class="footer__links"><a href="https://www.instagram.com/elegance_strasbourg/" target="_blank" rel="noopener">Instagram</a><a href="legal.html">Mentions légales</a><a href="legal.html#confidentialite">Confidentialité</a></span>
-    </div>
+    <div><p class="footer__h">Prestations</p><ul><li>Coupe homme</li><li>Coupe &amp; barbe</li><li>Taillage barbe</li><li>Soin du visage</li></ul></div>
+    <div><p class="footer__h">Le salon</p><ul><li>162 route de Bischwiller</li><li>67300 Schiltigheim</li><li>Mardi – samedi, 10:00 – 19:00</li></ul></div>
+    <div><p class="footer__h">Contact</p><ul><li><a href="tel:+33388977468">03 88 97 74 68</a></li><li><a href="https://www.instagram.com/elegance_strasbourg/" target="_blank" rel="noopener">@elegance_strasbourg</a></li></ul></div>
+  </div>
+  <div class="wrap footer__bottom">
+    <span>© <span id="year"></span> Elegance Strasbourg</span>
+    <span class="footer__links"><a href="legal.html">Mentions légales</a><a href="legal.html#confidentialite">Confidentialité</a></span>
   </div>
 </footer>
 
