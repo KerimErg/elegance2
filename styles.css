@@ -826,3 +826,53 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .intro .hero__photo { animation: fadeIn 1.4s ease .1s both; }
 }
 @media (max-width: 960px) { .hero__photo { height: min(72vh, 660px); } }
+
+/* =====================================================================
+   Bannière « grande maison » : vidéo plein écran, logo centré
+   ===================================================================== */
+.hero--lux { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-rows: 1fr; grid-template-columns: minmax(0, 1fr); place-items: center; height: 100vh; height: 100svh; min-height: 560px; padding: 0; background: #000; }
+.hero--lux::after { display: none; }
+.hero--lux .hero__media { position: absolute; inset: 0; z-index: -1; }
+.hero--lux .hero__video { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(.58) contrast(1.06) saturate(.92); transform: scale(1.04); animation: luxDrift 14s ease-out both; }
+@keyframes luxDrift { from { transform: scale(1.12); } to { transform: scale(1.02); } }
+.hero--lux .hero__media::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0, 0, 0, .1) 0%, rgba(0, 0, 0, .55) 100%), linear-gradient(180deg, rgba(0, 0, 0, .45) 0%, rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, .6) 100%); }
+
+.hero--lux .hero__center { display: flex; flex-direction: column; align-items: center; text-align: center; gap: clamp(1.8rem, 4vh, 3rem); padding-inline: var(--gutter); }
+.hero--lux .hero__title { display: flex; flex-direction: column; align-items: center; margin: 0; gap: 0; }
+.hero--lux .hero__word { font-family: var(--wide); font-weight: 400; font-size: clamp(2.3rem, 8.2vw, 7.6rem); line-height: 1; letter-spacing: .24em; margin-right: -.24em; white-space: nowrap; color: #fff; text-shadow: 0 2px 30px rgba(0, 0, 0, .35); }
+.hero--lux .hero__word span { display: inline-block; }
+.hero--lux .hero__rule { display: block; width: clamp(80px, 12vw, 160px); height: 1px; margin: clamp(1.1rem, 2.4vh, 1.6rem) 0 clamp(.6rem, 1.4vh, .9rem); background: rgba(255, 255, 255, .7); }
+.hero--lux .hero__script { font-family: var(--script); font-size: clamp(1.8rem, 3.6vw, 3.2rem); line-height: 1; color: rgba(255, 255, 255, .9); margin: 0; align-self: center; text-shadow: 0 2px 20px rgba(0, 0, 0, .4); }
+.hero--lux .hero__cta { display: inline-flex; align-items: center; padding: 1rem 2.4rem; border: 1px solid rgba(255, 255, 255, .55); color: #fff; font-size: .74rem; font-weight: 500; letter-spacing: .32em; text-transform: uppercase; transition: background .4s ease, color .4s ease, border-color .4s ease; }
+.hero--lux .hero__cta:hover, .hero--lux .hero__cta:focus-visible { background: #fff; color: #000; border-color: #fff; }
+.hero--lux .hero__scroll { position: absolute; left: 50%; bottom: calc(28px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; width: 1px; height: 56px; background: rgba(255, 255, 255, .2); overflow: hidden; }
+.hero--lux .hero__scroll span { position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: #fff; animation: luxScroll 2.2s cubic-bezier(.6, 0, .3, 1) infinite; }
+@keyframes luxScroll { to { top: 100%; } }
+
+/* Ouverture : les lettres se rapprochent et se révèlent, le filet se trace, puis la signature */
+.intro .hero--lux .hero__word { animation: luxTrack 2.4s cubic-bezier(.2, .7, .2, 1) .3s both; }
+@keyframes luxTrack { from { letter-spacing: .6em; margin-right: -.6em; } }
+.intro .hero--lux .hero__word span { animation: luxLetter 1.6s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(.35s + var(--i) * 90ms); }
+@keyframes luxLetter { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: none; } }
+.intro .hero--lux .hero__rule { animation: luxRule 1.4s cubic-bezier(.7, 0, .2, 1) 1.5s both; }
+@keyframes luxRule { from { transform: scaleX(0); } }
+.intro .hero--lux .hero__script { animation: luxFade 1.4s ease 2.1s both; }
+.intro .hero--lux .hero__cta { animation: luxFade 1.2s ease 2.6s both; }
+.intro .hero--lux .hero__scroll { animation: luxFade 1s ease 3.1s both; }
+.intro .hero--lux .hero__media { animation: luxFade 1.8s ease 0s both; }
+@keyframes luxFade { from { opacity: 0; } }
+.intro .header { animation: fadeIn 1s ease 2.8s both; }
+
+@media (max-width: 960px) {
+  .hero--lux .hero__word { letter-spacing: .14em; margin-right: -.14em; font-size: 9.2vw; }
+  @keyframes luxTrack { from { letter-spacing: .4em; margin-right: -.4em; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero--lux .hero__video { animation: none; transform: none; }
+  .hero--lux .hero__scroll span { animation: none; top: 30%; }
+}
+
+/* Sur la bannière, le petit logo du menu ferait doublon : il apparaît au défilement */
+.header .logo { transition: opacity .4s ease; }
+.header:not(.is-solid) .logo { opacity: 0; pointer-events: none; }
