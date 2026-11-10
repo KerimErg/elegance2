@@ -810,14 +810,19 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @media (min-width: 961px) and (max-width: 1180px) { .hero__photo { width: 50%; } }
 
 /* =====================================================================
-   Bannière : vidéo du salon (format portrait)
+   Bannière : vidéo plein écran
    ===================================================================== */
 .hero__video { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media (min-width: 961px) {
-  .hero__photo { width: min(40%, 600px); right: 0; left: auto; }
-  .hero__photo::after { background: linear-gradient(90deg, var(--bg) 0%, rgba(17, 17, 19, 0) 26%), linear-gradient(0deg, rgba(17, 17, 19, .55), transparent 25%), linear-gradient(180deg, rgba(17, 17, 19, .5), transparent 16%); }
-  .hero__word { text-shadow: 0 2px 6px rgba(0, 0, 0, .35), 0 8px 50px rgba(0, 0, 0, .55); }
+  .hero__photo { width: 100%; left: 0; right: 0; }
+  .hero__video { object-position: 50% 40%; }
+  .hero__photo::after { background:
+    linear-gradient(90deg, rgba(17, 17, 19, .86) 0%, rgba(17, 17, 19, .55) 30%, rgba(17, 17, 19, .08) 60%, rgba(17, 17, 19, .2) 100%),
+    linear-gradient(0deg, rgba(17, 17, 19, .92) 0%, rgba(17, 17, 19, 0) 32%),
+    linear-gradient(180deg, rgba(17, 17, 19, .6) 0%, rgba(17, 17, 19, 0) 16%); }
+  .hero__word { font-size: min(10.6vw, 10.5rem); text-shadow: 0 2px 6px rgba(0, 0, 0, .35), 0 8px 50px rgba(0, 0, 0, .55); }
+  .hero__script { font-size: min(6vw, 5.8rem); }
+  .hero__script, .hero__lead, .hero__kicker { text-shadow: 0 1px 14px rgba(0, 0, 0, .8); }
+  .intro .hero__photo { animation: fadeIn 1.4s ease .1s both; }
 }
-@media (max-width: 960px) {
-  .hero__photo { height: min(70vh, 640px); }
-}
+@media (max-width: 960px) { .hero__photo { height: min(72vh, 660px); } }
