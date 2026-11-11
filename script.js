@@ -256,6 +256,27 @@ document.addEventListener("click", (e) => {
   });
 })();
 
+// ===================== Passage accueil -> prestations =====================
+(() => {
+  const sec = $("#prestations"), strips = $$("#strips .strip");
+  strips.forEach((st, k) => st.style.setProperty("--k", k));
+  if (!sec) return;
+  if (reduced || !("IntersectionObserver" in window)) { sec.classList.add("is-in"); return; }
+  const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { sec.classList.add("is-in"); io.disconnect(); } }, { threshold: .22 });
+  io.observe(sec);
+  // l'accueil s'efface en douceur pendant qu'on descend
+  const center = $(".hero__center"), cue = $(".hero__scroll"), shade = $("#heroShade");
+  let last = -1;
+  scrollWork.push(() => {
+    const p = Math.min(1, Math.max(0, scrollY / (innerHeight * .9)));
+    if (Math.abs(p - last) < .002) return; last = p;
+    center.style.opacity = (1 - p * 1.3).toFixed(3);
+    center.style.transform = `translate3d(0,${(-p * 70).toFixed(1)}px,0) scale(${(1 - p * .06).toFixed(4)})`;
+    cue.style.opacity = (1 - p * 3).toFixed(3);
+    shade.style.opacity = (p * .85).toFixed(3);
+  });
+})();
+
 // ===================== Repères de section (droite) =====================
 (() => {
   const rail = $("#rail"), secs = $$("[data-rail]"); if (!rail || !secs.length) return;
