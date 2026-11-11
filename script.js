@@ -282,7 +282,7 @@ document.addEventListener("click", (e) => {
   scrollWork.push(() => {
     const p = Math.min(1.3, Math.max(0, scrollY / innerHeight));
     if (Math.abs(p - last) < .001) return; last = p;
-    const q = Math.min(1, p / 1.1), e = q * q * (3 - 2 * q);   // départ et arrivée en douceur
+    const q = Math.min(1, p / .9), e = q * q * (3 - 2 * q);   // départ et arrivée en douceur
     media.style.transform = `translate3d(0,${(-e * 3).toFixed(2)}vh,0) scale(${(1 - e * .38).toFixed(4)})`;
     media.style.borderRadius = `${(e * 36).toFixed(1)}px`;
     center.style.opacity = Math.max(0, 1 - p * 1.8).toFixed(3);
@@ -322,13 +322,14 @@ document.addEventListener("click", (e) => {
     [vids, bgs, items].forEach((list) => list.forEach((el, j) => el.classList.toggle("is-on", j === i)));
     minis.forEach((el, j) => el.classList.toggle("is-on", j === i));          // la vignette montre la vidéo suivante
     now.textContent = pad(i + 1);
+    vids[(i + 1) % n].preload = "auto";                  // prépare la vidéo suivante
     try { vids[i].currentTime = 0; } catch (e) {}
     play(); arm();
   };
   const arm = () => { clearTimeout(timer); if (visible && !reduced) timer = setTimeout(() => go(i + 1), 6500); };
   $$(".show__arrow", sec).forEach((b) => b.addEventListener("click", () => go(i + Number(b.dataset.dir))));
   $(".show__mini", sec).addEventListener("click", () => go(i + 1));
-  new IntersectionObserver(([en]) => { visible = en.isIntersecting; play(); arm(); }, { threshold: .25 }).observe(sec);
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) vids[(i + 1) % n].preload = "auto"; play(); arm(); }, { threshold: .25 }).observe(sec);
 })();
 
 // ===================== Apparitions à l'entrée dans l'écran =====================
