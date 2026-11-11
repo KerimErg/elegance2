@@ -8,6 +8,19 @@ const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const pad = (n) => String(n).padStart(2, "0");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// ===================== Défilement adouci =====================
+// Molette et pavé tactile glissent en douceur ; le toucher reste natif sur téléphone.
+const lenis = (!reduced && window.Lenis) ? new window.Lenis({ lerp: .085, wheelMultiplier: .9 }) : null;
+if (lenis) {
+  const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+  requestAnimationFrame(raf);
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const id = a.getAttribute("href"), el = id.length > 1 && document.querySelector(id); if (!el) return;
+    e.preventDefault(); lenis.scrollTo(el, { offset: id === "#accueil" ? 0 : -70, duration: 1.4 });
+  });
+}
+
 // ===================== Header, menu, lien actif =====================
 // Un seul calcul par image affichée ; positions des sections mesurées une fois (et au redimensionnement).
 const header = $("#header"), nav = $("#nav"), burger = $("#burger");
@@ -32,7 +45,7 @@ measureNav(); onScroll();
 const setMenu = (open) => {
   nav.classList.toggle("is-open", open);
   burger.setAttribute("aria-expanded", open);
-  document.body.style.overflow = open ? "hidden" : "";
+  document.body.style.overflow = open ? "hidden" : ""; if (lenis) open ? lenis.stop() : lenis.start();
 };
 burger.addEventListener("click", () => setMenu(!nav.classList.contains("is-open")));
 nav.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
@@ -268,15 +281,15 @@ document.addEventListener("click", (e) => {
   const media = $(".hero__media"), center = $(".hero__center"), cue = $(".hero__scroll"), shade = $("#heroShade");
   let last = -1;
   scrollWork.push(() => {
-    const p = Math.min(1, Math.max(0, scrollY / innerHeight));
+    const p = Math.min(1.3, Math.max(0, scrollY / innerHeight));
     if (Math.abs(p - last) < .001) return; last = p;
-    const q = Math.min(1, p / .75), e = q * q * (3 - 2 * q);   // départ et arrivée en douceur
-    media.style.transform = `scale(${(1 - e * .2).toFixed(4)})`;
-    media.style.borderRadius = `${(e * 32).toFixed(1)}px`;
+    const q = Math.min(1, p / 1.1), e = q * q * (3 - 2 * q);   // départ et arrivée en douceur
+    media.style.transform = `translate3d(0,${(-e * 3).toFixed(2)}vh,0) scale(${(1 - e * .38).toFixed(4)})`;
+    media.style.borderRadius = `${(e * 36).toFixed(1)}px`;
     center.style.opacity = Math.max(0, 1 - p * 1.8).toFixed(3);
-    center.style.transform = `translate3d(0,${(-p * 90).toFixed(1)}px,0)`;
+    center.style.transform = `translate3d(0,${(-p * 90).toFixed(1)}px,0) scale(${(1 - Math.min(p, 1) * .08).toFixed(4)})`;
     cue.style.opacity = Math.max(0, 1 - p * 4).toFixed(3);
-    shade.style.opacity = (e * .7).toFixed(3);
+    shade.style.opacity = (e * .55).toFixed(3);
   });
 })();
 

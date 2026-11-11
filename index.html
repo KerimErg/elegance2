@@ -44,7 +44,6 @@
   <div class="header__bar">
     <a href="#accueil" class="logo" aria-label="Elegance Strasbourg, accueil"><span class="logo__word">ELEGANCE</span><span class="logo__script">Strasbourg</span></a>
     <nav class="nav" id="nav" aria-label="Navigation principale">
-      <a href="#accueil">Accueil</a>
       <a href="#prestations">Prestations</a>
       <a href="#equipe">L’équipe</a>
       <a href="#realisations">Le travail</a>
@@ -85,7 +84,7 @@
     <h2 class="strips-sec__title t-big">Nos prestations,<br><b>nos tarifs.</b></h2>
     <div class="strips" id="strips">
       <article class="strip is-on" tabindex="0">
-        <img src="images/svc-coupe.jpg" alt="" loading="lazy">
+        <img decoding="async" src="images/svc-coupe.jpg" alt="" loading="lazy">
         <span class="strip__label">Coupe homme</span>
         <div class="strip__body">
           <p class="eyebrow">30 min · 18 €</p>
@@ -95,7 +94,7 @@
         </div>
       </article>
       <article class="strip" tabindex="0">
-        <img src="images/look-platine.jpg" alt="" loading="lazy">
+        <img decoding="async" src="images/svc-coupe-barbe.jpg" alt="" loading="lazy">
         <span class="strip__label">Coupe & barbe</span>
         <div class="strip__body">
           <p class="eyebrow">30 min · 28 €</p>
@@ -105,7 +104,7 @@
         </div>
       </article>
       <article class="strip" tabindex="0">
-        <img src="images/card-barbe.jpg" alt="" loading="lazy">
+        <img decoding="async" src="images/svc-barbe.jpg" alt="" loading="lazy">
         <span class="strip__label">Taillage barbe</span>
         <div class="strip__body">
           <p class="eyebrow">15 min · 12 €</p>
@@ -115,7 +114,7 @@
         </div>
       </article>
       <article class="strip" tabindex="0">
-        <img src="images/look-texture.jpg" alt="" loading="lazy">
+        <img decoding="async" src="images/svc-soin.jpg" alt="" loading="lazy">
         <span class="strip__label">Soin du visage</span>
         <div class="strip__body">
           <p class="eyebrow">30 min · 25 €</p>
@@ -125,7 +124,7 @@
         </div>
       </article>
       <article class="strip" tabindex="0">
-        <img src="images/look-boucles.jpg" alt="" loading="lazy">
+        <img decoding="async" src="images/svc-coloration.jpg" alt="" loading="lazy">
         <span class="strip__label">Coloration</span>
         <div class="strip__body">
           <p class="eyebrow">30 min · 15 €</p>
@@ -152,10 +151,10 @@
   <!-- ================= LE TRAVAIL ================= -->
   <section class="show" id="realisations" data-rail="Le travail">
     <div class="show__bg" aria-hidden="true">
-      <img src="videos/travail-tresses.jpg" alt="" class="is-on">
-      <img src="videos/travail-rasoir.jpg" alt="">
-      <img src="videos/travail-platine.jpg" alt="">
-      <img src="videos/travail-nuque.jpg" alt="">
+      <img src="videos/travail-tresses-flou.jpg" alt="" class="is-on">
+      <img src="videos/travail-rasoir-flou.jpg" alt="">
+      <img src="videos/travail-platine-flou.jpg" alt="">
+      <img src="videos/travail-nuque-flou.jpg" alt="">
     </div>
     <div class="wrap show__inner">
       <div class="show__text">
@@ -248,7 +247,7 @@
   <!-- ================= LE SALON ================= -->
   <section class="salon" id="salon" data-rail="Le salon">
     <figure class="salon__photo">
-      <img src="images/salon.jpg" alt="Le salon Elegance : plafond lumineux en nid d’abeille, fauteuil de barbier et miroirs" loading="lazy">
+      <img decoding="async" src="images/salon.jpg" alt="Le salon Elegance : plafond lumineux en nid d’abeille, fauteuil de barbier et miroirs" loading="lazy">
     </figure>
     <div class="salon__text">
       <p class="eyebrow" data-reveal>Le salon</p>
@@ -290,6 +289,7 @@
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
