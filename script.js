@@ -256,22 +256,34 @@ document.addEventListener("click", (e) => {
   book.time = null; show("pick"); renderPick();
 });
 
-// ===================== Prestations : bandes qui s'ouvrent =====================
+// ===================== La carte : une photo suit la souris =====================
 (() => {
-  const strips = $$("#strips .strip"); if (!strips.length) return;
-  const fine = matchMedia("(hover: hover) and (pointer: fine)");
-  const open = (st) => strips.forEach((x) => x.classList.toggle("is-on", x === st));
-  strips.forEach((st) => {
-    st.addEventListener("mouseenter", () => { if (fine.matches) open(st); });
-    st.addEventListener("click", (e) => { if (!e.target.closest("a")) open(st); });
-    st.addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target === st) { e.preventDefault(); open(st); } });
+  const list = $("#carte"), peek = $("#peek"); if (!list || !peek) return;
+  const pics = $$("img", peek), fine = matchMedia("(hover: hover) and (pointer: fine)");
+  let x = 0, y = 0, cx = 0, cy = 0, raf = 0, on = false;
+  const loop = () => {
+    cx += (x - cx) * .14; cy += (y - cy) * .14;
+    peek.style.left = cx.toFixed(1) + "px"; peek.style.top = cy.toFixed(1) + "px";
+    raf = on || Math.abs(x - cx) > .5 ? requestAnimationFrame(loop) : 0;
+  };
+  list.addEventListener("pointermove", (e) => {
+    if (!fine.matches) return;
+    const r = list.getBoundingClientRect();
+    x = r.left + r.width * .5 + (e.clientX - r.left - r.width * .5) * .15; y = e.clientY;   // reste entre le nom et le prix, suit surtout la hauteur
+    if (!on) { cx = x; cy = y; }
+    if (!raf) raf = requestAnimationFrame(loop);
   });
+  $$(".carte__row", list).forEach((row) => row.addEventListener("pointerenter", () => {
+    if (!fine.matches) return;
+    pics.forEach((p, k) => p.classList.toggle("is-on", k === Number(row.dataset.img)));
+    on = true; peek.classList.add("is-on");
+  }));
+  list.addEventListener("pointerleave", () => { on = false; peek.classList.remove("is-on"); });
 })();
 
 // ===================== Passage accueil -> prestations =====================
 (() => {
-  const sec = $("#prestations"), strips = $$("#strips .strip");
-  strips.forEach((st, k) => st.style.setProperty("--k", k));
+  const sec = $("#prestations");
   if (!sec) return;
   if (reduced || !("IntersectionObserver" in window)) { sec.classList.add("is-in"); return; }
   const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { sec.classList.add("is-in"); io.disconnect(); } }, { threshold: .35 });
