@@ -313,13 +313,13 @@ document.addEventListener("click", (e) => {
 // ===================== Le travail : vitrine vidéo =====================
 (() => {
   const sec = $("#realisations"); if (!sec) return;
-  const vids = $$(".show__main video", sec), bgs = $$(".show__bg img", sec), minis = $$(".show__mini img", sec), items = $$(".show__item", sec);
+  const vids = $$(".show__main video", sec), minis = $$(".show__mini img", sec), items = $$(".show__item", sec);
   const now = $("#showNow"), n = vids.length;
   let i = 0, visible = false, timer = 0;
   const play = () => vids.forEach((v, k) => { if (k === i && visible && !reduced) { const p = v.play(); if (p) p.catch(() => {}); } else v.pause(); });
   const go = (k) => {
     i = (k + n) % n;
-    [vids, bgs, items].forEach((list) => list.forEach((el, j) => el.classList.toggle("is-on", j === i)));
+    [vids, items].forEach((list) => list.forEach((el, j) => el.classList.toggle("is-on", j === i)));
     minis.forEach((el, j) => el.classList.toggle("is-on", j === i));          // la vignette montre la vidéo suivante
     now.textContent = pad(i + 1);
     vids[(i + 1) % n].preload = "auto";                  // prépare la vidéo suivante
