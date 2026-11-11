@@ -161,12 +161,17 @@
     </div>
     <div class="wrap show__inner">
       <div class="show__text">
-        <div class="show__tags"><span class="eyebrow">Le travail</span><span class="tag">Filmé au salon</span></div>
+        <p class="show__kicker">Le travail <span>· filmé au salon</span></p>
         <div class="show__titles" aria-live="polite">
-          <div class="show__item is-on"><h2 class="show__title">Tresses<br>& dégradé</h2><p>Dégradé à la tondeuse autour des tresses.</p></div>
-          <div class="show__item"><h2 class="show__title">Contours<br>au rasoir</h2><p>Le tracé, net, au rasoir.</p></div>
+          <div class="show__item is-on"><h2 class="show__title">Tresses<br><i>&amp;</i> dégradé</h2><p>Dégradé à la tondeuse, autour des tresses.</p></div>
+          <div class="show__item"><h2 class="show__title">Contours<br><i>au</i> rasoir</h2><p>Le tracé, net, au rasoir.</p></div>
           <div class="show__item"><h2 class="show__title">Crop<br>platine</h2><p>Décoloration et dégradé.</p></div>
-          <div class="show__item"><h2 class="show__title">Les<br>finitions</h2><p>La nuque, à la tondeuse.</p></div>
+          <div class="show__item"><h2 class="show__title"><i>Les</i><br>finitions</h2><p>La nuque, à la tondeuse.</p></div>
+        </div>
+        <div class="show__nav">
+          <button type="button" class="show__arrow" data-dir="-1" aria-label="Vidéo précédente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+          <span class="show__count"><b id="showNow">01</b><i></i>04</span>
+          <button type="button" class="show__arrow" data-dir="1" aria-label="Vidéo suivante"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
       </div>
       <div class="show__stage">
@@ -175,18 +180,15 @@
           <video src="videos/travail-rasoir.mp4" poster="videos/travail-rasoir.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : contour au rasoir"></video>
           <video src="videos/travail-platine.mp4" poster="videos/travail-platine.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : crop platine"></video>
           <video src="videos/travail-nuque.mp4" poster="videos/travail-nuque.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : finitions de la nuque"></video>
+          <span class="show__frame" aria-hidden="true"></span>
         </div>
         <button class="show__mini" type="button" aria-label="Vidéo suivante">
           <img src="videos/travail-rasoir.jpg" alt="" class="is-on">
           <img src="videos/travail-platine.jpg" alt="">
           <img src="videos/travail-nuque.jpg" alt="">
           <img src="videos/travail-tresses.jpg" alt="">
+          <span class="show__mini-label">Suivant</span>
         </button>
-      </div>
-      <div class="show__nav">
-        <button type="button" class="show__arrow" data-dir="-1" aria-label="Vidéo précédente">←</button>
-        <span class="show__count"><b id="showNow">01</b> / 04</span>
-        <button type="button" class="show__arrow" data-dir="1" aria-label="Vidéo suivante">→</button>
       </div>
     </div>
   </section>
