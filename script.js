@@ -273,8 +273,27 @@ document.addEventListener("click", (e) => {
     center.style.opacity = (1 - p * 1.3).toFixed(3);
     center.style.transform = `translate3d(0,${(-p * 70).toFixed(1)}px,0) scale(${(1 - p * .06).toFixed(4)})`;
     cue.style.opacity = (1 - p * 3).toFixed(3);
-    shade.style.opacity = (p * .85).toFixed(3);
+    shade.style.opacity = Math.min(1, p * 1.1).toFixed(3);
   });
+})();
+
+// ===================== Transition : les mots s'éclairent au fil du défilement =====================
+(() => {
+  const t = $("#introText"); if (!t) return;
+  t.setAttribute("aria-label", t.textContent);
+  t.innerHTML = t.textContent.split(" ").map((w) => `<span class="w" aria-hidden="true">${w}</span>`).join(" ");
+  const words = $$(".w", t);
+  if (reduced) { words.forEach((w) => w.classList.add("on")); return; }
+  let last = -1;
+  const update = () => {
+    const r = t.getBoundingClientRect();
+    // début : haut du texte aux 85 % de l'écran ; fin : bas du texte à 45 %
+    const p = Math.min(1, Math.max(0, (innerHeight * .85 - r.top) / (r.height + innerHeight * .4)));
+    const n = Math.round(p * words.length);
+    if (n === last) return; last = n;
+    words.forEach((w, i) => w.classList.toggle("on", i < n));
+  };
+  update(); scrollWork.push(update); addEventListener("resize", update);
 })();
 
 // ===================== Repères de section (droite) =====================

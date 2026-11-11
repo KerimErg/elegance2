@@ -135,6 +135,21 @@ button { background: none; border: 0; cursor: pointer; }
 @keyframes fade { from { opacity: 0; } }
 @keyframes up { from { opacity: 0; transform: translateY(18px); } }
 
+/* =====================================================================
+   Transition accueil -> prestations : texte seul, mots qui s'éclairent
+   ===================================================================== */
+.intro-sec { background: var(--bg); padding-block: clamp(120px, 16vw, 220px) clamp(100px, 12vw, 170px); }
+.intro-sec__eyebrow { margin-bottom: 2rem; }
+.intro-sec__text { max-width: 22ch; font-weight: 300; font-size: clamp(2rem, 4.4vw, 4.2rem); line-height: 1.08; letter-spacing: -.03em; }
+.intro-sec__text .w { transition: color .5s ease; color: rgba(244, 243, 247, .16); }
+.intro-sec__text .w.on { color: var(--cream); }
+.intro-sec__facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--line); }
+.intro-sec__facts div { padding: 1.8rem 1.4rem 0 0; }
+.intro-sec__facts div + div { padding-left: 1.4rem; border-left: 1px solid var(--line); }
+.intro-sec__facts dt { font-weight: 300; font-size: clamp(2.2rem, 4vw, 3.6rem); line-height: 1; letter-spacing: -.03em; }
+.intro-sec__facts dt small { font-size: .45em; color: var(--gold-2); margin-left: .1em; letter-spacing: 0; }
+.intro-sec__facts dd { margin-top: .6rem; color: var(--muted); font-size: .95rem; }
+
 /* Passage accueil -> prestations : le contenu de l'accueil s'efface, puis les bandes
    montent une à une comme un rideau qui se lève. */
 .hero__shade { position: absolute; inset: 0; z-index: 0; background: var(--bg); opacity: 0; pointer-events: none; }
@@ -375,6 +390,9 @@ button { background: none; border: 0; cursor: pointer; }
   @keyframes track { from { letter-spacing: .4em; margin-right: -.4em; } }
   .hero__caps { font-size: .78rem; letter-spacing: .3em; margin-right: -.3em; }
   .salon__facts { grid-template-columns: 1fr 1fr; gap: 1.2rem 1rem; }
+  .intro-sec__facts { grid-template-columns: 1fr 1fr; }
+  .intro-sec__facts div:nth-child(3) { padding-left: 0; border-left: 0; }
+  .intro-sec__facts div:nth-child(n+3) { margin-top: 1.6rem; border-top: 1px solid var(--line); }
   .show__title { font-size: clamp(2.8rem, 13vw, 4rem); }
   #pService .chip { flex-direction: column; align-items: flex-start; gap: .15rem; }
 }
