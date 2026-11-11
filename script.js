@@ -245,9 +245,8 @@ $("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); s
 $("#year").textContent = today.getFullYear();
 
 // ===================== L'équipe =====================
-$("#team").innerHTML = BARBERS.map((b) => `
-  <li data-reveal><a href="#reserver" data-pick-barber="${b.id}"><span class="crew__name">${b.name}</span><span class="crew__go">Réserver<span class="sr-only"> avec ${b.name}</span> <span aria-hidden="true">→</span></span></a></li>`).join("")
-  + `<li data-reveal><a href="#reserver" data-pick-barber="any"><span class="crew__name crew__name--any">Le premier disponible</span><span class="crew__go">Réserver <span aria-hidden="true">→</span></span></a></li>`;
+$("#team").innerHTML = [...BARBERS.map((b) => [b.id, b.name, `Réserver<span class="sr-only"> avec ${b.name}</span>`]), ["any", "Premier disponible", "Réserver"]]
+  .map(([id, name, go], k) => `<li data-reveal><a href="#reserver" data-pick-barber="${id}"><span class="crew__n">${pad(k + 1)}</span><span class="crew__name">${name}</span><span class="crew__go">${go}</span></a></li>`).join("");
 
 // Choix d'un barbier ou d'une prestation depuis la page : le module de réservation suit
 document.addEventListener("click", (e) => {

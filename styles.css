@@ -164,11 +164,11 @@ button { background: none; border: 0; cursor: pointer; }
 .strips { display: flex; gap: 6px; height: min(74vh, 720px); min-height: 520px; }
 .strip { position: relative; isolation: isolate; flex: 1 1 0; min-width: 0; overflow: hidden; cursor: pointer; border-radius: 4px; transition: flex-grow 1s var(--slow); outline-offset: -3px; }
 .strip.is-on { flex-grow: 4.2; cursor: default; }
-.strip img { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); filter: grayscale(1); transition: transform 1.4s var(--slow), filter 1s ease; }
-.strip.is-on img { transform: scale(1); filter: none; }
-.strip::before { content: ""; position: absolute; inset: 0; z-index: -2; background: #09090b; opacity: .78; transition: opacity 1s ease; }
+.strip img { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); transition: transform 1.4s var(--slow); }
+.strip.is-on img { transform: scale(1); }
+.strip::before { content: ""; position: absolute; inset: 0; z-index: -2; background: #09090b; opacity: .66; transition: opacity 1s ease; }
 .strip.is-on::before { opacity: .08; }
-.strip:not(.is-on):hover::before { opacity: .6; }
+.strip:not(.is-on):hover::before { opacity: .45; }
 .strip::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(9, 9, 11, 0) 50%, rgba(9, 9, 11, .8) 100%); opacity: 0; transition: opacity 1s; }
 .strip.is-on::after { opacity: 1; }
 .strip__label { position: absolute; left: 50%; bottom: 30px; writing-mode: vertical-rl; transform: translateX(-50%) rotate(180deg); white-space: nowrap; font-size: .88rem; font-weight: 400; color: var(--muted); letter-spacing: .02em; transition: opacity .4s; }
@@ -185,19 +185,19 @@ button { background: none; border: 0; cursor: pointer; }
    L'équipe
    ===================================================================== */
 .sec { padding-block: var(--section); }
-.team { background: var(--bg-2); }
-.team__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(2.5rem, 7vw, 7rem); align-items: center; }
-.team__intro { display: grid; gap: 1.4rem; }
+.team { background: var(--bg); }
+.team__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(2.5rem, 7vw, 7rem); align-items: start; }
+.team__intro { display: grid; gap: 1.4rem; position: sticky; top: 120px; }
 .crew { border-top: 1px solid var(--line); }
 .crew li { border-bottom: 1px solid var(--line); }
-.crew a { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: clamp(1rem, 2.2vw, 1.5rem) 0; }
-.crew a::before { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform .7s var(--slow); }
-.crew__name { font-weight: 300; font-size: clamp(2.2rem, 4.4vw, 3.8rem); line-height: 1; letter-spacing: -.03em; transition: color .4s, transform .6s var(--ease); }
-.crew__name--any { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(1.7rem, 3vw, 2.5rem); letter-spacing: 0; color: var(--muted); }
-.crew__go { display: inline-flex; align-items: center; gap: .5rem; color: var(--gold-2); font-size: .92rem; font-weight: 500; opacity: .0; transform: translateX(-10px); transition: opacity .4s, transform .5s var(--ease); }
+.crew a { position: relative; display: grid; grid-template-columns: 2.6rem 1fr auto; align-items: baseline; gap: 1rem; padding: 1.5rem 0; }
+.crew a::before { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--cream); transform: scaleX(0); transform-origin: left; transition: transform .8s var(--slow); }
+.crew__n { font-size: .8rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+.crew__name { font-weight: 300; font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.1; letter-spacing: -.02em; transition: transform .6s var(--ease); }
+.crew__go { font-size: .85rem; color: var(--faint); transition: color .4s; }
 .crew a:hover::before, .crew a:focus-visible::before { transform: scaleX(1); }
-.crew a:hover .crew__name, .crew a:focus-visible .crew__name { color: var(--gold-2); transform: translateX(10px); }
-.crew a:hover .crew__go, .crew a:focus-visible .crew__go { opacity: 1; transform: none; }
+.crew a:hover .crew__name, .crew a:focus-visible .crew__name { transform: translateX(6px); }
+.crew a:hover .crew__go, .crew a:focus-visible .crew__go { color: var(--cream); }
 
 /* =====================================================================
    Le travail : vitrine vidéo
@@ -364,6 +364,7 @@ button { background: none; border: 0; cursor: pointer; }
   .strip__title { flex-basis: 100%; }
 
   .team__grid, .book, .show__inner { grid-template-columns: minmax(0, 1fr); }
+  .team__intro { position: static; }
   .book__intro { position: static; }
   .show { padding-block: var(--section); }
   .show__stage { padding-left: 0; padding-right: 30px; }
