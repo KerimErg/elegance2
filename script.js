@@ -157,7 +157,7 @@ el.pick.addEventListener("click", (e) => {
   if (c && !c.disabled) {
     const box = c.parentElement, left = box.scrollLeft;
     book[c.dataset.g] = c.dataset.v;
-    renderPick(); syncQuick(); $("#" + box.id).scrollLeft = left;
+    renderPick(); $("#" + box.id).scrollLeft = left;
   } else if (sl && !sl.disabled) { book.time = sl.dataset.t; renderPick(); }
 });
 
@@ -225,7 +225,7 @@ $("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); s
   renderPick();
   await loadAvailability();
   book.date = days.find(dayHasSlot) || days[0];
-  renderPick(); syncQuick();
+  renderPick();
 })();
 
 // ===================== Divers =====================
@@ -233,33 +233,67 @@ $("#year").textContent = today.getFullYear();
 
 // ===================== L'équipe =====================
 $("#team").innerHTML = BARBERS.map((b) => `
-  <article class="crew__card" data-reveal>
-    <h3 class="crew__name">${b.name}</h3>
-    <p class="crew__role">Barbier</p>
-    <span class="crew__mono" aria-hidden="true">${b.name[0]}</span>
-    <div class="crew__foot"><small>Mardi au samedi</small><a href="#reserver" class="crew__book" data-pick-barber="${b.id}">Réserver<span class="sr-only"> avec ${b.name}</span></a></div>
-  </article>`).join("");
+  <li data-reveal><a href="#reserver" data-pick-barber="${b.id}"><span class="crew__name">${b.name}</span><span class="crew__go">Réserver<span class="sr-only"> avec ${b.name}</span> <span aria-hidden="true">→</span></span></a></li>`).join("")
+  + `<li data-reveal><a href="#reserver" data-pick-barber="any"><span class="crew__name crew__name--any">Le premier disponible</span><span class="crew__go">Réserver <span aria-hidden="true">→</span></span></a></li>`;
 
 // Choix d'un barbier ou d'une prestation depuis la page : le module de réservation suit
 document.addEventListener("click", (e) => {
   const a = e.target.closest("[data-pick-barber], [data-pick-service]"); if (!a) return;
   if (a.dataset.pickBarber) book.barber = a.dataset.pickBarber;
   if (a.dataset.pickService) book.service = a.dataset.pickService;
-  book.time = null; show("pick"); renderPick(); syncQuick();
+  book.time = null; show("pick"); renderPick();
 });
 
-// ===================== Réservation rapide (bannière) =====================
-const qS = $("#qService"), qB = $("#qBarber"), qD = $("#qDay");
-qS.innerHTML = SERVICES.map((s) => `<option value="${s.id}">${s.name} · ${s.price} €</option>`).join("");
-qB.innerHTML = `<option value="any">Peu importe</option>` + BARBERS.map((b) => `<option value="${b.id}">${b.name}</option>`).join("");
-qD.innerHTML = days.map((d) => `<option value="${d}">${d === iso(today) ? "Aujourd’hui" : fmtLong(d).replace(/^./, (c) => c.toUpperCase())}</option>`).join("");
-function syncQuick() { qS.value = book.service; qB.value = book.barber; if (book.date) qD.value = book.date; }
-$("#quick").addEventListener("submit", (e) => {
-  e.preventDefault();
-  book.service = qS.value; book.barber = qB.value; book.date = qD.value; book.time = null;
-  show("pick"); renderPick();
-  $("#reserver").scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
-});
+// ===================== Prestations : bandes qui s'ouvrent =====================
+(() => {
+  const strips = $$("#strips .strip"); if (!strips.length) return;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)");
+  const open = (st) => strips.forEach((x) => x.classList.toggle("is-on", x === st));
+  strips.forEach((st) => {
+    st.addEventListener("mouseenter", () => { if (fine.matches) open(st); });
+    st.addEventListener("click", (e) => { if (!e.target.closest("a")) open(st); });
+    st.addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target === st) { e.preventDefault(); open(st); } });
+  });
+})();
+
+// ===================== Repères de section (droite) =====================
+(() => {
+  const rail = $("#rail"), secs = $$("[data-rail]"); if (!rail || !secs.length) return;
+  rail.innerHTML = secs.map((s) => `<a href="#${s.id}"><span>${s.dataset.rail}</span><i></i></a>`).join("");
+  const dots = $$("a", rail);
+  let tops = [], last = -1;
+  const measure = () => { tops = secs.map((s) => s.offsetTop); };
+  const update = () => {
+    const y = scrollY + innerHeight * .45; let k = 0;
+    tops.forEach((t, i) => { if (t <= y) k = i; });
+    if (k !== last) { dots.forEach((d, i) => d.classList.toggle("is-on", i === k)); last = k; }
+  };
+  measure(); update();
+  addEventListener("resize", () => { measure(); update(); });
+  addEventListener("load", () => { measure(); update(); });
+  scrollWork.push(update);
+})();
+
+// ===================== Le travail : vitrine vidéo =====================
+(() => {
+  const sec = $("#realisations"); if (!sec) return;
+  const vids = $$(".show__main video", sec), bgs = $$(".show__bg img", sec), minis = $$(".show__mini img", sec), items = $$(".show__item", sec);
+  const now = $("#showNow"), n = vids.length;
+  let i = 0, visible = false, timer = 0;
+  const play = () => vids.forEach((v, k) => { if (k === i && visible && !reduced) { const p = v.play(); if (p) p.catch(() => {}); } else v.pause(); });
+  const go = (k) => {
+    i = (k + n) % n;
+    [vids, bgs, items].forEach((list) => list.forEach((el, j) => el.classList.toggle("is-on", j === i)));
+    minis.forEach((el, j) => el.classList.toggle("is-on", j === i));          // la vignette montre la vidéo suivante
+    now.textContent = pad(i + 1);
+    try { vids[i].currentTime = 0; } catch (e) {}
+    play(); arm();
+  };
+  const arm = () => { clearTimeout(timer); if (visible && !reduced) timer = setTimeout(() => go(i + 1), 6500); };
+  $$(".show__arrow", sec).forEach((b) => b.addEventListener("click", () => go(i + Number(b.dataset.dir))));
+  $(".show__mini", sec).addEventListener("click", () => go(i + 1));
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; play(); arm(); }, { threshold: .25 }).observe(sec);
+})();
 
 // ===================== Apparitions à l'entrée dans l'écran =====================
 // Seuls les éléments encore hors écran au chargement sont masqués : la page reste complète sans script.
@@ -289,7 +323,7 @@ if (!reduced && "IntersectionObserver" in window) {
 // ===================== Vidéos : lecture seulement quand elles sont à l'écran =====================
 // Économise la batterie et le processeur ; aucune lecture automatique si l'appareil limite les animations.
 (() => {
-  const vids = $$("video");
+  const vids = $$("video:not([data-managed])");
   if (reduced) { vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); v.controls = true; }); return; }
   const io = new IntersectionObserver((entries) => entries.forEach((en) => {
     const v = en.target;
