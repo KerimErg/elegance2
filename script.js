@@ -501,3 +501,12 @@ scrollWork.push(toggleMbar);
   ["touchstart", "pointerdown", "scroll", "keydown"].forEach((ev) => addEventListener(ev, kick, { passive: true, once: true }));
   tryPlay();
 })();
+
+// ===================== Prestations sur téléphone : flèches du carrousel =====================
+(() => {
+  const box = $("#strips"), nav = $(".strips-nav"); if (!box || !nav) return;
+  $$("button", nav).forEach((b) => b.addEventListener("click", () => {
+    const card = $(".strip", box); const step = card ? card.getBoundingClientRect().width + 14 : box.clientWidth * .8;
+    box.scrollBy({ left: step * Number(b.dataset.dir), behavior: "smooth" });
+  }));
+})();
