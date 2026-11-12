@@ -415,3 +415,50 @@ function toggleMbar() {
   mbar.querySelectorAll("a").forEach((a) => (on ? a.removeAttribute("tabindex") : a.setAttribute("tabindex", "-1")));
 }
 scrollWork.push(toggleMbar);
+
+// ===================== Curseur sur mesure et boutons aimantés (souris uniquement) =====================
+(() => {
+  const c = document.getElementById("cursor");
+  if (!c || reduced || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  document.documentElement.classList.add("has-cursor");
+  const ring = $(".cursor__ring", c), dot = $(".cursor__dot", c), label = $(".cursor__label", c);
+  let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y, raf = 0;
+  const loop = () => {
+    rx += (x - rx) * .16; ry += (y - ry) * .16;
+    ring.style.transform = `translate3d(${rx.toFixed(1)}px,${ry.toFixed(1)}px,0)`;
+    raf = Math.abs(x - rx) + Math.abs(y - ry) > .3 ? requestAnimationFrame(loop) : 0;
+  };
+  addEventListener("pointermove", (e) => {
+    x = e.clientX; y = e.clientY;
+    dot.style.transform = `translate3d(${x}px,${y}px,0)`;
+    c.classList.remove("is-hidden");
+    if (!raf) raf = requestAnimationFrame(loop);
+  }, { passive: true });
+  document.addEventListener("pointerleave", () => c.classList.add("is-hidden"));
+  document.addEventListener("pointerover", (e) => {
+    const t = e.target;
+    const zone = t.closest("[data-cursor]"), link = t.closest("a, button, .strip");
+    const field = t.closest("input, select, textarea");
+    const lab = link && link.closest(".strip.is-on") && link.matches("a") ? "Réserver" : (zone && !(link && !link.matches(".strip")) ? zone.dataset.cursor : "");
+    c.classList.toggle("is-label", !!lab && !field);
+    c.classList.toggle("is-link", !lab && !!link && !field);
+    c.classList.toggle("is-hidden", !!field);
+    if (lab) label.textContent = lab;
+  });
+  // boutons aimantés
+  $$(".btn, .header__cta").forEach((b) => {
+    b.addEventListener("pointermove", (e) => {
+      const r = b.getBoundingClientRect();
+      b.style.transform = `translate(${((e.clientX - r.left - r.width / 2) * .22).toFixed(1)}px, ${((e.clientY - r.top - r.height / 2) * .3).toFixed(1)}px)`;
+    });
+    b.addEventListener("pointerleave", () => { b.style.transform = ""; });
+  });
+})();
+
+// ===================== Grandes images : dévoilement depuis le centre =====================
+(() => {
+  const els = $$(".strips, .show__main");
+  if (reduced || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver((en) => en.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-unveiled"); io.unobserve(e.target); } }), { threshold: .2 });
+  els.forEach((el) => { if (el.getBoundingClientRect().top > innerHeight * .8) { el.classList.add("unveil"); io.observe(el); } });
+})();

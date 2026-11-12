@@ -38,6 +38,7 @@
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__ring"><b class="cursor__label"></b></span><span class="cursor__dot"></span></div>
 <a class="skip" href="#reserver">Aller à la réservation</a>
 
 <header class="header" id="header">
@@ -89,7 +90,7 @@
       <h2 class="strips-sec__title t-big">Nos prestations,<br><b>nos tarifs.</b></h2>
       <p class="strips-sec__aside">Du mardi au samedi, sur rendez-vous.</p>
     </div>
-    <div class="wrap"><div class="strips" id="strips">
+    <div class="wrap"><div class="strips" id="strips" data-cursor="Voir">
       <article class="strip is-on" tabindex="0">
         <img decoding="async" src="images/svc-coupe.jpg" alt="" loading="lazy">
         <span class="strip__frame" aria-hidden="true"></span>
@@ -174,7 +175,7 @@
         </ol>
       </div>
       <div class="show__stage">
-        <div class="show__main">
+        <div class="show__main" data-cursor="Voir">
           <video src="videos/travail-tresses.mp4" poster="videos/travail-tresses.jpg" muted loop playsinline preload="metadata" data-managed class="is-on" aria-label="Vidéo : dégradé autour de tresses"></video>
           <video src="videos/travail-rasoir.mp4" poster="videos/travail-rasoir.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : contour au rasoir"></video>
           <video src="videos/travail-platine.mp4" poster="videos/travail-platine.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : crop platine"></video>

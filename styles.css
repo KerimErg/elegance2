@@ -422,6 +422,31 @@ button { background: none; border: 0; cursor: pointer; }
 .t-big.rv .ln > span { transform: translateY(110%); }
 .t-big.rv.in .ln > span { transform: none; transition: transform 1.25s cubic-bezier(.2, .8, .2, 1); transition-delay: calc(var(--rd, 0s) + var(--li, 0) * .12s); }
 
+
+/* ---------- Curseur sur mesure (souris uniquement) ---------- */
+.cursor { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor .strip { cursor: none; }
+  html.has-cursor input, html.has-cursor select, html.has-cursor textarea { cursor: auto; }
+  .has-cursor .cursor { display: block; }
+}
+.cursor { position: fixed; left: 0; top: 0; z-index: 300; pointer-events: none; }
+.cursor__dot { position: fixed; left: 0; top: 0; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--cream); mix-blend-mode: difference; transition: opacity .3s, transform .3s; }
+.cursor__ring { position: fixed; left: 0; top: 0; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; border: 1px solid rgba(244, 243, 247, .55); display: grid; place-items: center; transition: width .5s var(--ease), height .5s var(--ease), margin .5s var(--ease), background .4s, border-color .4s, opacity .3s; }
+.cursor__label { font-size: .62rem; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; color: #0b0b0d; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .4s var(--ease); margin-right: -.24em; }
+.cursor.is-link .cursor__ring { width: 64px; height: 64px; margin: -32px 0 0 -32px; border-color: rgba(244, 243, 247, .9); }
+.cursor.is-link .cursor__dot { transform: scale(0); }
+.cursor.is-label .cursor__ring { width: 96px; height: 96px; margin: -48px 0 0 -48px; background: var(--cream); border-color: var(--cream); }
+.cursor.is-label .cursor__label { opacity: 1; transform: none; }
+.cursor.is-label .cursor__dot { transform: scale(0); }
+.cursor.is-hidden .cursor__ring, .cursor.is-hidden .cursor__dot { opacity: 0; }
+
+/* ---------- Grandes images : dévoilement depuis le centre ---------- */
+.unveil { clip-path: inset(14% 10% 14% 10%); transition: clip-path 1.6s cubic-bezier(.7, 0, .2, 1); }
+.unveil.is-unveiled { clip-path: inset(0 0 0 0); }
+.unveil video, .unveil img { transition: transform 1.9s cubic-bezier(.2, .7, .2, 1); }
+.unveil:not(.is-unveiled) video, .unveil:not(.is-unveiled) img { transform: scale(1.22); }
+
 /* =====================================================================
    Responsive
    ===================================================================== */
