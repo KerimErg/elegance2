@@ -142,8 +142,12 @@ button { background: none; border: 0; cursor: pointer; }
 
 /* Passage accueil -> prestations : l'accueil reste fixé et se resserre en carte
    pendant que les prestations montent par-dessus. */
-.hero-stage { position: relative; height: 200vh; height: 200svh; background: var(--bg); }
+.hero-stage { position: relative; height: 300vh; height: 300svh; background: var(--bg); }
 .hero-stage .hero { position: sticky; top: 0; }
+/* la vidéo n'est plus visible qu'à travers les lettres, puis on traverse le mot */
+.hero__mask { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; background: #09090b; color: #fff; mix-blend-mode: multiply; opacity: 0; pointer-events: none; will-change: transform, opacity; }
+.hero__mask span { font-family: var(--wide); font-size: 13.5vw; line-height: 1; letter-spacing: .02em; margin-right: -.02em; white-space: nowrap; }
+.hero__media::after { opacity: var(--grad, 1); }
 .hero__media { transform-origin: 50% 40%; overflow: hidden; will-change: transform, border-radius; }
 .hero__shade { position: absolute; inset: 0; z-index: 0; background: var(--bg); opacity: 0; pointer-events: none; }
 .hero__center, .hero__scroll { will-change: opacity, transform; }
