@@ -348,7 +348,7 @@ button { background: none; border: 0; cursor: pointer; }
 /* ---------- Accueil : bouton et note ---------- */
 .hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 @media (min-width: 961px) {
-  .hero__media::before { background: linear-gradient(90deg, rgba(9, 9, 11, .8) 0%, rgba(9, 9, 11, .74) 27%, rgba(9, 9, 11, 0) 37%, rgba(9, 9, 11, 0) 63%, rgba(9, 9, 11, .74) 73%, rgba(9, 9, 11, .8) 100%); }
+  .hero__media::before { background: linear-gradient(90deg, rgba(9, 9, 11, .42) 0%, rgba(9, 9, 11, .34) 27%, rgba(9, 9, 11, 0) 37%, rgba(9, 9, 11, 0) 63%, rgba(9, 9, 11, .34) 73%, rgba(9, 9, 11, .42) 100%); }
 }
 .hero__cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem 1.6rem; margin-top: 2.4rem; }
 .hero__rating { font-size: .88rem; color: rgba(244, 243, 247, .82); border-bottom: 1px solid rgba(244, 243, 247, .25); padding-bottom: 2px; transition: border-color .3s; }
