@@ -503,3 +503,23 @@ button { background: none; border: 0; cursor: pointer; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .rv { opacity: 1; transform: none; }
 }
+
+/* ---------- Téléphone : page plus courte (pas de contenus en double) ---------- */
+@media (max-width: 720px) {
+  :root { --section: 72px; }
+  .strips-sec { padding-block: 72px 56px; }
+  .tarifs, .recap, .salon__map, .footer__grid > div:nth-child(2) { display: none; }
+  .strip__label::after { content: attr(data-price); font-size: .9rem; letter-spacing: .04em; color: var(--muted); }
+  .avis__head { margin-bottom: 1.6rem; }
+  .avis__grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; gap: 1rem; border-top: 0; margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r)); padding-inline: var(--gutter) var(--gutter-r); scroll-padding-inline: var(--gutter); }
+  .avis__grid::-webkit-scrollbar { display: none; }
+  .avis__item, .avis__item + .avis__item { flex: 0 0 86%; scroll-snap-align: start; padding: 1.4rem 0 0; border: 0; border-top: 1px solid var(--line); }
+  .avis__item blockquote { font-size: 1.12rem; }
+  .salon__photo { aspect-ratio: 16 / 10; }
+  .salon__text { gap: 1.4rem; }
+  .show__title { font-size: clamp(2.4rem, 11vw, 3.2rem); }
+  .show__chapters { margin-top: 1.4rem; }
+  .show__chap { padding: .75rem 0; }
+  .footer { padding-top: 48px; }
+  .footer__grid { gap: 1.4rem; padding-bottom: 2rem; }
+}
