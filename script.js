@@ -25,7 +25,7 @@ if (lenis) {
 // Un seul calcul par image affichée ; positions des sections mesurées une fois (et au redimensionnement).
 const header = $("#header"), nav = $("#nav"), burger = $("#burger");
 const navLinks = $$(".nav a:not(.nav__cta)");
-const NAV_SECS = ["accueil", "prestations", "equipe", "realisations", "reserver", "salon"];
+const NAV_SECS = ["accueil", "prestations", "realisations", "reserver", "salon"];
 let navTops = [], scrollTick = false, lastSolid = null, lastActive = null;
 const measureNav = () => { navTops = NAV_SECS.map((id) => { const s = document.getElementById(id); return s ? s.getBoundingClientRect().top + scrollY : Infinity; }); };
 const scrollWork = [];                       // autres tâches liées au défilement (barre mobile…)
@@ -255,7 +255,7 @@ $("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); s
 $("#year").textContent = today.getFullYear();
 
 // ===================== L'équipe =====================
-$("#team").innerHTML = BARBERS.map((b) => `
+if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
   <li data-reveal><a href="#reserver" data-pick-barber="${b.id}">
     <span class="crew__photo">${b.photo ? `<img src="${b.photo}" alt="${b.name}, barbier" loading="lazy" decoding="async">` : `<span class="crew__mono" aria-hidden="true">${b.name.slice(0, 2)}</span>`}</span>
     <span class="crew__name">${b.name}</span>
