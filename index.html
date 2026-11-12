@@ -35,9 +35,16 @@
   }
   </script>
   <link rel="stylesheet" href="styles.css">
-  <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
+  <script>(function(){var d=document.documentElement;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;d.classList.add("intro");try{if(!sessionStorage.getItem("eleg-vu")){d.classList.add("is-loading");sessionStorage.setItem("eleg-vu","1");}}catch(e){}})();</script>
 </head>
 <body>
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <span class="loader__word">ELEGANCE</span>
+    <span class="loader__line"><i></i></span>
+    <span class="loader__script">Strasbourg</span>
+  </div>
+</div>
 <a class="skip" href="#reserver">Aller à la réservation</a>
 
 <header class="header" id="header">

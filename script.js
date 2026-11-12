@@ -8,6 +8,20 @@ const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const pad = (n) => String(n).padStart(2, "0");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// ===================== Ouverture : rideau noir avec le logo =====================
+(() => {
+  const root = document.documentElement, loader = document.getElementById("loader");
+  if (!loader || !root.classList.contains("is-loading")) return;
+  let done = false;
+  const lift = () => {
+    if (done) return; done = true;
+    root.classList.remove("is-loading"); root.classList.add("loader-out");
+    setTimeout(() => { root.classList.remove("loader-out"); loader.remove(); }, 1150);
+  };
+  loader.addEventListener("click", lift);
+  setTimeout(lift, 2100);
+})();
+
 // ===================== Défilement adouci =====================
 // Molette et pavé tactile glissent en douceur ; le toucher reste natif sur téléphone.
 const lenis = (!reduced && window.Lenis) ? new window.Lenis({ lerp: .085, wheelMultiplier: .9 }) : null;
@@ -367,6 +381,9 @@ if (!reduced && "IntersectionObserver" in window) {
   const io = new IntersectionObserver((entries) => entries.forEach((en) => {
     if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
   }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
+  $$(".t-big[data-reveal]").forEach((t) => {
+    t.innerHTML = t.innerHTML.split(/<br\s*\/?>/i).map((l, k) => `<span class="ln"><span style="--li:${k}">${l}</span></span>`).join("");
+  });
   const groups = new Map();
   $$("[data-reveal]").forEach((el) => {
     if (el.getBoundingClientRect().top < innerHeight) return;

@@ -414,6 +414,34 @@ button { background: none; border: 0; cursor: pointer; }
 .avis__item figcaption { margin-top: auto; font-size: .78rem; letter-spacing: .2em; text-transform: uppercase; }
 .avis__item figcaption span { color: var(--faint); letter-spacing: .1em; text-transform: none; }
 
+
+/* ---------- Ouverture : rideau noir avec le logo (une fois par visite) ---------- */
+.loader { display: none; }
+.is-loading .loader, .loader-out .loader { display: grid; }
+.loader { position: fixed; inset: 0; z-index: 200; place-items: center; background: #050507; cursor: pointer; animation: loaderSafety 0s linear 5s forwards; }
+.loader__inner { display: flex; flex-direction: column; align-items: center; }
+.loader__word { font-family: var(--wide); font-size: clamp(1.6rem, 4.4vw, 3.4rem); letter-spacing: .5em; margin-right: -.5em; color: var(--cream); animation: loaderWord 1.6s var(--ease) .1s both; }
+.loader__line { width: clamp(120px, 18vw, 220px); height: 1px; margin: 1.4rem 0 1rem; background: rgba(244, 243, 247, .12); overflow: hidden; }
+.loader__line i { display: block; height: 100%; background: var(--cream); transform-origin: left; animation: loaderLine 1.3s var(--slow) .35s both; }
+.loader__script { font-family: var(--script); font-size: clamp(1.6rem, 2.6vw, 2.2rem); color: var(--gold-2); animation: fade 1s ease .9s both; }
+@keyframes loaderWord { from { opacity: 0; letter-spacing: .9em; margin-right: -.9em; filter: blur(8px); } }
+@keyframes loaderLine { from { transform: scaleX(0); } }
+@keyframes loaderSafety { to { visibility: hidden; pointer-events: none; } }
+.loader-out .loader { animation: loaderUp 1.1s cubic-bezier(.76, 0, .24, 1) both; }
+.loader-out .loader__inner { animation: loaderInner 1.1s cubic-bezier(.76, 0, .24, 1) both; }
+@keyframes loaderUp { to { clip-path: inset(0 0 100% 0); } }
+@keyframes loaderInner { to { transform: translateY(-14vh); opacity: 0; } }
+/* l'accueil attend la levée du rideau pour lancer ses propres animations */
+.is-loading .hero *, .is-loading .hero__media, .is-loading .header, .is-loading .rail { animation-play-state: paused !important; }
+html.is-loading { overflow: hidden; }
+
+/* ---------- Titres révélés ligne par ligne ---------- */
+.t-big .ln { display: block; overflow: hidden; padding-bottom: .14em; margin-bottom: -.14em; }
+.t-big .ln > span { display: block; }
+.t-big.rv { opacity: 1; transform: none; }
+.t-big.rv .ln > span { transform: translateY(110%); }
+.t-big.rv.in .ln > span { transform: none; transition: transform 1.25s cubic-bezier(.2, .8, .2, 1); transition-delay: calc(var(--rd, 0s) + var(--li, 0) * .12s); }
+
 /* =====================================================================
    Responsive
    ===================================================================== */
