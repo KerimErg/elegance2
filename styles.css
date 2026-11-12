@@ -537,3 +537,47 @@ button { background: none; border: 0; cursor: pointer; }
   .show__main video.is-on { opacity: 1; }
   .show__main video::-webkit-media-controls, .show__main video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
 }
+
+/* ---------- Accueil : diaporama animé si la vidéo est bloquée ---------- */
+.hero__slides { position: absolute; inset: 0; overflow: hidden; }
+.hero__slides img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; animation: heroSlide 20s linear infinite; animation-delay: calc(var(--n) * 4s - .6s); }
+@keyframes heroSlide {
+  0% { opacity: 0; transform: scale(1.14); }
+  4% { opacity: 1; }
+  22% { opacity: 1; }
+  27% { opacity: 0; transform: scale(1.02); }
+  100% { opacity: 0; transform: scale(1.02); }
+}
+
+/* ---------- Téléphone : site légèrement réduit et finitions ---------- */
+@media (max-width: 720px) {
+  html { font-size: 15px; }
+  body { font-size: 16px; }
+  .header__bar { min-height: 64px; }
+  .burger { width: 44px; height: 44px; }
+  .logo__word { font-size: .92rem; }
+  .hero__word { font-size: 10.4vw; }
+  .hero__script { font-size: 1.9rem; }
+  .hero__tag { font-size: 1.35rem; }
+  .hero__caps { font-size: .7rem; letter-spacing: .26em; margin-right: -.26em; }
+  .hero__cta { margin-top: 1.8rem; gap: .6rem 1rem; }
+  .hero__rating { padding: .7rem .2rem; border-bottom: 0; }
+  .t-big { font-size: clamp(2.3rem, 10vw, 2.9rem); }
+  .strips-sec { padding-block: 56px 40px; }
+  .strips-sec__head { margin-bottom: 1.6rem; }
+  .strip { height: 60px; }
+  .strip.is-on { height: min(430px, 60svh); }
+  .strip__body .eyebrow, .strip__link { font-size: .75rem; }
+  .strip__title { font-size: 2.2rem; }
+  .show { padding-block: 56px; }
+  .show__main { width: 86%; margin-inline: auto; max-height: 62svh; }
+  .show__kicker { margin-bottom: 1.2rem; }
+  .show__item p { margin-top: .9rem; font-size: .95rem; }
+  .avis__item blockquote { font-size: 1.05rem; }
+  .avis__score b { font-size: 2.6rem; }
+  .book { gap: 2rem; }
+  .phone__label { margin: 1.4rem 0 .6rem; }
+  .salon__text { padding-bottom: 56px; }
+  .footer { padding-top: 40px; }
+  .strip__label, .show__kicker, .show__chap-n, .show__chap-t, .strip__body .eyebrow, .strip__link, .phone__label, .tarifs__dur { font-size: 12px; }
+}

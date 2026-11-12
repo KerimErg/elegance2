@@ -490,9 +490,19 @@ scrollWork.push(toggleMbar);
   const v = document.getElementById("heroVideo"); if (!v || reduced) return;
   v.muted = true; v.defaultMuted = true; v.setAttribute("muted", ""); v.playsInline = true;
   const ok = () => v.classList.remove("is-blocked");
-  const tryPlay = () => { const p = v.play(); if (p) p.then(ok).catch(() => v.classList.add("is-blocked")); };
+  // diaporama de secours : quelques images de la vidéo qui se succèdent en zoomant lentement
+  let slides = false;
+  const block = () => {
+    v.classList.add("is-blocked");
+    if (slides) return; slides = true;
+    const big = matchMedia("(min-width: 961px)").matches, box = document.createElement("div");
+    box.className = "hero__slides"; box.setAttribute("aria-hidden", "true");
+    box.innerHTML = ["0.5", "4.2", "7.6", "10.8", "13.6"].map((t, n) => `<img src="images/hero/${big ? "d" : "m"}-${t}.jpg" alt="" style="--n:${n}" decoding="async">`).join("");
+    v.parentNode.insertBefore(box, v);
+  };
+  const tryPlay = () => { const p = v.play(); if (p) p.then(ok).catch(block); };
   v.addEventListener("playing", ok);
-  setTimeout(() => { if (v.paused || v.readyState < 2) { v.classList.add("is-blocked"); tryPlay(); } }, 1200);
+  setTimeout(() => { if (v.paused || v.readyState < 2) { block(); tryPlay(); } }, 1200);
   const kick = () => { if (v.paused) tryPlay(); };
   ["touchstart", "pointerdown", "scroll", "keydown"].forEach((ev) => addEventListener(ev, kick, { passive: true, once: true }));
   tryPlay();
