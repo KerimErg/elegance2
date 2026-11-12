@@ -527,4 +527,5 @@ button { background: none; border: 0; cursor: pointer; }
 /* ---------- Vidéo d'accueil : image de secours si la lecture automatique est bloquée ---------- */
 .hero__media { background: #09090b center / cover no-repeat; }
 .hero__video.is-blocked { visibility: hidden; }
+.flying .hero__video.is-blocked { visibility: visible; }
 .hero__video::-webkit-media-controls, .hero__video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }

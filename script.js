@@ -290,7 +290,8 @@ document.addEventListener("click", (e) => {
   const sec = $("#prestations"), strips = $$("#strips .strip"), root = document.documentElement;
   strips.forEach((st, k) => st.style.setProperty("--k", k));
   if (!sec || !strips.length) return;
-  if (reduced) { sec.classList.add("is-in"); return; }
+  // transition réservée aux ordinateurs : sur téléphone, défilement simple et fiable
+  if (reduced || !matchMedia("(min-width: 961px) and (hover: hover)").matches) { sec.classList.add("is-in", "is-head"); return; }
   const media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), first = strips[0];
   root.classList.add("flying");
   const clamp = (v) => Math.min(1, Math.max(0, v));
