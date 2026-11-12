@@ -148,7 +148,8 @@ button { background: none; border: 0; cursor: pointer; }
 /* La vidéo d'accueil vole jusqu'à la première bande des prestations */
 .flying .hero { isolation: auto; }
 .flying .hero__center, .flying .hero__scroll { z-index: 3; }
-.flying .hero__media { position: fixed; inset: 0; z-index: 2; transform-origin: 0 0; will-change: transform, clip-path, opacity; }
+.flying .hero__media { position: fixed; inset: 0; z-index: 2; overflow: hidden; transform-origin: 0 0; will-change: transform, opacity; backface-visibility: hidden; }
+.flying .hero__video { transform-origin: 50% 50%; will-change: transform; }
 .flying .hero__media::after { opacity: var(--grad, 1); }
 .hero__shade { position: absolute; inset: 0; z-index: 0; background: var(--bg); opacity: 0; pointer-events: none; }
 .hero__center, .hero__scroll { will-change: opacity, transform; }

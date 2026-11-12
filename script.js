@@ -296,18 +296,19 @@ document.addEventListener("click", (e) => {
   const clamp = (v) => Math.min(1, Math.max(0, v));
   const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const lerp = (a, b, t) => a + (b - a) * t;
-  let end = 1, last = -1, land = null;
+  let end = 1, land = null;
   const measure = () => {
     const r = first.getBoundingClientRect(), docTop = r.top + scrollY;
     const landTop = 72 + Math.max(0, (innerHeight - 72 - r.height) / 2);   // la bande arrive au centre de l'écran
     end = Math.max(innerHeight * .6, docTop - landTop);
     land = { left: r.left, right: r.right, top: docTop - end, bottom: docTop - end + r.height };
-    last = -1; update();
+    shown = -1; render(target()); shown = target();
   };
-  const update = () => {
-    const y = scrollY;
-    if (Math.abs(y - last) < .5) return; last = y;
-    const p = clamp(y / end), e = ease(p);
+  // progression amortie : la vidéo suit le défilement avec une légère inertie
+  let shown = -1, raf = 0;
+  const target = () => clamp(scrollY / end);
+  const render = (p) => {
+    const e = ease(p);
     center.style.opacity = Math.max(0, 1 - p * 4).toFixed(3);
     center.style.transform = `translate3d(0,${(-p * 160).toFixed(1)}px,0)`;
     cue.style.opacity = Math.max(0, 1 - p * 8).toFixed(3);
@@ -322,17 +323,24 @@ document.addEventListener("click", (e) => {
     const W = innerWidth, H = innerHeight, r = land;
     // rectangle visible : de l'écran entier à la bande
     const L = lerp(0, r.left, e), T = lerp(0, r.top, e), Rr = lerp(W, r.right, e), B = lerp(H, r.bottom, e);
-    // l'image garde ses proportions : elle est agrandie juste assez pour couvrir le rectangle
-    const s = Math.max((Rr - L) / W, (B - T) / H);
-    const tx = (L + Rr) / 2 - W * s / 2, ty = (T + B) / 2 - H * s / 2;
-    media.style.transform = `translate3d(${tx.toFixed(2)}px,${ty.toFixed(2)}px,0) scale(${s.toFixed(5)})`;
-    const ci = [(T - ty) / s, W - (Rr - tx) / s, H - (B - ty) / s, (L - tx) / s].map((v) => Math.max(0, v).toFixed(2) + "px");
-    media.style.clipPath = `inset(${ci.join(" ")} round ${(e * 2 / s).toFixed(2)}px)`;
+    const sx = (Rr - L) / W, sy = (B - T) / H, s = Math.max(sx, sy);
+    // tout en transformations (calculées par la carte graphique) : le cadre se déforme,
+    // la vidéo à l'intérieur compense pour garder ses proportions
+    media.style.transform = `translate3d(${L.toFixed(2)}px,${T.toFixed(2)}px,0) scale(${sx.toFixed(5)},${sy.toFixed(5)})`;
+    video.style.transform = `scale(${(s / sx).toFixed(5)},${(s / sy).toFixed(5)})`;
     media.style.setProperty("--grad", (1 - e).toFixed(3));
     const f = clamp((p - .86) / .12);
     media.style.opacity = (1 - f).toFixed(3);                       // fondu final dans la photo
     first.style.opacity = f.toFixed(3);
   };
+  const step = () => {
+    const t = target();
+    shown = shown < 0 ? t : shown + (t - shown) * .14;
+    if (Math.abs(t - shown) < .0005) shown = t;
+    render(shown);
+    raf = shown !== t ? requestAnimationFrame(step) : 0;
+  };
+  const update = () => { if (!raf && target() !== shown) raf = requestAnimationFrame(step); };
   scrollWork.push(update);
   addEventListener("resize", () => { clearTimeout(measure.t); measure.t = setTimeout(measure, 120); });
   addEventListener("load", measure);
