@@ -335,12 +335,42 @@ document.addEventListener("click", (e) => {
   };
   const step = () => {
     const t = target();
-    shown = shown < 0 ? t : shown + (t - shown) * .14;
-    if (Math.abs(t - shown) < .0005) shown = t;
+    shown = t;
     render(shown);
     raf = shown !== t ? requestAnimationFrame(step) : 0;
   };
   const update = () => { if (!raf && target() !== shown) raf = requestAnimationFrame(step); };
+
+  // La page s'arrête toujours sur les prestations : en arrivant d'en haut, même en défilant vite,
+  // on marque l'arrêt au moment où la vidéo s'est posée ; si l'on s'arrête en pleine transition,
+  // le mouvement se termine tout seul (vers les prestations ou vers l'accueil).
+  const goTo = (y) => {
+    if (lenis) lenis.scrollTo(y, { duration: .9, lock: true, force: true, easing: (t) => 1 - Math.pow(1 - t, 3) });
+    else scrollTo({ top: y, behavior: "smooth" });
+  };
+  let prevY = scrollY, dir = 0, idle = 0, snapping = false;
+  const hold = () => {
+    snapping = true;
+    if (lenis) { lenis.stop(); setTimeout(() => { lenis.start(); snapping = false; }, 650); }
+    else setTimeout(() => { snapping = false; }, 650);
+  };
+  scrollWork.push(() => {
+    const y = scrollY;
+    if (y !== prevY) dir = y > prevY ? 1 : -1;
+    if (!snapping && dir > 0 && prevY < end - 2 && y > end + 2) {
+      // on a dépassé l'arrêt sur sa lancée : retour sur les prestations, puis courte pause
+      goTo(end); hold();
+    }
+    prevY = y;
+    clearTimeout(idle);
+    if (!snapping && y > 2 && y < end - 2) {
+      idle = setTimeout(() => {
+        const p = scrollY / end;
+        if (p <= 0 || p >= 1) return;
+        goTo(dir < 0 && p < .85 ? 0 : end);
+      }, 160);
+    }
+  });
   scrollWork.push(update);
   addEventListener("resize", () => { clearTimeout(measure.t); measure.t = setTimeout(measure, 120); });
   addEventListener("load", measure);
