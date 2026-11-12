@@ -529,3 +529,11 @@ button { background: none; border: 0; cursor: pointer; }
 .hero__video.is-blocked { visibility: hidden; }
 .flying .hero__video.is-blocked { visibility: visible; }
 .hero__video::-webkit-media-controls, .hero__video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
+
+/* ---------- Le travail : image de secours et fondu simple sur téléphone ---------- */
+.show__main { background-position: center; background-size: cover; background-repeat: no-repeat; }
+@media (max-width: 960px), (hover: none) {
+  .show__main video { visibility: visible; opacity: 0; transform: none; animation: none !important; transition: opacity .5s ease; }
+  .show__main video.is-on { opacity: 1; }
+  .show__main video::-webkit-media-controls, .show__main video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
+}

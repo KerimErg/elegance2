@@ -402,6 +402,8 @@ document.addEventListener("click", (e) => {
 (() => {
   const sec = $("#realisations"); if (!sec) return;
   const vids = $$(".show__main video", sec), items = $$(".show__item", sec), chaps = $$(".show__chap", sec), n = vids.length;
+  const main = $(".show__main", sec);
+  main.style.backgroundImage = `url("${vids[0].poster}")`;
   const DUR = 2800;
   sec.style.setProperty("--dur", DUR + "ms");
   let i = 0, visible = false, timer = 0, left = DUR, started = 0;
@@ -414,6 +416,7 @@ document.addEventListener("click", (e) => {
     vids[i].classList.add("is-on");
     try { vids[i].currentTime = 0; } catch (e) {}
     setTimeout(() => { vids[prev].classList.remove("is-prev"); vids[prev].pause(); }, 700);
+    main.style.backgroundImage = `url("${vids[i].poster}")`;
     items.forEach((el, j) => el.classList.toggle("is-on", j === i));
     chaps.forEach((c, j) => { c.classList.remove("is-on"); if (j === i) { void c.offsetWidth; c.classList.add("is-on"); } });
     vids[(i + 1) % n].preload = "auto";
