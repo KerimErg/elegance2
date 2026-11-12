@@ -326,25 +326,39 @@ document.addEventListener("click", (e) => {
 })();
 
 // ===================== Le travail : vitrine vidéo =====================
+// Chapitres avec barre de progression ; la vidéo suivante se dévoile de bas en haut.
 (() => {
   const sec = $("#realisations"); if (!sec) return;
-  const vids = $$(".show__main video", sec), minis = $$(".show__mini img", sec), items = $$(".show__item", sec);
-  const now = $("#showNow"), n = vids.length;
-  let i = 0, visible = false, timer = 0;
-  const play = () => vids.forEach((v, k) => { if (k === i && visible && !reduced) { const p = v.play(); if (p) p.catch(() => {}); } else v.pause(); });
+  const vids = $$(".show__main video", sec), items = $$(".show__item", sec), chaps = $$(".show__chap", sec), n = vids.length;
+  const DUR = 7000;
+  sec.style.setProperty("--dur", DUR + "ms");
+  let i = 0, visible = false, timer = 0, left = DUR, started = 0;
+  const play = () => vids.forEach((v, k) => { if (k === i && visible && !reduced) { const p = v.play(); if (p) p.catch(() => {}); } else if (!v.classList.contains("is-prev")) v.pause(); });
   const go = (k) => {
-    i = (k + n) % n;
-    [vids, items].forEach((list) => list.forEach((el, j) => el.classList.toggle("is-on", j === i)));
-    minis.forEach((el, j) => el.classList.toggle("is-on", j === i));          // la vignette montre la vidéo suivante
-    now.textContent = pad(i + 1);
-    vids[(i + 1) % n].preload = "auto";                  // prépare la vidéo suivante
+    if (k === i) return;
+    const prev = i; i = (k + n) % n;
+    vids.forEach((v, j) => { v.classList.toggle("is-prev", j === prev); v.classList.remove("is-on"); });
+    void vids[i].offsetWidth;                          // relance l'animation d'entrée
+    vids[i].classList.add("is-on");
     try { vids[i].currentTime = 0; } catch (e) {}
-    play(); arm();
+    setTimeout(() => { vids[prev].classList.remove("is-prev"); vids[prev].pause(); }, 1400);
+    items.forEach((el, j) => el.classList.toggle("is-on", j === i));
+    chaps.forEach((c, j) => { c.classList.remove("is-on"); if (j === i) { void c.offsetWidth; c.classList.add("is-on"); } });
+    vids[(i + 1) % n].preload = "auto";
+    play(); left = DUR; arm();
   };
-  const arm = () => { clearTimeout(timer); if (visible && !reduced) timer = setTimeout(() => go(i + 1), 6500); };
-  $$(".show__arrow", sec).forEach((b) => b.addEventListener("click", () => go(i + Number(b.dataset.dir))));
-  $(".show__mini", sec).addEventListener("click", () => go(i + 1));
-  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) vids[(i + 1) % n].preload = "auto"; play(); arm(); }, { threshold: .25 }).observe(sec);
+  const arm = () => {
+    clearTimeout(timer);
+    if (visible && !reduced) { started = Date.now(); timer = setTimeout(() => go(i + 1), left); }
+  };
+  chaps.forEach((c) => c.addEventListener("click", () => go(Number(c.dataset.k))));
+  new IntersectionObserver(([en]) => {
+    const was = visible; visible = en.isIntersecting;
+    sec.classList.toggle("is-paused", !visible);
+    if (visible) { vids[(i + 1) % n].preload = "auto"; arm(); }
+    else if (was) { clearTimeout(timer); left = Math.max(400, left - (Date.now() - started)); }
+    play();
+  }, { threshold: .25 }).observe(sec);
 })();
 
 // ===================== Apparitions à l'entrée dans l'écran =====================
