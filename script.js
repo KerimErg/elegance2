@@ -380,14 +380,6 @@ if (!reduced && "IntersectionObserver" in window) {
   });
 }
 
-// ===================== Bannière : vidéo adaptée à l'écran =====================
-// Ordinateur : version horizontale plein écran ; téléphone : version verticale pleine résolution.
-(() => {
-  const v = $("#heroVideo"); if (!v) return;
-  const size = matchMedia("(min-width: 961px)").matches ? "large" : "small";
-  v.poster = v.dataset["poster" + (size === "large" ? "Large" : "Small")];
-  v.src = v.dataset["src" + (size === "large" ? "Large" : "Small")];
-})();
 
 // ===================== Vidéos : lecture seulement quand elles sont à l'écran =====================
 // Économise la batterie et le processeur ; aucune lecture automatique si l'appareil limite les animations.
