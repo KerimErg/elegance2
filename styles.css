@@ -523,3 +523,8 @@ button { background: none; border: 0; cursor: pointer; }
   .footer { padding-top: 48px; }
   .footer__grid { gap: 1.4rem; padding-bottom: 2rem; }
 }
+
+/* ---------- Vidéo d'accueil : image de secours si la lecture automatique est bloquée ---------- */
+.hero__media { background: #09090b center / cover no-repeat; }
+.hero__video.is-blocked { visibility: hidden; }
+.hero__video::-webkit-media-controls, .hero__video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }

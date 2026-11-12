@@ -478,3 +478,18 @@ function toggleMbar() {
   mbar.querySelectorAll("a").forEach((a) => (on ? a.removeAttribute("tabindex") : a.setAttribute("tabindex", "-1")));
 }
 scrollWork.push(toggleMbar);
+
+// ===================== Vidéo d'accueil : lecture automatique bloquée =====================
+// Certains téléphones (économie d'énergie, navigateurs intégrés aux applis) refusent la lecture
+// automatique : on garde alors l'image fixe et on relance la vidéo au premier geste.
+(() => {
+  const v = document.getElementById("heroVideo"); if (!v || reduced) return;
+  v.muted = true; v.defaultMuted = true; v.setAttribute("muted", ""); v.playsInline = true;
+  const ok = () => v.classList.remove("is-blocked");
+  const tryPlay = () => { const p = v.play(); if (p) p.then(ok).catch(() => v.classList.add("is-blocked")); };
+  v.addEventListener("playing", ok);
+  setTimeout(() => { if (v.paused || v.readyState < 2) { v.classList.add("is-blocked"); tryPlay(); } }, 1200);
+  const kick = () => { if (v.paused) tryPlay(); };
+  ["touchstart", "pointerdown", "scroll", "keydown"].forEach((ev) => addEventListener(ev, kick, { passive: true, once: true }));
+  tryPlay();
+})();
