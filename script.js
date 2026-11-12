@@ -291,24 +291,19 @@ document.addEventListener("click", (e) => {
   if (reduced || !("IntersectionObserver" in window)) { sec.classList.add("is-in"); return; }
   const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { sec.classList.add("is-in"); io.disconnect(); } }, { threshold: .35 });
   io.observe(sec);
-  // en descendant : le texte s'efface, la vidéo ne reste visible qu'à travers « ELEGANCE »,
-  // puis on traverse les lettres avant que les prestations montent
-  const media = $(".hero__media"), center = $(".hero__center"), cue = $(".hero__scroll"), shade = $("#heroShade"), mask = $("#heroMask");
-  const clamp = (v) => Math.min(1, Math.max(0, v)), smooth = (v) => v * v * (3 - 2 * v);
+  // l'accueil reste fixé, se resserre en carte arrondie et s'assombrit pendant que les prestations montent
+  const media = $(".hero__media"), center = $(".hero__center"), cue = $(".hero__scroll"), shade = $("#heroShade");
   let last = -1;
   scrollWork.push(() => {
-    const p = Math.max(0, scrollY / innerHeight);
-    if (p > 2.2 && last > 2.2) return;
+    const p = Math.min(1.3, Math.max(0, scrollY / innerHeight));
     if (Math.abs(p - last) < .001) return; last = p;
-    center.style.opacity = Math.max(0, 1 - p * 3).toFixed(3);
-    center.style.transform = `translate3d(0,${(-p * 120).toFixed(1)}px,0)`;
-    cue.style.opacity = Math.max(0, 1 - p * 5).toFixed(3);
-    const m = smooth(clamp((p - .08) / .3));             // apparition des lettres
-    const z = clamp((p - .5) / 1.05);                    // traversée du mot
-    mask.style.opacity = m.toFixed(3);
-    mask.style.transform = `scale(${(1 + Math.pow(z, 2.6) * 38).toFixed(3)})`;
-    media.style.setProperty("--grad", (1 - m).toFixed(3));
-    shade.style.opacity = (smooth(clamp((p - 1.25) / .5)) * .8).toFixed(3);
+    const q = Math.min(1, p / .9), e = q * q * (3 - 2 * q);   // départ et arrivée en douceur
+    media.style.transform = `translate3d(0,${(-e * 3).toFixed(2)}vh,0) scale(${(1 - e * .38).toFixed(4)})`;
+    media.style.borderRadius = `${(e * 36).toFixed(1)}px`;
+    center.style.opacity = Math.max(0, 1 - p * 1.8).toFixed(3);
+    center.style.transform = `translate3d(0,${(-p * 90).toFixed(1)}px,0) scale(${(1 - Math.min(p, 1) * .08).toFixed(4)})`;
+    cue.style.opacity = Math.max(0, 1 - p * 4).toFixed(3);
+    shade.style.opacity = (e * .55).toFixed(3);
   });
 })();
 
