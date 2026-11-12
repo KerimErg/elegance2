@@ -73,6 +73,10 @@
       <span class="hero__rule" aria-hidden="true"></span>
       <p class="hero__tag">Barbier à Schiltigheim.</p>
       <p class="hero__caps">Coupe <i>·</i> Barbe <i>·</i> Soin du visage</p>
+      <div class="hero__cta">
+        <a href="#reserver" class="btn btn--gold">Prendre rendez-vous</a>
+        <a class="hero__rating" href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener"><span class="hero__stars" aria-hidden="true">★★★★★</span> 4,8 · 284 avis Google</a>
+      </div>
     </div>
     <div class="hero__shade" id="heroShade" aria-hidden="true"></div>
     <a class="hero__scroll" href="#prestations" aria-label="Voir les prestations"><span></span></a>
@@ -138,14 +142,26 @@
       </article>
     </div>
     </div>
+    <div class="wrap">
+      <ul class="tarifs" aria-label="Tarifs">
+        <li><span class="tarifs__name">Coupe homme</span><span class="tarifs__dur">30 min</span><span class="tarifs__price">18 €</span></li>
+        <li><span class="tarifs__name">Coupe &amp; barbe</span><span class="tarifs__dur">30 min</span><span class="tarifs__price">28 €</span></li>
+        <li><span class="tarifs__name">Taillage barbe</span><span class="tarifs__dur">15 min</span><span class="tarifs__price">12 €</span></li>
+        <li><span class="tarifs__name">Soin du visage</span><span class="tarifs__dur">30 min</span><span class="tarifs__price">25 €</span></li>
+        <li><span class="tarifs__name">Coloration</span><span class="tarifs__dur">30 min · par téléphone</span><span class="tarifs__price">15 €</span></li>
+      </ul>
+    </div>
   </section>
 
   <!-- ================= L'ÉQUIPE ================= -->
   <section class="sec team" id="equipe" data-rail="L’équipe">
-    <div class="wrap team__grid">
-      <div class="team__intro">
-        <p class="eyebrow" data-reveal>L’équipe</p>
-        <h2 class="t-big" data-reveal>Choisissez<br><b>votre barbier.</b></h2>
+    <div class="wrap">
+      <div class="team__head">
+        <div>
+          <p class="eyebrow" data-reveal>L’équipe</p>
+          <h2 class="t-big" data-reveal>Choisissez<br><b>votre barbier.</b></h2>
+        </div>
+        <a href="#reserver" class="team__any" data-pick-barber="any" data-reveal>Le premier disponible <span aria-hidden="true">→</span></a>
       </div>
       <ul class="crew" id="team"></ul>
     </div>
@@ -193,6 +209,13 @@
       <div class="book__intro">
         <p class="eyebrow" data-reveal>Réservation</p>
         <h2 class="t-big" data-reveal>Réservez<br><b>votre créneau.</b></h2>
+        <dl class="recap" id="recap" data-reveal>
+          <div><dt>Prestation</dt><dd id="rcService">—</dd></div>
+          <div><dt>Barbier</dt><dd id="rcBarber">—</dd></div>
+          <div><dt>Date</dt><dd id="rcDate">—</dd></div>
+          <div><dt>Heure</dt><dd id="rcTime">À choisir</dd></div>
+          <div class="recap__total"><dt>Total</dt><dd id="rcPrice">—</dd></div>
+        </dl>
         <p class="book__note" data-reveal>Confirmation immédiate · paiement au salon.<br>Une question : <a href="tel:+33388977468">03 88 97 74 68</a></p>
       </div>
       <div class="book__panel">
@@ -255,7 +278,11 @@
         <div><dt>Horaires</dt><dd>Mardi – samedi<br>10:00 – 19:00</dd></div>
         <div><dt>Téléphone</dt><dd><a href="tel:+33388977468">03 88 97 74 68</a></dd></div>
         <div><dt>Avis Google</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener">4,8 / 5 · 284 avis</a></dd></div>
+        <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/elegance_strasbourg/" target="_blank" rel="noopener">@elegance_strasbourg</a></dd></div>
       </dl>
+      <div class="salon__map" data-reveal>
+        <iframe title="Plan d’accès : Elegance Strasbourg, 162 route de Bischwiller, Schiltigheim" src="https://www.google.com/maps?q=162+Route+de+Bischwiller,+67300+Schiltigheim&amp;z=16&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
       <div class="salon__actions" data-reveal>
         <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--gold" target="_blank" rel="noopener">Itinéraire <span aria-hidden="true">↗</span></a>
         <a href="#reserver" class="btn btn--line">Prendre rendez-vous</a>

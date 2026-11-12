@@ -55,8 +55,8 @@ button { background: none; border: 0; cursor: pointer; }
 .wrap { width: 100%; max-width: 1320px; margin-inline: auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
 
 /* ---------- Typographie ---------- */
-.t-big { font-weight: 300; font-size: clamp(2.6rem, 5.6vw, 5.4rem); line-height: .98; letter-spacing: -.035em; text-wrap: balance; }
-.t-big b { font-weight: 500; }
+.t-big { font-family: var(--serif); font-weight: 400; font-size: clamp(2.8rem, 5.8vw, 5.6rem); line-height: .98; letter-spacing: -.01em; text-wrap: balance; }
+.t-big b { font-weight: 400; font-style: italic; color: rgba(244, 243, 247, .6); }
 .eyebrow { color: var(--gold); font-size: .9rem; font-weight: 500; letter-spacing: .01em; }
 .lede { color: var(--muted); font-size: 1.05rem; max-width: 30rem; }
 .tag { display: inline-flex; align-items: center; padding: .35rem .9rem; border: 1px solid var(--line-2); border-radius: 999px; font-size: .88rem; color: var(--cream); }
@@ -344,6 +344,59 @@ button { background: none; border: 0; cursor: pointer; }
 .rv { opacity: 0; transform: translateY(28px); }
 .rv.in { opacity: 1; transform: none; transition: opacity 1s var(--ease), transform 1s var(--ease); transition-delay: var(--rd, 0s); }
 
+
+/* ---------- Accueil : bouton et note ---------- */
+.hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+@media (min-width: 961px) {
+  .hero__media::before { background: linear-gradient(90deg, rgba(9, 9, 11, .8) 0%, rgba(9, 9, 11, .74) 27%, rgba(9, 9, 11, 0) 37%, rgba(9, 9, 11, 0) 63%, rgba(9, 9, 11, .74) 73%, rgba(9, 9, 11, .8) 100%); }
+}
+.hero__cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem 1.6rem; margin-top: 2.4rem; }
+.hero__rating { font-size: .88rem; color: rgba(244, 243, 247, .82); border-bottom: 1px solid rgba(244, 243, 247, .25); padding-bottom: 2px; transition: border-color .3s; }
+.hero__rating:hover { border-color: var(--cream); }
+.hero__stars { letter-spacing: .12em; color: var(--cream); margin-right: .3rem; }
+.intro .hero__cta { animation: up 1.1s var(--ease) 2.5s both; }
+
+/* ---------- Tarifs : liste lisible ---------- */
+.tarifs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top: 2.4rem; border-top: 1px solid var(--line); }
+.tarifs li { display: grid; gap: .2rem; padding: 1.4rem 1.2rem 0 0; }
+.tarifs li + li { padding-left: 1.2rem; border-left: 1px solid var(--line); }
+.tarifs__name { font-family: var(--serif); font-size: 1.35rem; line-height: 1.15; }
+.tarifs__dur { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
+.tarifs__price { margin-top: .5rem; font-size: 1.15rem; font-weight: 300; }
+
+/* ---------- L'équipe : portraits ---------- */
+.team__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; margin-bottom: clamp(2.4rem, 4vw, 3.6rem); }
+.team__head .eyebrow { margin-bottom: 1.4rem; }
+.team__any { font-size: .72rem; letter-spacing: .28em; text-transform: uppercase; padding-bottom: 6px; border-bottom: 1px solid rgba(244, 243, 247, .4); white-space: nowrap; }
+.team__any:hover { border-color: var(--cream); }
+.crew { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.8rem, 1.6vw, 1.4rem); border: 0; }
+.crew li { border: 0; }
+.crew a { display: block; padding: 0; }
+.crew a::before { display: none; }
+.crew__photo { position: relative; display: grid; place-items: center; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 2px; background: radial-gradient(ellipse at 50% 35%, #1c1c22, #0d0d10 75%); }
+.crew__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--slow); }
+.crew__mono { font-family: var(--serif); font-size: clamp(3.4rem, 6vw, 5.4rem); color: rgba(244, 243, 247, .16); transition: color .6s; }
+.crew__photo::after { content: ""; position: absolute; inset: 12px; border: 1px solid rgba(244, 243, 247, .14); transition: border-color .6s; }
+.crew__name { display: block; margin-top: 1.1rem; font-family: var(--serif); font-weight: 400; font-size: clamp(1.6rem, 2.2vw, 2rem); letter-spacing: 0; }
+.crew__spec { display: block; margin-top: .2rem; font-size: .9rem; color: var(--muted); }
+.crew__go { display: inline-block; margin-top: .9rem; font-size: .7rem; letter-spacing: .28em; text-transform: uppercase; color: var(--faint); transition: color .4s; }
+.crew a:hover .crew__photo img { transform: scale(1.04); }
+.crew a:hover .crew__mono { color: rgba(244, 243, 247, .4); }
+.crew a:hover .crew__photo::after { border-color: rgba(244, 243, 247, .4); }
+.crew a:hover .crew__name { transform: none; }
+
+/* ---------- Réservation : récapitulatif ---------- */
+.recap { margin-top: 1.2rem; border-top: 1px solid var(--line); }
+.recap div { display: flex; justify-content: space-between; gap: 1rem; padding: .85rem 0; border-bottom: 1px solid var(--line); }
+.recap dt { font-size: .7rem; letter-spacing: .22em; text-transform: uppercase; color: var(--faint); }
+.recap dd { text-align: right; font-size: .95rem; }
+.recap .is-empty { color: var(--faint); }
+.recap__total dd { font-family: var(--serif); font-size: 1.5rem; line-height: 1; }
+
+/* ---------- Le salon : carte ---------- */
+.salon__map { position: relative; height: 220px; overflow: hidden; border-radius: 2px; border: 1px solid var(--line); }
+.salon__map iframe { width: 100%; height: 100%; border: 0; filter: grayscale(1) invert(.92) contrast(.9); }
+
 /* =====================================================================
    Responsive
    ===================================================================== */
@@ -399,6 +452,12 @@ button { background: none; border: 0; cursor: pointer; }
   .footer { padding-bottom: 80px; }
 }
 @media (max-width: 720px) {
+  .tarifs { grid-template-columns: 1fr; row-gap: 0; }
+  .tarifs li, .tarifs li + li { display: grid; grid-template-columns: 1fr auto; padding: 1rem 0; border-left: 0; border-bottom: 1px solid var(--line); }
+  .tarifs__dur { grid-row: 2; }
+  .tarifs__price { grid-row: 1 / 3; grid-column: 2; align-self: center; margin: 0; }
+  .team__head { flex-direction: column; align-items: flex-start; }
+  .crew__go { display: none; }
   .hero__word { font-size: 9.6vw; letter-spacing: .14em; margin-right: -.14em; }
   @keyframes track { from { letter-spacing: .4em; margin-right: -.4em; } }
   .hero__caps { font-size: .78rem; letter-spacing: .3em; margin-right: -.3em; }

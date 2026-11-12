@@ -25,17 +25,18 @@ if (lenis) {
 // Un seul calcul par image affichée ; positions des sections mesurées une fois (et au redimensionnement).
 const header = $("#header"), nav = $("#nav"), burger = $("#burger");
 const navLinks = $$(".nav a:not(.nav__cta)");
+const NAV_SECS = ["accueil", "prestations", "equipe", "realisations", "reserver", "salon"];
 let navTops = [], scrollTick = false, lastSolid = null, lastActive = null;
-const measureNav = () => { navTops = navLinks.map((a) => { const s = $(a.getAttribute("href")); return s ? s.offsetTop : Infinity; }); };
+const measureNav = () => { navTops = NAV_SECS.map((id) => { const s = document.getElementById(id); return s ? s.getBoundingClientRect().top + scrollY : Infinity; }); };
 const scrollWork = [];                       // autres tâches liées au défilement (barre mobile…)
 const onScroll = () => {
   scrollTick = false;
   const solid = scrollY > 30;
   if (solid !== lastSolid) { header.classList.toggle("is-solid", solid); lastSolid = solid; }
   const y = scrollY + innerHeight * .4;
-  let active = -1;
+  let active = 0;
   navTops.forEach((top, i) => { if (top <= y) active = i; });
-  if (active !== lastActive) { navLinks.forEach((a, i) => a.classList.toggle("is-active", i === active)); lastActive = active; }
+  if (active !== lastActive) { navLinks.forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === "#" + NAV_SECS[active])); lastActive = active; }
   scrollWork.forEach((fn) => fn());
 };
 addEventListener("scroll", () => { if (!scrollTick) { scrollTick = true; requestAnimationFrame(onScroll); } }, { passive: true });
@@ -141,7 +142,7 @@ const chip = (g, v, label, sub, off) =>
 function renderPick() {
   $("#pService").innerHTML = SERVICES.map((s) => chip("service", s.id, s.name, `${s.price} €`)).join("");
   $("#pBarber").innerHTML = chip("barber", "any", `<span class="av av--any" aria-hidden="true">✦</span>`, "Peu importe")
-    + BARBERS.map((b) => chip("barber", b.id, `<span class="av" aria-hidden="true">${b.name[0]}</span>`, b.name)).join("");
+    + BARBERS.map((b) => chip("barber", b.id, `<span class="av" aria-hidden="true">${b.name.slice(0, 2)}</span>`, b.name)).join("");
   $("#pDate").innerHTML = days.map((d) => chip("date", d, `${fmtDay(d)} ${fromIso(d).getDate()}`, book.blocked.has(d) ? "fermé" : !dayHasSlot(d) ? "complet" : "", !dayHasSlot(d))).join("");
   if (book.time && !slotFree(book.date, book.time)) book.time = null;
   $("#pSlots").innerHTML = SLOT_TIMES.map((t) => {
@@ -151,6 +152,15 @@ function renderPick() {
   const s = SERVICES.find((x) => x.id === book.service);
   el.next.disabled = !book.time;
   el.next.textContent = book.time ? `Continuer · ${s.name} · ${book.time}` : "Choisissez un créneau";
+  updateRecap(s);
+}
+function updateRecap(s) {
+  const set = (id, txt, empty) => { const e = document.getElementById(id); if (!e) return; e.textContent = txt; e.classList.toggle("is-empty", !!empty); };
+  set("rcService", s.name);
+  set("rcBarber", book.barber === "any" ? "Premier disponible" : barberName(book.barber));
+  set("rcDate", book.date ? fmtLong(book.date).replace(/^./, (c) => c.toUpperCase()) : "—", !book.date);
+  set("rcTime", book.time || "À choisir", !book.time);
+  set("rcPrice", `${s.price} €`);
 }
 
 // Sur téléphone, garder le haut du panneau à l'écran quand on change d'étape
@@ -245,8 +255,13 @@ $("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); s
 $("#year").textContent = today.getFullYear();
 
 // ===================== L'équipe =====================
-$("#team").innerHTML = [...BARBERS.map((b) => [b.id, b.name, `Réserver<span class="sr-only"> avec ${b.name}</span>`]), ["any", "Premier disponible", "Réserver"]]
-  .map(([id, name, go], k) => `<li data-reveal><a href="#reserver" data-pick-barber="${id}"><span class="crew__n">${pad(k + 1)}</span><span class="crew__name">${name}</span><span class="crew__go">${go}</span></a></li>`).join("");
+$("#team").innerHTML = BARBERS.map((b) => `
+  <li data-reveal><a href="#reserver" data-pick-barber="${b.id}">
+    <span class="crew__photo">${b.photo ? `<img src="${b.photo}" alt="${b.name}, barbier" loading="lazy" decoding="async">` : `<span class="crew__mono" aria-hidden="true">${b.name.slice(0, 2)}</span>`}</span>
+    <span class="crew__name">${b.name}</span>
+    ${b.specialty ? `<span class="crew__spec">${b.specialty}</span>` : ""}
+    <span class="crew__go">Réserver<span class="sr-only"> avec ${b.name}</span> →</span>
+  </a></li>`).join("");
 
 // Choix d'un barbier ou d'une prestation depuis la page : le module de réservation suit
 document.addEventListener("click", (e) => {
