@@ -284,27 +284,60 @@ document.addEventListener("click", (e) => {
 })();
 
 // ===================== Passage accueil -> prestations =====================
+// En descendant, la vidéo plein écran rétrécit et se pose exactement sur la première bande
+// des prestations, puis se fond dans sa photo ; les autres bandes et le titre arrivent ensuite.
 (() => {
-  const sec = $("#prestations"), strips = $$("#strips .strip");
+  const sec = $("#prestations"), strips = $$("#strips .strip"), root = document.documentElement;
   strips.forEach((st, k) => st.style.setProperty("--k", k));
-  if (!sec) return;
-  if (reduced || !("IntersectionObserver" in window)) { sec.classList.add("is-in"); return; }
-  const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { sec.classList.add("is-in"); io.disconnect(); } }, { threshold: .35 });
-  io.observe(sec);
-  // l'accueil reste fixé, se resserre en carte arrondie et s'assombrit pendant que les prestations montent
-  const media = $(".hero__media"), center = $(".hero__center"), cue = $(".hero__scroll"), shade = $("#heroShade");
-  let last = -1;
-  scrollWork.push(() => {
-    const p = Math.min(1.3, Math.max(0, scrollY / innerHeight));
-    if (Math.abs(p - last) < .001) return; last = p;
-    const q = Math.min(1, p / .9), e = q * q * (3 - 2 * q);   // départ et arrivée en douceur
-    media.style.transform = `translate3d(0,${(-e * 3).toFixed(2)}vh,0) scale(${(1 - e * .38).toFixed(4)})`;
-    media.style.borderRadius = `${(e * 36).toFixed(1)}px`;
-    center.style.opacity = Math.max(0, 1 - p * 1.8).toFixed(3);
-    center.style.transform = `translate3d(0,${(-p * 90).toFixed(1)}px,0) scale(${(1 - Math.min(p, 1) * .08).toFixed(4)})`;
-    cue.style.opacity = Math.max(0, 1 - p * 4).toFixed(3);
-    shade.style.opacity = (e * .55).toFixed(3);
-  });
+  if (!sec || !strips.length) return;
+  if (reduced) { sec.classList.add("is-in"); return; }
+  const media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), first = strips[0];
+  root.classList.add("flying");
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const lerp = (a, b, t) => a + (b - a) * t;
+  let end = 1, last = -1, land = null;
+  const measure = () => {
+    const r = first.getBoundingClientRect(), docTop = r.top + scrollY;
+    const landTop = 72 + Math.max(0, (innerHeight - 72 - r.height) / 2);   // la bande arrive au centre de l'écran
+    end = Math.max(innerHeight * .6, docTop - landTop);
+    land = { left: r.left, right: r.right, top: docTop - end, bottom: docTop - end + r.height };
+    last = -1; update();
+  };
+  const update = () => {
+    const y = scrollY;
+    if (Math.abs(y - last) < .5) return; last = y;
+    const p = clamp(y / end), e = ease(p);
+    center.style.opacity = Math.max(0, 1 - p * 4).toFixed(3);
+    center.style.transform = `translate3d(0,${(-p * 160).toFixed(1)}px,0)`;
+    cue.style.opacity = Math.max(0, 1 - p * 8).toFixed(3);
+    if (p >= 1) {
+      media.style.visibility = "hidden"; video.pause(); first.style.opacity = "";
+      sec.classList.add("is-in", "is-head"); return;
+    }
+    media.style.visibility = ""; if (video.paused) { const pr = video.play(); if (pr) pr.catch(() => {}); }
+    if (p < .97) sec.classList.remove("is-in"); else sec.classList.add("is-in");
+    sec.classList.toggle("is-head", p > .9);
+    if (!first.classList.contains("is-on")) strips.forEach((st) => st.classList.toggle("is-on", st === first));
+    const W = innerWidth, H = innerHeight, r = land;
+    // rectangle visible : de l'écran entier à la bande
+    const L = lerp(0, r.left, e), T = lerp(0, r.top, e), Rr = lerp(W, r.right, e), B = lerp(H, r.bottom, e);
+    // l'image garde ses proportions : elle est agrandie juste assez pour couvrir le rectangle
+    const s = Math.max((Rr - L) / W, (B - T) / H);
+    const tx = (L + Rr) / 2 - W * s / 2, ty = (T + B) / 2 - H * s / 2;
+    media.style.transform = `translate3d(${tx.toFixed(2)}px,${ty.toFixed(2)}px,0) scale(${s.toFixed(5)})`;
+    const ci = [(T - ty) / s, W - (Rr - tx) / s, H - (B - ty) / s, (L - tx) / s].map((v) => Math.max(0, v).toFixed(2) + "px");
+    media.style.clipPath = `inset(${ci.join(" ")} round ${(e * 2 / s).toFixed(2)}px)`;
+    media.style.setProperty("--grad", (1 - e).toFixed(3));
+    const f = clamp((p - .86) / .12);
+    media.style.opacity = (1 - f).toFixed(3);                       // fondu final dans la photo
+    first.style.opacity = f.toFixed(3);
+  };
+  scrollWork.push(update);
+  addEventListener("resize", () => { clearTimeout(measure.t); measure.t = setTimeout(measure, 120); });
+  addEventListener("load", measure);
+  if (document.fonts) document.fonts.ready.then(measure);
+  measure();
 })();
 
 // ===================== Repères de section (droite) =====================

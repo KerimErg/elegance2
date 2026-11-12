@@ -144,16 +144,20 @@ button { background: none; border: 0; cursor: pointer; }
 
 /* Passage accueil -> prestations : l'accueil reste fixé et se resserre en carte
    pendant que les prestations montent par-dessus. */
-.hero-stage { position: relative; height: 200vh; height: 200svh; background: var(--bg); }
-.hero-stage .hero { position: sticky; top: 0; }
-.hero__media { transform-origin: 50% 40%; overflow: hidden; will-change: transform, border-radius; }
+.hero-stage { position: relative; background: var(--bg); }
+/* La vidéo d'accueil vole jusqu'à la première bande des prestations */
+.flying .hero { isolation: auto; }
+.flying .hero__center, .flying .hero__scroll { z-index: 3; }
+.flying .hero__media { position: fixed; inset: 0; z-index: 2; transform-origin: 0 0; will-change: transform, clip-path, opacity; }
+.flying .hero__media::after { opacity: var(--grad, 1); }
 .hero__shade { position: absolute; inset: 0; z-index: 0; background: var(--bg); opacity: 0; pointer-events: none; }
 .hero__center, .hero__scroll { will-change: opacity, transform; }
-.hero-stage + .strips-sec { margin-top: -100vh; margin-top: -100svh; z-index: 2; border-radius: 28px 28px 0 0; border-top: 1px solid rgba(244, 243, 247, .14); box-shadow: 0 -40px 90px rgba(0, 0, 0, .65); }
-.intro .strips-sec__title { transition: opacity 1.1s ease .2s, transform 1.2s var(--ease) .2s; }
-.intro .strips-sec:not(.is-in) .strips-sec__title { opacity: 0; transform: translateY(60px); }
+.flying .strips-sec__head > * { transition: opacity 1s ease, transform 1.2s cubic-bezier(.2, .8, .2, 1); }
+.flying .strips-sec__aside { transition-delay: .12s; }
+.flying .strips-sec:not(.is-head) .strips-sec__head > * { opacity: 0; transform: translateY(40px); }
+.flying .strip { transition: flex-grow 1.1s var(--slow), opacity .9s ease calc(var(--k, 0) * 90ms), transform 1.2s cubic-bezier(.2, .8, .2, 1) calc(var(--k, 0) * 90ms); }
+.flying .strips-sec:not(.is-in) .strip:not(:first-child) { opacity: 0; transform: translateX(90px); }
 .intro .strip img { transition: transform 1.8s var(--slow); }
-.intro .strips-sec:not(.is-in) .strip img { transform: scale(1.25); }
 .intro .strip__label { transition: opacity .9s ease calc(.3s + var(--k, 0) * 100ms); }
 .intro .strips-sec.is-in .strip__label { transition: opacity .25s ease; }
 .intro .strips-sec:not(.is-in) .strip__label { opacity: 0; }
