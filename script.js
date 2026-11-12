@@ -292,7 +292,7 @@ document.addEventListener("click", (e) => {
   if (!sec || !strips.length) return;
   // transition réservée aux ordinateurs : sur téléphone, défilement simple et fiable
   if (reduced || !matchMedia("(min-width: 961px) and (hover: hover)").matches) { sec.classList.add("is-in", "is-head"); return; }
-  const media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), first = strips[0];
+  const slidesBox = $(".hero__slides"), media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), first = strips[0];
   root.classList.add("flying");
   const clamp = (v) => Math.min(1, Math.max(0, v));
   const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -329,6 +329,7 @@ document.addEventListener("click", (e) => {
     // la vidéo à l'intérieur compense pour garder ses proportions
     media.style.transform = `translate3d(${L.toFixed(2)}px,${T.toFixed(2)}px,0) scale(${sx.toFixed(5)},${sy.toFixed(5)})`;
     video.style.transform = `scale(${(s / sx).toFixed(5)},${(s / sy).toFixed(5)})`;
+    if (slidesBox) slidesBox.style.transform = video.style.transform;
     media.style.setProperty("--grad", (1 - e).toFixed(3));
     const f = clamp((p - .86) / .12);
     media.style.opacity = (1 - f).toFixed(3);                       // fondu final dans la photo
@@ -489,20 +490,13 @@ scrollWork.push(toggleMbar);
 (() => {
   const v = document.getElementById("heroVideo"); if (!v || reduced) return;
   v.muted = true; v.defaultMuted = true; v.setAttribute("muted", ""); v.playsInline = true;
-  const ok = () => v.classList.remove("is-blocked");
-  // diaporama de secours : quelques images de la vidéo qui se succèdent en zoomant lentement
-  let slides = false;
-  const block = () => {
-    v.classList.add("is-blocked");
-    if (slides) return; slides = true;
-    const big = matchMedia("(min-width: 961px)").matches, box = document.createElement("div");
-    box.className = "hero__slides"; box.setAttribute("aria-hidden", "true");
-    box.innerHTML = ["0.5", "4.2", "7.6", "10.8", "13.6"].map((t, n) => `<img src="images/hero/${big ? "d" : "m"}-${t}.jpg" alt="" style="--n:${n}" decoding="async">`).join("");
-    v.parentNode.insertBefore(box, v);
-  };
+  const ok = () => v.classList.add("is-playing");
+  const block = () => v.classList.remove("is-playing");
   const tryPlay = () => { const p = v.play(); if (p) p.then(ok).catch(block); };
   v.addEventListener("playing", ok);
-  setTimeout(() => { if (v.paused || v.readyState < 2) { block(); tryPlay(); } }, 1200);
+  v.addEventListener("timeupdate", () => { if (v.currentTime > 0) ok(); });
+  v.addEventListener("error", block);
+  setTimeout(() => { if (v.paused || v.readyState < 2) tryPlay(); }, 1200);
   const kick = () => { if (v.paused) tryPlay(); };
   ["touchstart", "pointerdown", "scroll", "keydown"].forEach((ev) => addEventListener(ev, kick, { passive: true, once: true }));
   tryPlay();

@@ -149,7 +149,7 @@ button { background: none; border: 0; cursor: pointer; }
 .flying .hero { isolation: auto; }
 .flying .hero__center, .flying .hero__scroll { z-index: 3; }
 .flying .hero__media { position: fixed; inset: 0; z-index: 2; overflow: hidden; transform-origin: 0 0; will-change: transform, opacity; backface-visibility: hidden; }
-.flying .hero__video { transform-origin: 50% 50%; will-change: transform; }
+.flying .hero__video, .flying .hero__slides { transform-origin: 50% 50%; will-change: transform; }
 .flying .hero__media::after { opacity: var(--grad, 1); }
 .hero__shade { position: absolute; inset: 0; z-index: 0; background: var(--bg); opacity: 0; pointer-events: none; }
 .hero__center, .hero__scroll { will-change: opacity, transform; }
@@ -526,8 +526,9 @@ button { background: none; border: 0; cursor: pointer; }
 
 /* ---------- Vidéo d'accueil : image de secours si la lecture automatique est bloquée ---------- */
 .hero__media { background: #09090b center / cover no-repeat; }
-.hero__video.is-blocked { visibility: hidden; }
-.flying .hero__video.is-blocked { visibility: visible; }
+/* la vidéo ne s'affiche que lorsqu'elle joue vraiment : sinon le diaporama reste visible */
+.hero__video { position: relative; opacity: 0; transition: opacity .8s ease; }
+.hero__video.is-playing { opacity: 1; }
 .hero__video::-webkit-media-controls, .hero__video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
 
 /* ---------- Le travail : image de secours et fondu simple sur téléphone ---------- */
@@ -540,7 +541,9 @@ button { background: none; border: 0; cursor: pointer; }
 
 /* ---------- Accueil : diaporama animé si la vidéo est bloquée ---------- */
 .hero__slides { position: absolute; inset: 0; overflow: hidden; }
-.hero__slides img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; animation: heroSlide 20s linear infinite; animation-delay: calc(var(--n) * 4s - .6s); }
+.hero__slides picture { position: absolute; inset: 0; opacity: 0; animation: heroSlide 20s linear infinite; animation-delay: calc(var(--n) * 4s - .6s); }
+.hero__slides picture:first-child { animation-delay: -.6s; }
+.hero__slides img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 @keyframes heroSlide {
   0% { opacity: 0; transform: scale(1.14); }
   4% { opacity: 1; }
@@ -580,4 +583,8 @@ button { background: none; border: 0; cursor: pointer; }
   .salon__text { padding-bottom: 56px; }
   .footer { padding-top: 40px; }
   .strip__label, .show__kicker, .show__chap-n, .show__chap-t, .strip__body .eyebrow, .strip__link, .phone__label, .tarifs__dur { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__video { opacity: 1; }
+  .hero__slides picture:first-child { opacity: 1; }
 }

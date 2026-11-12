@@ -35,7 +35,7 @@
     "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261112k">
+  <link rel="stylesheet" href="styles.css?v=20261112l">
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
@@ -64,8 +64,15 @@
   <div class="hero-stage" id="heroStage">
   <section class="hero" id="accueil" data-rail="Accueil">
     <div class="hero__media" aria-hidden="true">
+      <div class="hero__slides" aria-hidden="true">
+        <picture style="--n:0"><source media="(min-width: 961px)" srcset="images/hero/d-0.5.jpg"><img src="images/hero/m-0.5.jpg" alt="" decoding="async" fetchpriority="high"></picture>
+        <picture style="--n:1"><source media="(min-width: 961px)" srcset="images/hero/d-4.2.jpg"><img src="images/hero/m-4.2.jpg" alt="" decoding="async"></picture>
+        <picture style="--n:2"><source media="(min-width: 961px)" srcset="images/hero/d-7.6.jpg"><img src="images/hero/m-7.6.jpg" alt="" decoding="async"></picture>
+        <picture style="--n:3"><source media="(min-width: 961px)" srcset="images/hero/d-10.8.jpg"><img src="images/hero/m-10.8.jpg" alt="" decoding="async"></picture>
+        <picture style="--n:4"><source media="(min-width: 961px)" srcset="images/hero/d-13.6.jpg"><img src="images/hero/m-13.6.jpg" alt="" decoding="async"></picture>
+      </div>
       <video class="hero__video" id="heroVideo" poster="videos/accueil-large.jpg" data-src-large="videos/accueil-large.mp4" data-poster-large="videos/accueil-large.jpg" data-src-small="videos/accueil.mp4" data-poster-small="videos/accueil.jpg" autoplay muted loop playsinline preload="auto"></video>
-      <script>(function(){var v=document.getElementById("heroVideo"),l=matchMedia("(min-width: 961px)").matches;v.poster=l?v.dataset.posterLarge:v.dataset.posterSmall;v.parentNode.style.backgroundImage="url("+v.poster+")";v.src=l?v.dataset.srcLarge:v.dataset.srcSmall;})();</script>
+      <script>(function(){var v=document.getElementById("heroVideo"),l=matchMedia("(min-width: 961px)").matches;v.poster=l?v.dataset.posterLarge:v.dataset.posterSmall;v.src=l?v.dataset.srcLarge:v.dataset.srcSmall;})();</script>
     </div>
     <div class="hero__center">
       <h1 class="hero__title" aria-label="Elegance Strasbourg">
@@ -325,9 +332,9 @@
   </div>
 </footer>
 
-<script src="config.js?v=20261112k"></script>
+<script src="config.js?v=20261112l"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=20261112k"></script>
+<script src="script.js?v=20261112l"></script>
 </body>
 </html>
