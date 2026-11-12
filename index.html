@@ -35,7 +35,7 @@
     "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261112l">
+  <link rel="stylesheet" href="styles.css?v=20261112m">
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
@@ -45,11 +45,17 @@
   <div class="header__bar">
     <a href="#accueil" class="logo" aria-label="Elegance Strasbourg, accueil"><span class="logo__word">ELEGANCE</span><span class="logo__script">Strasbourg</span></a>
     <nav class="nav" id="nav" aria-label="Navigation principale">
-      <a href="#prestations">Prestations</a>
-      <a href="#realisations">Le travail</a>
-      <a href="#avis">Avis</a>
-      <a href="#salon">Le salon</a>
-      <a href="#reserver" class="nav__cta">Prendre rendez-vous</a>
+      <p class="nav__eyebrow">Menu</p>
+      <a href="#prestations" style="--d:0">Prestations</a>
+      <a href="#realisations" style="--d:1">Le travail</a>
+      <a href="#avis" style="--d:2">Avis</a>
+      <a href="#salon" style="--d:3">Le salon</a>
+      <a href="#reserver" class="nav__cta" style="--d:4">Prendre rendez-vous</a>
+      <div class="nav__info" style="--d:5">
+        <p>162 route de Bischwiller<br>67300 Schiltigheim</p>
+        <p>Mardi – samedi<br>10:00 – 19:00</p>
+        <p><a href="tel:+33388977468">03 88 97 74 68</a><br><a href="https://www.instagram.com/elegance_strasbourg/" target="_blank" rel="noopener">Instagram</a></p>
+      </div>
     </nav>
     <a href="#reserver" class="btn btn--gold header__cta">Prendre rendez-vous</a>
     <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
@@ -332,9 +338,9 @@
   </div>
 </footer>
 
-<script src="config.js?v=20261112l"></script>
+<script src="config.js?v=20261112m"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=20261112l"></script>
+<script src="script.js?v=20261112m"></script>
 </body>
 </html>
