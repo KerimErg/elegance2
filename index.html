@@ -35,7 +35,7 @@
     "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261116b">
+  <link rel="stylesheet" href="styles.css?v=20261116c">
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
@@ -188,7 +188,7 @@
         </ol>
       </div>
       <div class="show__stage">
-        <div class="show__main">
+        <div class="show__main" data-reveal>
           <video src="videos/travail-tresses.mp4" poster="videos/travail-tresses.jpg" muted loop playsinline preload="metadata" data-managed class="is-on" aria-label="Vidéo : dégradé autour de tresses"></video>
           <video src="videos/travail-rasoir.mp4" poster="videos/travail-rasoir.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : contour au rasoir"></video>
           <video src="videos/travail-platine.mp4" poster="videos/travail-platine.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : crop platine"></video>
@@ -205,25 +205,26 @@
         <div>
           <h2 class="t-big" data-reveal>Avis clients</h2>
         </div>
-        <a class="avis__score" href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener" data-reveal><b>4,8</b><span>★★★★★<br>284 avis Google ↗</span></a>
+        <a class="avis__score" href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener" data-reveal><b data-count="4.8" data-dec="1">4,8</b><span>★★★★★<br><em data-count="284">284</em> avis Google ↗</span></a>
       </div>
-      <div class="avis__grid">
-        <figure class="avis__item" data-reveal>
+      <div class="avis__grid" id="avisGrid" aria-live="polite">
+        <figure class="avis__item">
           <span class="avis__stars" aria-label="5 étoiles sur 5">★★★★★</span>
           <blockquote>«&nbsp;Franchement, une super découverte ! J’ai été très bien accueillie et je suis sortie ravie de ma coupe. Le résultat est naturel, propre et vraiment réussi. Je reviendrai avec plaisir !&nbsp;»</blockquote>
           <figcaption>Ilhan S. <span>· avis Google, 2026</span></figcaption>
         </figure>
-        <figure class="avis__item" data-reveal>
+        <figure class="avis__item">
           <span class="avis__stars" aria-label="5 étoiles sur 5">★★★★★</span>
           <blockquote>«&nbsp;Excellent salon ! Très bon accueil, équipe professionnelle et à l’écoute. Je suis toujours très satisfait de ma coupe, le résultat est exactement ce que je souhaite. Je recommande vivement Élégance Strasbourg !&nbsp;»</blockquote>
           <figcaption>Furkan E. <span>· avis Google, 2026</span></figcaption>
         </figure>
-        <figure class="avis__item" data-reveal>
+        <figure class="avis__item">
           <span class="avis__stars" aria-label="5 étoiles sur 5">★★★★★</span>
           <blockquote>«&nbsp;Très bon accueil en arrivant au salon, les coiffeurs sont très expérimentés et très forts, mais surtout à l’écoute de tous vos besoins. Je recommande très fort ce salon, et merci encore pour ces coupes incroyables.&nbsp;»</blockquote>
           <figcaption>Marcus P. <span>· avis Google, 2023</span></figcaption>
         </figure>
       </div>
+      <div class="avis__dots" id="avisDots"></div>
     </div>
   </section>
 
@@ -242,7 +243,7 @@
         <p class="book__note" data-reveal>Paiement au salon.<br>Une question : <a href="tel:+33388977468">03 88 97 74 68</a></p>
       </div>
       <div class="book__panel">
-<div class="phone-wrap">
+<div class="phone-wrap" data-reveal>
         <div class="phone" id="phone">
           <div class="phone__notch"></div>
           <div class="phone__screen">
@@ -302,7 +303,7 @@
 
   <!-- ================= LE SALON ================= -->
   <section class="salon" id="salon" data-rail="Adresse">
-    <figure class="salon__photo">
+    <figure class="salon__photo" data-reveal>
       <img decoding="async" src="images/salon.jpg" alt="Le salon Elegance : plafond lumineux en nid d’abeille, fauteuil de barbier et miroirs" loading="lazy">
     </figure>
     <div class="salon__text">
@@ -345,9 +346,9 @@
   </div>
 </footer>
 
-<script src="config.js?v=20261116b"></script>
+<script src="config.js?v=20261116c"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=20261116b"></script>
+<script src="script.js?v=20261116c"></script>
 </body>
 </html>

@@ -526,3 +526,58 @@ scrollWork.push(toggleMbar);
     box.scrollBy({ left: step * Number(b.dataset.dir), behavior: "smooth" });
   }));
 })();
+
+// ===================== Avis : une citation à la fois, défilement automatique =====================
+(() => {
+  const grid = document.getElementById("avisGrid"), dots = document.getElementById("avisDots"); if (!grid || !dots) return;
+  const items = $$(".avis__item", grid); if (!items.length) return;
+  dots.innerHTML = items.map((_, k) => `<button type="button" aria-label="Avis ${k + 1}"></button>`).join("");
+  const btns = $$("button", dots);
+  let i = 0, t = 0, visible = false;
+  const go = (k) => {
+    i = (k + items.length) % items.length;
+    items.forEach((el, j) => el.classList.toggle("is-on", j === i));
+    btns.forEach((b, j) => b.classList.toggle("is-on", j === i));
+    clearTimeout(t); if (visible && !reduced) t = setTimeout(() => go(i + 1), 6000);
+  };
+  btns.forEach((b, k) => b.addEventListener("click", () => go(k)));
+  let x0 = null;
+  grid.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  grid.addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1)); x0 = null; });
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; go(i); }, { threshold: .3 }).observe(grid);
+  go(0);
+})();
+
+// ===================== Chiffres qui comptent jusqu'à leur valeur =====================
+(() => {
+  const els = $$("[data-count]"); if (!els.length || reduced || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver((en) => en.forEach((e) => {
+    if (!e.isIntersecting) return; io.unobserve(e.target);
+    const el = e.target, to = parseFloat(el.dataset.count), dec = Number(el.dataset.dec || 0), t0 = performance.now(), dur = 1600;
+    const tick = (now) => {
+      const p = Math.min(1, (now - t0) / dur), v = to * (1 - Math.pow(1 - p, 4));
+      el.textContent = v.toFixed(dec).replace(".", ",");
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }), { threshold: .6 });
+  els.forEach((el) => { el.textContent = (0).toFixed(Number(el.dataset.dec || 0)).replace(".", ","); io.observe(el); });
+})();
+
+// ===================== Prestations sur téléphone : la carte au centre ressort =====================
+(() => {
+  const box = document.getElementById("strips"); if (!box || reduced) return;
+  const mq = matchMedia("(max-width: 720px)");
+  const cards = $$(".strip", box);
+  let raf = 0;
+  const update = () => {
+    raf = 0; if (!mq.matches) { box.classList.remove("is-live"); return; }
+    box.classList.add("is-live");
+    const mid = box.getBoundingClientRect().left + box.clientWidth / 2;
+    let best = 0, bd = Infinity;
+    cards.forEach((c, k) => { const r = c.getBoundingClientRect(), d = Math.abs(r.left + r.width / 2 - mid); if (d < bd) { bd = d; best = k; } });
+    cards.forEach((c, k) => c.classList.toggle("is-center", k === best));
+  };
+  box.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+  addEventListener("resize", update); update();
+})();
