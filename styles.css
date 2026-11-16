@@ -1016,3 +1016,29 @@ body { background: var(--bg); color: var(--cream); }
 .rv { transform: translateY(28px); }
 .rv.in { transition: opacity 1.2s cubic-bezier(.16, 1, .3, 1), transform 1.4s cubic-bezier(.16, 1, .3, 1); transition-delay: var(--rd, 0s); }
 @media (max-width: 960px) { .svc2__item .svc2__text { color: var(--cream); --fg-rgb: 244, 243, 247; --bg-rgb: 43, 43, 49; --cream: rgb(var(--fg-rgb)); --muted: rgba(var(--fg-rgb), .62); --faint: rgba(var(--fg-rgb), .4); --line: rgba(var(--fg-rgb), .14); --line-2: rgba(var(--fg-rgb), .24); } }
+
+/* =====================================================================
+   Palette « maison » : pierre chaude et bleu nuit, accent violet
+   ===================================================================== */
+:root { --bg: #e9e3d9; --bg-2: #e2dbcf; --bg-3: #d8d0c2; --bg-4: #cdc4b5; --bg-rgb: 233, 227, 217; --night: #171a26; --night-2: #1e2232; }
+body { background: var(--bg); }
+.strips-sec, .planity { background: var(--bg); }
+.planity { background: radial-gradient(ellipse 60% 70% at 50% 100%, rgba(122, 69, 240, .16), rgba(122, 69, 240, 0) 70%), var(--bg); }
+/* sections bleu nuit */
+.cfs, .salon, .footer, .header.is-solid { color: var(--cream); --fg-rgb: 240, 237, 232; --bg-rgb: 23, 26, 38; --cream: rgb(var(--fg-rgb)); --muted: rgba(var(--fg-rgb), .66); --faint: rgba(var(--fg-rgb), .42); --line: rgba(var(--fg-rgb), .16); --line-2: rgba(var(--fg-rgb), .28); }
+.cfs { background: radial-gradient(ellipse 55% 55% at 50% 55%, rgba(122, 69, 240, .28), rgba(122, 69, 240, 0) 70%), var(--night); }
+.salon { background: var(--night); }
+.footer { background: #12141d; border-top: 1px solid rgba(240, 237, 232, .08); }
+.header.is-solid { background: rgba(23, 26, 38, .96); }
+.salon__facts dt, .salon .salon__facts a:hover { color: #b394ff; }
+.cf__dots button.is-on::before { background: #b394ff; }
+.cf__arrow:hover { background: var(--accent); border-color: var(--accent); }
+/* avis : violet profond, plus classe */
+.avis { background: radial-gradient(ellipse 70% 80% at 50% 0%, #4b3a78 0%, #2c2346 55%, #1d1830 100%); }
+/* menu mobile ouvert : bleu nuit */
+@media (max-width: 960px) {
+  .header:has(.nav.is-open) { color: var(--cream); --fg-rgb: 240, 237, 232; --bg-rgb: 23, 26, 38; --cream: rgb(var(--fg-rgb)); --muted: rgba(var(--fg-rgb), .66); --faint: rgba(var(--fg-rgb), .42); --line: rgba(var(--fg-rgb), .16); --line-2: rgba(var(--fg-rgb), .28); }
+  .nav { background: var(--night); }
+  .mbar { background: rgba(23, 26, 38, .95) !important; --fg-rgb: 240, 237, 232; --cream: rgb(var(--fg-rgb)); --muted: rgba(var(--fg-rgb), .66); --faint: rgba(var(--fg-rgb), .42); --line: rgba(var(--fg-rgb), .16); --line-2: rgba(var(--fg-rgb), .28); color: var(--cream); }
+}
+.svc2__media, .cf__item { box-shadow: 0 34px 80px rgba(23, 26, 38, .28); }
