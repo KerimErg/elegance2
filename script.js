@@ -60,212 +60,9 @@ word.innerHTML = [...word.textContent].map((ch, i) => `<span style="--i:${i}">${
 $(".hero__title").setAttribute("aria-label", "Elegance Strasbourg");
 
 
-// ===================== Réservation (téléphone) =====================
-// Vraie réservation via Supabase quand config.js est rempli, sinon mode démonstration.
-const db = CFG.supabaseUrl && CFG.supabaseAnonKey && window.supabase
-  ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey)
-  : null;
-const DEMO = !db;
-
-const today = new Date(); today.setHours(0, 0, 0, 0);
-const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const fromIso = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
-const fmtDay = (s) => fromIso(s).toLocaleDateString("fr-FR", { weekday: "short" }).replace(".", "");
-const fmtLong = (s) => fromIso(s).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
-
-const days = [];
-for (let d = new Date(today), n = 0; n < CFG.daysAhead; n++, d.setDate(d.getDate() + 1)) if (OPEN[d.getDay()]) days.push(iso(d));
-
-const BARBERS = CFG.barbers || [], CAP = Math.max(1, BARBERS.length);
-const barberName = (id) => (BARBERS.find((b) => b.id === id) || {}).name;
-// load : "jour|heure" -> { total, barbers:Set } (nombre de rdv et coiffeurs déjà pris)
-const book = { service: SERVICES[0].id, barber: "any", date: null, time: null, load: new Map(), blocked: new Set(), loading: false };
-const el = {
-  pick: $("#stepPick"), form: $("#stepForm"), done: $("#stepDone"),
-  status: $("#phoneStatus"), statusText: $("#phoneStatusText"),
-  next: $("#pNext"), submit: $("#pSubmit"), error: $("#pError"), loading: $("#pLoading"),
-};
-
-if (DEMO) $("#phoneTag").textContent = "Mode démonstration · aucune réservation n’est enregistrée";
-
-function demoTaken(day, time) {
-  let h = 7; for (const c of day + time) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  return h % 4 === 0;
-}
-
-async function loadAvailability() {
-  book.loading = true; el.loading.hidden = false;
-  try {
-    if (DEMO) {
-      book.load = new Map(days.flatMap((d) => SLOT_TIMES.filter((t) => demoTaken(d, t)).map((t) => [`${d}|${t}`, { total: CAP, barbers: new Set() }])));
-    } else {
-      const from = days[0], to = days[days.length - 1];
-      let [load, blocked] = await Promise.all([
-        db.rpc("slot_load", { from_day: from, to_day: to }),
-        db.from("blocked_days").select("day").gte("day", from).lte("day", to),
-      ]);
-      if (load.error) { // base pas encore mise à jour : créneaux complets seulement
-        const t = await db.rpc("taken_slots", { from_day: from, to_day: to });
-        if (t.error) throw t.error;
-        load = { data: t.data.map((r) => ({ ...r, total: CAP, barbers: [] })) };
-      }
-      if (blocked.error) throw blocked.error;
-      book.load = new Map(load.data.map((r) => [`${r.day}|${String(r.slot).slice(0, 5)}`, { total: r.total, barbers: new Set(r.barbers || []) }]));
-      book.blocked = new Set(blocked.data.map((r) => r.day));
-    }
-    el.error.textContent = "";
-  } catch (err) {
-    console.error(err);
-    el.statusText.textContent = "Créneaux indisponibles pour le moment. Réessayez ou appelez le salon.";
-  } finally {
-    book.loading = false; el.loading.hidden = true;
-  }
-}
-
-function slotFree(day, time) {
-  const d = fromIso(day);
-  if (book.blocked.has(day) || !OPEN[d.getDay()] || time > OPEN[d.getDay()]) return false;
-  if (day === iso(today)) {
-    const n = new Date(), [hh, mm] = time.split(":").map(Number);
-    if (hh * 60 + mm <= n.getHours() * 60 + n.getMinutes() + 30) return false;
-  }
-  const l = book.load.get(`${day}|${time}`);
-  if (!l) return true;
-  if (l.total >= CAP) return false;
-  return book.barber === "any" || !l.barbers.has(book.barber);
-}
-const dayHasSlot = (day) => SLOT_TIMES.some((t) => slotFree(day, t));
-
-const chip = (g, v, label, sub, off) =>
-  `<button type="button" class="chip${book[g] === v ? " is-on" : ""}" data-g="${g}" data-v="${v}" aria-pressed="${book[g] === v}" ${off ? "disabled" : ""}>${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
-
-function renderPick() {
-  $("#pService").innerHTML = SERVICES.map((s) => chip("service", s.id, s.name, `${s.price} €`)).join("");
-  $("#pBarber").innerHTML = chip("barber", "any", `<span class="av av--any" aria-hidden="true">✦</span>`, "Peu importe")
-    + BARBERS.map((b) => chip("barber", b.id, `<span class="av" aria-hidden="true">${b.name.slice(0, 2)}</span>`, b.name)).join("");
-  $("#pDate").innerHTML = days.map((d) => chip("date", d, `${fmtDay(d)} ${fromIso(d).getDate()}`, book.blocked.has(d) ? "fermé" : !dayHasSlot(d) ? "complet" : "", !dayHasSlot(d))).join("");
-  if (book.time && !slotFree(book.date, book.time)) book.time = null;
-  $("#pSlots").innerHTML = SLOT_TIMES.map((t) => {
-    const off = !slotFree(book.date, t);
-    return `<button type="button" class="slot${book.time === t ? " is-on" : ""}" data-t="${t}" ${off ? "disabled" : ""}>${t}</button>`;
-  }).join("");
-  const s = SERVICES.find((x) => x.id === book.service);
-  el.next.disabled = !book.time;
-  el.next.textContent = book.time ? `Continuer · ${s.name} · ${book.time}` : "Choisissez un créneau";
-  updateRecap(s);
-}
-function updateRecap(s) {
-  const set = (id, txt, empty) => { const e = document.getElementById(id); if (!e) return; e.textContent = txt; e.classList.toggle("is-empty", !!empty); };
-  set("rcService", s.name);
-  set("rcBarber", book.barber === "any" ? "Premier disponible" : barberName(book.barber));
-  set("rcDate", book.date ? fmtLong(book.date).replace(/^./, (c) => c.toUpperCase()) : "—", !book.date);
-  set("rcTime", book.time || "À choisir", !book.time);
-  set("rcPrice", `${s.price} €`);
-}
-
-// Sur téléphone, garder le haut du panneau à l'écran quand on change d'étape
-function keepPanelInView() {
-  if (innerWidth > 720) return;
-  const r = $("#phone").getBoundingClientRect();
-  if (r.top < 60 || r.top > innerHeight * .5) scrollTo({ top: scrollY + r.top - 84, behavior: reduced ? "auto" : "smooth" });
-}
-function show(step) {
-  el.pick.hidden = step !== "pick"; el.form.hidden = step !== "form"; el.done.hidden = step !== "done";
-  el.status.classList.toggle("is-ok", step === "done");
-  const bar = document.getElementById("wzBar"); if (bar) bar.hidden = step === "done";
-  if (step !== "done") el.statusText.textContent = step === "form" ? "Plus qu’une étape" : "Réservez en moins d’une minute";
-}
-
-// Assistant de réservation : une question à la fois (4 étapes)
-let wz = 0;
-function wzGo(k, focus = true) {
-  wz = k;
-  $$(".wz", el.pick).forEach((w) => { w.hidden = Number(w.dataset.wz) !== k; });
-  const n = el.form.hidden ? k + 1 : 4;
-  $("#wzCount").textContent = `Étape ${n} sur 4`;
-  $("#wzFill").style.width = `${n * 25}%`;
-  $("#wzBack").hidden = n === 1;
-  if (focus) keepPanelInView();
-}
-$("#wzBack").addEventListener("click", () => { if (!el.form.hidden) { show("pick"); wzGo(2); } else wzGo(Math.max(0, wz - 1)); });
-
-el.pick.addEventListener("click", (e) => {
-  const c = e.target.closest(".chip"), sl = e.target.closest(".slot");
-  if (c && !c.disabled) {
-    const box = c.parentElement, left = box.scrollLeft;
-    book[c.dataset.g] = c.dataset.v;
-    renderPick(); $("#" + box.id).scrollLeft = left;
-    if (c.dataset.g === "service") setTimeout(() => wzGo(1), 180);
-    if (c.dataset.g === "barber") setTimeout(() => wzGo(2), 180);
-  } else if (sl && !sl.disabled) { book.time = sl.dataset.t; renderPick(); setTimeout(() => el.next.click(), 180); }
-});
-
-el.next.addEventListener("click", () => {
-  if (!book.time) return;
-  const s = SERVICES.find((x) => x.id === book.service);
-  $("#pRecap").innerHTML = `<b>${s.name}</b> · ${s.price} €<br>${fmtLong(book.date)} à ${book.time}<br>${book.barber === "any" ? "Premier coiffeur disponible" : "Avec " + barberName(book.barber)}`;
-  el.error.textContent = "";
-  show("form"); wzGo(wz, false); keepPanelInView();
-  $("#fName").focus({ preventScroll: true });
-});
-$("#pBack").addEventListener("click", () => { show("pick"); wzGo(2); });
-
-function validate() {
-  const name = $("#fName").value.trim(), phone = $("#fPhone").value.trim(), email = $("#fEmail").value.trim();
-  if (name.length < 2) return ["Indiquez votre nom et prénom.", "#fName"];
-  if (!/^[0-9 +().-]{8,20}$/.test(phone) || phone.replace(/\D/g, "").length < 9) return ["Indiquez un numéro de téléphone valide, par exemple 06 12 34 56 78.", "#fPhone"];
-  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return ["L’adresse e-mail n’est pas valide. Corrigez-la ou laissez le champ vide.", "#fEmail"];
-  return [null, { name, phone, email }];
-}
-
-el.form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const [msg, data] = validate();
-  if (msg) { el.error.textContent = msg; $(data).focus(); return; }
-  const s = SERVICES.find((x) => x.id === book.service);
-  el.submit.disabled = true; el.submit.textContent = "Envoi…"; el.error.textContent = "";
-  try {
-    if (DEMO) {
-      await new Promise((r) => setTimeout(r, 600));
-    } else {
-      const row = {
-        day: book.date, slot: book.time, service: s.name, price: s.price,
-        client_name: data.name, client_phone: data.phone, client_email: data.email || null,
-        barber: book.barber === "any" ? null : book.barber,
-      };
-      let { error } = await db.from("appointments").insert(row);
-      if (error && error.code === "PGRST204") { delete row.barber; ({ error } = await db.from("appointments").insert(row)); } // base pas encore mise à jour
-      if (error) throw error;
-    }
-    const k = `${book.date}|${book.time}`, l = book.load.get(k) || { total: 0, barbers: new Set() };
-    l.total++; if (book.barber !== "any") l.barbers.add(book.barber); book.load.set(k, l);
-    $("#pDoneText").textContent = `${s.name}${book.barber === "any" ? "" : " avec " + barberName(book.barber)} · ${fmtLong(book.date)} à ${book.time}. À très vite au salon, ${data.name.split(" ")[0]} !`;
-    el.statusText.textContent = `Rendez-vous confirmé · ${fmtLong(book.date)}, ${book.time}`;
-    show("done"); keepPanelInView();
-    el.form.reset();
-  } catch (err) {
-    console.error(err);
-    const gone = err && (err.code === "23505" || err.code === "42501");
-    if (gone) {
-      await loadAvailability(); book.time = null; renderPick(); show("pick");
-      el.statusText.textContent = "Ce créneau vient d’être pris. Choisissez-en un autre.";
-    } else {
-      el.error.textContent = "La réservation n’a pas pu être envoyée. Vérifiez votre connexion et réessayez, ou appelez le salon.";
-    }
-  } finally {
-    el.submit.disabled = false; el.submit.textContent = "Confirmer le rendez-vous";
-  }
-});
-
-$("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); show("pick"); wzGo(0, false); });
-
-(async () => {
-  book.date = days[0];
-  renderPick();
-  await loadAvailability();
-  book.date = days.find(dayHasSlot) || days[0];
-  renderPick();
-})();
+// ===================== Réservation =====================
+// Les rendez-vous se prennent sur Planity (liens dans la page).
+const today = new Date();
 
 // ===================== Divers =====================
 $("#year").textContent = today.getFullYear();
@@ -278,14 +75,6 @@ if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
     ${b.specialty ? `<span class="crew__spec">${b.specialty}</span>` : ""}
     <span class="crew__go">Réserver<span class="sr-only"> avec ${b.name}</span> →</span>
   </a></li>`).join("");
-
-// Choix d'un barbier ou d'une prestation depuis la page : le module de réservation suit
-document.addEventListener("click", (e) => {
-  const a = e.target.closest("[data-pick-barber], [data-pick-service]"); if (!a) return;
-  if (a.dataset.pickBarber) book.barber = a.dataset.pickBarber;
-  if (a.dataset.pickService) book.service = a.dataset.pickService;
-  book.time = null; show("pick"); renderPick(); wzGo(a.dataset.pickService ? 1 : a.dataset.pickBarber ? 2 : 0, false);
-});
 
 // ===================== Prestations : bandes qui s'ouvrent =====================
 (() => {
@@ -493,9 +282,9 @@ if (!reduced && "IntersectionObserver" in window) {
 
 // ===================== Barre fixe mobile (Appeler / Réserver) =====================
 const mbar = $("#mbar");
-const phoneSec = $("#phone");
+const phoneSec = $("#reserver");
 let phoneInView = false;
-new IntersectionObserver(([en]) => { phoneInView = en.isIntersecting; toggleMbar(); }, { threshold: .15 }).observe(phoneSec);
+if (phoneSec) new IntersectionObserver(([en]) => { phoneInView = en.isIntersecting; toggleMbar(); }, { threshold: .15 }).observe(phoneSec);
 let mbarOn = null;
 function toggleMbar() {
   const on = scrollY > innerHeight * .6 && !phoneInView;

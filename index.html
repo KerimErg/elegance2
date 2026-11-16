@@ -34,7 +34,7 @@
     "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261116e">
+  <link rel="stylesheet" href="styles.css?v=20261116f">
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
@@ -49,14 +49,14 @@
       <a href="#realisations" style="--d:1">Réalisations</a>
       <a href="#avis" style="--d:2">Avis</a>
       <a href="#salon" style="--d:3">Adresse</a>
-      <a href="#reserver" class="nav__cta" style="--d:4">Prendre rendez-vous</a>
+      <a href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" class="nav__cta" style="--d:4" target="_blank" rel="noopener">Prendre rendez-vous</a>
       <div class="nav__info" style="--d:5">
         <p>162 route de Bischwiller<br>67300 Schiltigheim</p>
         <p>Mardi – samedi<br>10:00 – 19:00</p>
         <p><a href="tel:+33388977468">03 88 97 74 68</a><br><a href="https://www.instagram.com/elegance_strasbourg/" target="_blank" rel="noopener">Instagram</a></p>
       </div>
     </nav>
-    <a href="#reserver" class="btn btn--gold header__cta">Prendre rendez-vous</a>
+    <a href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" class="btn btn--gold header__cta" target="_blank" rel="noopener">Prendre rendez-vous</a>
     <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
   </div>
 </header>
@@ -87,7 +87,7 @@
       <span class="hero__rule" aria-hidden="true"></span>
       <p class="hero__tag">Barbier à Schiltigheim</p>
       <div class="hero__cta">
-        <a href="#reserver" class="btn btn--gold">Prendre rendez-vous</a>
+        <a href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" class="btn btn--gold" target="_blank" rel="noopener">Prendre rendez-vous</a>
         <a class="hero__rating" href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" target="_blank" rel="noopener"><span class="hero__stars" aria-hidden="true">★★★★★</span> 4,8 · 284 avis Google</a>
       </div>
     </div>
@@ -115,7 +115,7 @@
           <div class="svc2__text">
             <h3 class="svc2__name">Coupe homme</h3>
             <p class="svc2__meta"><span>18 €</span><i></i>30 min</p>
-            <a class="btn btn--gold" href="#reserver" data-pick-service="coupe">Réserver</a>
+            <a class="btn btn--gold" href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" target="_blank" rel="noopener">Réserver</a>
           </div>
         </article>
         <article class="svc2__item" data-k="1" data-reveal>
@@ -123,7 +123,7 @@
           <div class="svc2__text">
             <h3 class="svc2__name">Coupe &amp; barbe</h3>
             <p class="svc2__meta"><span>28 €</span><i></i>30 min</p>
-            <a class="btn btn--gold" href="#reserver" data-pick-service="coupe-barbe">Réserver</a>
+            <a class="btn btn--gold" href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" target="_blank" rel="noopener">Réserver</a>
           </div>
         </article>
         <article class="svc2__item" data-k="2" data-reveal>
@@ -131,7 +131,7 @@
           <div class="svc2__text">
             <h3 class="svc2__name">Taillage barbe</h3>
             <p class="svc2__meta"><span>12 €</span><i></i>15 min</p>
-            <a class="btn btn--gold" href="#reserver" data-pick-service="barbe">Réserver</a>
+            <a class="btn btn--gold" href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" target="_blank" rel="noopener">Réserver</a>
           </div>
         </article>
         <article class="svc2__item" data-k="3" data-reveal>
@@ -139,7 +139,7 @@
           <div class="svc2__text">
             <h3 class="svc2__name">Soin du visage</h3>
             <p class="svc2__meta"><span>25 €</span><i></i>30 min</p>
-            <a class="btn btn--gold" href="#reserver" data-pick-service="soin">Réserver</a>
+            <a class="btn btn--gold" href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" target="_blank" rel="noopener">Réserver</a>
           </div>
         </article>
         <article class="svc2__item" data-k="4" data-reveal>
@@ -221,75 +221,17 @@
   </section>
 
   <!-- ================= RÉSERVER ================= -->
-  <section class="sec book-sec" id="reserver" data-rail="Réserver">
-    <div class="wrap book">
-      <div class="book__intro">
-        <h2 class="t-big" data-reveal>Réserver</h2>
-        <dl class="recap" id="recap" data-reveal>
-          <div><dt>Prestation</dt><dd id="rcService">—</dd></div>
-          <div><dt>Barbier</dt><dd id="rcBarber">—</dd></div>
-          <div><dt>Date</dt><dd id="rcDate">—</dd></div>
-          <div><dt>Heure</dt><dd id="rcTime">À choisir</dd></div>
-          <div class="recap__total"><dt>Total</dt><dd id="rcPrice">—</dd></div>
-        </dl>
-        <p class="book__note" data-reveal>Paiement au salon.<br>Une question : <a href="tel:+33388977468">03 88 97 74 68</a></p>
-      </div>
-      <div class="book__panel">
-<div class="phone-wrap" data-reveal>
-        <div class="phone" id="phone">
-          <div class="phone__notch"></div>
-          <div class="phone__screen">
-            <div class="phone__status" id="phoneStatus">
-              <span class="phone__check" aria-hidden="true"></span>
-              <span id="phoneStatusText">Réservez en moins d’une minute</span>
-            </div>
-
-            <div class="wz__bar" id="wzBar">
-              <button type="button" class="wz__back" id="wzBack" hidden>← Retour</button>
-              <span class="wz__count" id="wzCount">Étape 1 sur 4</span>
-              <span class="wz__track"><i id="wzFill"></i></span>
-            </div>
-            <div class="phone__step" id="stepPick">
-              <div class="wz" data-wz="0">
-                <p class="wz__title">Quelle prestation ?</p>
-                <div class="chips" id="pService"></div>
-              </div>
-              <div class="wz" data-wz="1" hidden>
-                <p class="wz__title">Avec quel barbier ?</p>
-                <div class="chips" id="pBarber"></div>
-              </div>
-              <div class="wz" data-wz="2" hidden>
-                <p class="wz__title">Quel jour ?</p>
-                <div class="chips" id="pDate"></div>
-                <p class="wz__sub">Heure <span class="phone__loading" id="pLoading" hidden>· mise à jour…</span></p>
-                <div class="slots" id="pSlots"></div>
-              </div>
-              <button class="phone__confirm" id="pNext" type="button" disabled hidden>Choisissez un créneau</button>
-            </div>
-
-            <form class="phone__step" id="stepForm" hidden novalidate>
-              <p class="wz__title">Vos coordonnées</p>
-              <p class="phone__recap" id="pRecap"></p>
-              <button type="button" class="phone__back" id="pBack" hidden>← Modifier le créneau</button>
-              <label class="field"><span>Nom et prénom</span><input id="fName" name="name" autocomplete="name" required minlength="2" maxlength="80"></label>
-              <label class="field"><span>Téléphone</span><input id="fPhone" name="tel" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20"></label>
-              <label class="field"><span>E-mail <small>facultatif</small></span><input id="fEmail" name="email" type="email" autocomplete="email" maxlength="120"></label>
-              <p class="phone__legal"><a href="legal.html#confidentialite" target="_blank" rel="noopener">Confidentialité</a></p>
-              <p class="phone__error" id="pError" role="alert"></p>
-              <button class="phone__confirm" id="pSubmit" type="submit">Confirmer le rendez-vous</button>
-            </form>
-
-            <div class="phone__step phone__done" id="stepDone" hidden>
-              <span class="phone__bigcheck" aria-hidden="true"></span>
-              <p class="phone__done-title">C’est réservé</p>
-              <p class="phone__done-text" id="pDoneText"></p>
-              <button class="phone__confirm phone__confirm--ghost" id="pAgain" type="button">Nouvelle réservation</button>
-            </div>
-          </div>
-        </div>
-        <p class="phone__tag" id="phoneTag" hidden></p>
-      </div>
-      </div>
+  <section class="sec book-sec planity" id="reserver" data-rail="Réserver">
+    <div class="wrap planity__inner">
+      <h2 class="t-big" data-reveal>Réserver</h2>
+      <p class="planity__lead" data-reveal>Choisissez votre prestation, votre barbier et votre créneau en ligne, en moins d’une minute.</p>
+      <ol class="planity__steps" data-reveal>
+        <li><b>1</b>Prestation</li>
+        <li><b>2</b>Barbier</li>
+        <li><b>3</b>Jour et heure</li>
+      </ol>
+      <a class="btn btn--gold planity__btn" href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" target="_blank" rel="noopener" data-reveal>Réserver sur Planity <span aria-hidden="true">↗</span></a>
+      <p class="planity__alt" data-reveal>Ou par téléphone : <a href="tel:+33388977468">03 88 97 74 68</a></p>
     </div>
   </section>
 
@@ -320,7 +262,7 @@
 
 <div class="mbar" id="mbar" aria-hidden="true">
   <a href="tel:+33388977468" class="mbar__call" tabindex="-1">Appeler</a>
-  <a href="#reserver" class="mbar__book" tabindex="-1">Réserver</a>
+  <a href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" class="mbar__book" tabindex="-1" target="_blank" rel="noopener">Réserver</a>
 </div>
 
 <footer class="footer">
@@ -338,9 +280,8 @@
   </div>
 </footer>
 
-<script src="config.js?v=20261116e"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js?v=20261116f"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=20261116e"></script>
+<script src="script.js?v=20261116f"></script>
 </body>
 </html>
