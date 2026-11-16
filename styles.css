@@ -707,3 +707,27 @@ button { background: none; border: 0; cursor: pointer; }
   .strip__title { font-size: 1.9rem; }
   .hero__tag { font-size: 1.05rem; }
 }
+
+/* ---------- Touches de couleur : le violet du néon du salon ---------- */
+:root { --accent: #8e5cff; --accent-2: #a77dff; --accent-soft: rgba(142, 92, 255, .16); }
+.btn--gold, .mbar__book, .nav .nav__cta, .phone__confirm:not(:disabled):not(.phone__confirm--ghost) { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn--gold:hover, .phone__confirm:hover:not(:disabled):not(.phone__confirm--ghost) { background: var(--accent-2); color: #fff; }
+.chip.is-on, .slot.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.chip.is-on small { color: rgba(255, 255, 255, .8); }
+#pBarber .chip.is-on .av { background: var(--accent); border-color: var(--accent); color: #fff; }
+#pService .chip.is-on { color: #fff; border-bottom-color: var(--accent); }
+#pService .chip.is-on small, .tarifs__price, .card__price { color: var(--accent-2); }
+.phone__label b { background: var(--accent); border-color: var(--accent); color: #fff; }
+.hero__stars, .avis__stars, .avis__score span { color: var(--accent-2); }
+.strip__body .eyebrow { color: var(--accent-2); }
+.strip__link { color: #fff; border-bottom-color: var(--accent-2); }
+.show__chap.is-on .show__chap-bar i { background: var(--accent); }
+.show__chap.is-on .show__chap-n { color: var(--accent-2); }
+.salon__facts dt { color: var(--accent-2); }
+.nav a::after { background: var(--accent); }
+.field input:focus { border-color: var(--accent); }
+.avis, .book-sec { background: linear-gradient(180deg, rgba(142, 92, 255, .06), rgba(142, 92, 255, 0) 60%), var(--bg); }
+@media (max-width: 720px) {
+  .strip__body .eyebrow { color: #fff; background: var(--accent-soft); border-color: rgba(167, 125, 255, .5); }
+  .strip__link { background: var(--accent); color: #fff; }
+}
