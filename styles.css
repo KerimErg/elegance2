@@ -851,3 +851,68 @@ body { font-weight: 400; letter-spacing: .01em; }
   .btn, .phone__confirm, .mbar a { font-size: .82rem; }
   .strip__link { text-transform: uppercase; letter-spacing: .16em; font-size: .78rem; }
 }
+
+/* =====================================================================
+   Prestations : grande photo fixe, liste qui défile à côté
+   ===================================================================== */
+.svc2 { padding-bottom: 6vh; }
+.svc2__inner { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+.svc2__media { position: sticky; top: calc(36px + 12vh); height: 76vh; border-radius: 4px; overflow: hidden; background: var(--bg-3); box-shadow: 0 50px 120px rgba(0, 0, 0, .45); }
+.svc2__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; clip-path: inset(100% 0 0 0); transform: scale(1.12); transition: clip-path 1.1s cubic-bezier(.7, 0, .2, 1), transform 1.6s cubic-bezier(.2, .7, .2, 1); }
+.svc2__media img.is-on { clip-path: inset(0 0 0 0); transform: none; z-index: 1; }
+.svc2__media img.was-on { clip-path: inset(0 0 0 0); transform: scale(1.04); }
+.svc2__img { display: none; }
+.svc2__item { min-height: 76vh; display: flex; align-items: center; }
+.svc2__item:last-child { min-height: calc(76vh + 12vh); }
+.svc2__text { display: grid; justify-items: start; gap: 1.2rem; opacity: .22; transform: translateX(-10px); transition: opacity .7s ease, transform .9s var(--ease); }
+.svc2__item.is-on .svc2__text { opacity: 1; transform: none; }
+.svc2__name { font-weight: 300; text-transform: uppercase; letter-spacing: .1em; font-size: clamp(2rem, 3.6vw, 3.4rem); line-height: 1.05; }
+.svc2__meta { display: flex; align-items: center; gap: 1rem; color: var(--muted); font-size: .95rem; letter-spacing: .06em; }
+.svc2__meta span { color: var(--accent-2); font-size: 1.35rem; font-weight: 400; letter-spacing: .02em; }
+.svc2__meta i { width: 34px; height: 1px; background: var(--line-2); }
+.svc2__item .btn { margin-top: .6rem; }
+.svc2__item:not(.is-on) .btn { pointer-events: none; }
+@media (max-width: 960px) {
+  .svc2__inner { grid-template-columns: 1fr; gap: 1.2rem; }
+  .svc2__media { display: none; }
+  .svc2__item, .svc2__item:last-child { position: relative; min-height: 0; aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; align-items: flex-end; }
+  .svc2__img { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); transition: transform 1.4s var(--ease); }
+  .svc2__item.in .svc2__img, .svc2__item:not(.rv) .svc2__img { transform: none; }
+  .svc2__item::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(29, 29, 34, 0) 40%, rgba(20, 20, 24, .92) 100%); }
+  .svc2__text, .svc2__item .svc2__text { position: relative; z-index: 1; opacity: 1; transform: none; padding: 1.4rem; gap: .8rem; }
+  .svc2__name { font-size: 1.7rem; }
+  .svc2__item .btn { pointer-events: auto; }
+}
+
+/* =====================================================================
+   Réalisations : carrousel en profondeur
+   ===================================================================== */
+.cfs { position: relative; overflow: hidden; padding-block: var(--section); background: radial-gradient(ellipse 60% 55% at 50% 55%, rgba(142, 92, 255, .2), rgba(142, 92, 255, 0) 70%), var(--bg-2); }
+.cfs__head { text-align: center; margin-bottom: clamp(2rem, 4vw, 3.4rem); }
+.cf { position: relative; height: min(68vh, 620px); perspective: 1600px; }
+.cf__item { position: absolute; left: 50%; top: 0; height: 100%; aspect-ratio: 3 / 4; border-radius: 6px; overflow: hidden; background: var(--bg-3) center / cover; box-shadow: 0 40px 100px rgba(0, 0, 0, .55); transform: translateX(-50%) scale(.6); opacity: 0; transition: transform 1s cubic-bezier(.65, 0, .25, 1), opacity .8s ease, filter .8s ease; cursor: pointer; }
+.cf__item video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.cf__item[data-d="0"] { transform: translateX(-50%) scale(1); opacity: 1; z-index: 3; cursor: default; }
+.cf__item[data-d="1"] { transform: translateX(28%) scale(.74) rotateY(-16deg); opacity: .55; z-index: 2; filter: brightness(.6); }
+.cf__item[data-d="-1"] { transform: translateX(-128%) scale(.74) rotateY(16deg); opacity: .55; z-index: 2; filter: brightness(.6); }
+.cf__item[data-d="2"], .cf__item[data-d="-2"] { transform: translateX(-50%) scale(.5); opacity: 0; z-index: 1; }
+.cf__caption { display: grid; justify-items: center; gap: 1.2rem; margin-top: 2rem; }
+.cf__titles { display: grid; }
+.cf__title { grid-area: 1 / 1; text-align: center; font-weight: 300; text-transform: uppercase; letter-spacing: .2em; font-size: clamp(1rem, 1.6vw, 1.25rem); opacity: 0; transform: translateY(10px); transition: opacity .5s, transform .6s var(--ease); }
+.cf__title.is-on { opacity: 1; transform: none; transition-delay: .3s; }
+.cf__nav { display: flex; align-items: center; gap: 1.2rem; }
+.cf__arrow { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--cream); font-size: 1.1rem; transition: background .3s, border-color .3s; }
+.cf__arrow:hover { background: var(--accent); border-color: var(--accent); }
+.cf__dots { display: flex; gap: .5rem; }
+.cf__dots button { width: 30px; height: 30px; display: grid; place-items: center; }
+.cf__dots button::before { content: ""; width: 22px; height: 2px; border-radius: 2px; background: var(--line-2); transition: width .4s var(--ease), background .3s; }
+.cf__dots button.is-on::before { width: 36px; background: var(--accent-2); }
+@media (max-width: 720px) {
+  .cf { height: 64vh; max-height: 520px; }
+  .cf__item[data-d="1"] { transform: translateX(34%) scale(.7) rotateY(-14deg); }
+  .cf__item[data-d="-1"] { transform: translateX(-134%) scale(.7) rotateY(14deg); }
+}
+
+/* Itinéraire : carte toujours visible */
+.salon .salon__map { display: block; height: 240px; }
+@media (max-width: 720px) { .salon .salon__map { height: 200px; } }

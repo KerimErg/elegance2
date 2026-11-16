@@ -303,12 +303,12 @@ document.addEventListener("click", (e) => {
 // En descendant, la vidéo plein écran rétrécit et se pose exactement sur la première bande
 // des prestations, puis se fond dans sa photo ; les autres bandes et le titre arrivent ensuite.
 (() => {
-  const sec = $("#prestations"), strips = $$("#strips .strip"), root = document.documentElement;
+  const sec = $("#prestations"), strips = $$(".svc2__item"), root = document.documentElement;
   strips.forEach((st, k) => st.style.setProperty("--k", k));
   if (!sec || !strips.length) return;
   // transition réservée aux ordinateurs : sur téléphone, défilement simple et fiable
   if (reduced || !matchMedia("(min-width: 961px) and (hover: hover)").matches) { sec.classList.add("is-in", "is-head"); return; }
-  const slidesBox = $(".hero__slides"), media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), first = strips[0];
+  const slidesBox = $(".hero__slides"), media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), first = document.getElementById("svcMedia");
   root.classList.add("flying");
   const clamp = (v) => Math.min(1, Math.max(0, v));
   const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -336,7 +336,6 @@ document.addEventListener("click", (e) => {
     media.style.visibility = ""; if (video.paused) { const pr = video.play(); if (pr) pr.catch(() => {}); }
     if (p < .97) sec.classList.remove("is-in"); else sec.classList.add("is-in");
     sec.classList.toggle("is-head", p > .9);
-    if (!first.classList.contains("is-on")) strips.forEach((st) => st.classList.toggle("is-on", st === first));
     const W = innerWidth, H = innerHeight, r = land;
     // rectangle visible : de l'écran entier à la bande
     const L = lerp(0, r.left, e), T = lerp(0, r.top, e), Rr = lerp(W, r.right, e), B = lerp(H, r.bottom, e);
@@ -414,43 +413,50 @@ document.addEventListener("click", (e) => {
   scrollWork.push(update);
 })();
 
-// ===================== Le travail : vitrine vidéo =====================
-// Chapitres avec barre de progression ; la vidéo suivante se dévoile de bas en haut.
+// ===================== Réalisations : carrousel en profondeur =====================
 (() => {
-  const sec = $("#realisations"); if (!sec) return;
-  const vids = $$(".show__main video", sec), items = $$(".show__item", sec), chaps = $$(".show__chap", sec), n = vids.length;
-  const main = $(".show__main", sec);
-  main.style.backgroundImage = `url("${vids[0].poster}")`;
-  const DUR = 2800;
-  sec.style.setProperty("--dur", DUR + "ms");
-  let i = 0, visible = false, timer = 0, left = DUR, started = 0;
-  const play = () => vids.forEach((v, k) => { if (k === i && visible && !reduced) { const p = v.play(); if (p) p.catch(() => {}); } else if (!v.classList.contains("is-prev")) v.pause(); });
+  const sec = document.getElementById("realisations"), cf = document.getElementById("cf"); if (!sec || !cf) return;
+  const items = $$(".cf__item", cf), vids = items.map((it) => $("video", it)), titles = $$(".cf__title", sec), dotsBox = document.getElementById("cfDots"), n = items.length;
+  items.forEach((it, k) => { it.style.backgroundImage = `url("${vids[k].poster}")`; });
+  dotsBox.innerHTML = items.map((_, k) => `<button type="button" aria-label="Vidéo ${k + 1}"></button>`).join("");
+  const dots = $$("button", dotsBox);
+  let i = 0, visible = false, timer = 0;
   const go = (k) => {
-    if (k === i) return;
-    const prev = i; i = (k + n) % n;
-    vids.forEach((v, j) => { v.classList.toggle("is-prev", j === prev); v.classList.remove("is-on"); });
-    void vids[i].offsetWidth;                          // relance l'animation d'entrée
-    vids[i].classList.add("is-on");
-    try { vids[i].currentTime = 0; } catch (e) {}
-    setTimeout(() => { vids[prev].classList.remove("is-prev"); vids[prev].pause(); }, 700);
-    main.style.backgroundImage = `url("${vids[i].poster}")`;
-    items.forEach((el, j) => el.classList.toggle("is-on", j === i));
-    chaps.forEach((c, j) => { c.classList.remove("is-on"); if (j === i) { void c.offsetWidth; c.classList.add("is-on"); } });
+    i = (k + n) % n;
+    items.forEach((it, j) => { let d = (j - i + n) % n; if (d > n / 2) d -= n; it.dataset.d = d; });
+    titles.forEach((t, j) => t.classList.toggle("is-on", j === i));
+    dots.forEach((b, j) => b.classList.toggle("is-on", j === i));
+    vids.forEach((v, j) => {
+      if (j === i && visible && !reduced) { v.preload = "auto"; try { v.currentTime = 0; } catch (e) {} const p = v.play(); if (p) p.catch(() => {}); }
+      else v.pause();
+    });
     vids[(i + 1) % n].preload = "auto";
-    play(); left = DUR; arm();
+    clearTimeout(timer); if (visible && !reduced) timer = setTimeout(() => go(i + 1), 4200);
   };
-  const arm = () => {
-    clearTimeout(timer);
-    if (visible && !reduced) { started = Date.now(); timer = setTimeout(() => go(i + 1), left); }
+  items.forEach((it, k) => it.addEventListener("click", () => { if (k !== i) go(k); }));
+  dots.forEach((b, k) => b.addEventListener("click", () => go(k)));
+  $$(".cf__arrow", sec).forEach((b) => b.addEventListener("click", () => go(i + Number(b.dataset.dir))));
+  let x0 = null;
+  cf.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  cf.addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1)); x0 = null; });
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; go(i); }, { threshold: .3 }).observe(cf);
+  go(0);
+})();
+
+// ===================== Prestations : la grande photo suit la prestation au centre de l'écran =====================
+(() => {
+  const media = document.getElementById("svcMedia"), list = $$(".svc2__item"); if (!media || !list.length) return;
+  const pics = $$("img", media);
+  let cur = 0;
+  const set = (k) => {
+    if (k === cur) return;
+    pics.forEach((p, j) => { p.classList.toggle("was-on", j === cur); p.classList.toggle("is-on", j === k); });
+    list.forEach((it, j) => it.classList.toggle("is-on", j === k));
+    const prev = cur; cur = k;
+    setTimeout(() => { if (cur !== prev) pics[prev].classList.remove("was-on"); }, 1200);
   };
-  chaps.forEach((c) => c.addEventListener("click", () => go(Number(c.dataset.k))));
-  new IntersectionObserver(([en]) => {
-    const was = visible; visible = en.isIntersecting;
-    sec.classList.toggle("is-paused", !visible);
-    if (visible) { vids[(i + 1) % n].preload = "auto"; arm(); }
-    else if (was) { clearTimeout(timer); left = Math.max(400, left - (Date.now() - started)); }
-    play();
-  }, { threshold: .25 }).observe(sec);
+  const io = new IntersectionObserver((en) => en.forEach((e) => { if (e.isIntersecting) set(Number(e.target.dataset.k)); }), { rootMargin: "-45% 0px -45% 0px" });
+  list.forEach((it) => io.observe(it));
 })();
 
 // ===================== Apparitions à l'entrée dans l'écran =====================

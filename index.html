@@ -34,7 +34,7 @@
     "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261116d">
+  <link rel="stylesheet" href="styles.css?v=20261116e">
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
@@ -97,102 +97,95 @@
   </div>
 
   <!-- ================= PRESTATIONS ================= -->
-  <section class="strips-sec" id="prestations" data-rail="Prestations">
+  <section class="strips-sec svc2" id="prestations" data-rail="Prestations">
     <div class="wrap strips-sec__head">
       <h2 class="strips-sec__title t-big">Prestations et tarifs</h2>
     </div>
-    <div class="wrap"><div class="strips" id="strips">
-      <article class="strip is-on" tabindex="0">
-        <img decoding="async" src="images/svc-coupe.jpg" alt="" loading="lazy">
-        <span class="strip__frame" aria-hidden="true"></span>
-        <span class="strip__label" data-price="18 €">Coupe homme</span>
-        <div class="strip__body">
-          <p class="eyebrow">30 min · 18 €</p>
-          <h3 class="strip__title">Coupe homme</h3>
-          <a class="strip__link" href="#reserver" data-pick-service="coupe">Réserver <span aria-hidden="true">→</span></a>
-        </div>
-      </article>
-      <article class="strip" tabindex="0">
-        <img decoding="async" src="images/svc-coupe-barbe.jpg" alt="" loading="lazy">
-        <span class="strip__frame" aria-hidden="true"></span>
-        <span class="strip__label" data-price="28 €">Coupe & barbe</span>
-        <div class="strip__body">
-          <p class="eyebrow">30 min · 28 €</p>
-          <h3 class="strip__title">Coupe & barbe</h3>
-          <a class="strip__link" href="#reserver" data-pick-service="coupe-barbe">Réserver <span aria-hidden="true">→</span></a>
-        </div>
-      </article>
-      <article class="strip" tabindex="0">
-        <img decoding="async" src="images/svc-barbe.jpg" alt="" loading="lazy">
-        <span class="strip__frame" aria-hidden="true"></span>
-        <span class="strip__label" data-price="12 €">Taillage barbe</span>
-        <div class="strip__body">
-          <p class="eyebrow">15 min · 12 €</p>
-          <h3 class="strip__title">Taillage barbe</h3>
-          <a class="strip__link" href="#reserver" data-pick-service="barbe">Réserver <span aria-hidden="true">→</span></a>
-        </div>
-      </article>
-      <article class="strip" tabindex="0">
-        <img decoding="async" src="images/svc-soin.jpg" alt="" loading="lazy">
-        <span class="strip__frame" aria-hidden="true"></span>
-        <span class="strip__label" data-price="25 €">Soin du visage</span>
-        <div class="strip__body">
-          <p class="eyebrow">30 min · 25 €</p>
-          <h3 class="strip__title">Soin du visage</h3>
-          <a class="strip__link" href="#reserver" data-pick-service="soin">Réserver <span aria-hidden="true">→</span></a>
-        </div>
-      </article>
-      <article class="strip" tabindex="0">
-        <img decoding="async" src="images/svc-coloration.jpg" alt="" loading="lazy">
-        <span class="strip__frame" aria-hidden="true"></span>
-        <span class="strip__label" data-price="15 €">Coloration</span>
-        <div class="strip__body">
-          <p class="eyebrow">30 min · 15 €</p>
-          <h3 class="strip__title">Coloration</h3>
-          <a class="strip__link" href="tel:+33388977468">Appeler <span aria-hidden="true">→</span></a>
-        </div>
-      </article>
-    </div>
-    </div>
-    <div class="strips-nav" aria-hidden="true"><button type="button" data-dir="-1">←</button><span>Faites glisser</span><button type="button" data-dir="1">→</button></div>
-    <div class="wrap">
-      <ul class="tarifs" aria-label="Tarifs">
-        <li><span class="tarifs__name">Coupe homme</span><span class="tarifs__dur">30 min</span><span class="tarifs__price">18 €</span></li>
-        <li><span class="tarifs__name">Coupe &amp; barbe</span><span class="tarifs__dur">30 min</span><span class="tarifs__price">28 €</span></li>
-        <li><span class="tarifs__name">Taillage barbe</span><span class="tarifs__dur">15 min</span><span class="tarifs__price">12 €</span></li>
-        <li><span class="tarifs__name">Soin du visage</span><span class="tarifs__dur">30 min</span><span class="tarifs__price">25 €</span></li>
-        <li><span class="tarifs__name">Coloration</span><span class="tarifs__dur">30 min · par téléphone</span><span class="tarifs__price">15 €</span></li>
-      </ul>
+    <div class="wrap svc2__inner">
+      <div class="svc2__media" id="svcMedia" aria-hidden="true">
+        <img src="images/svc-coupe.jpg" alt="" decoding="async" class="is-on" data-k="0">
+        <img src="images/svc-coupe-barbe.jpg" alt="" decoding="async" loading="lazy" data-k="1">
+        <img src="images/svc-barbe.jpg" alt="" decoding="async" loading="lazy" data-k="2">
+        <img src="images/svc-soin.jpg" alt="" decoding="async" loading="lazy" data-k="3">
+        <img src="images/svc-coloration.jpg" alt="" decoding="async" loading="lazy" data-k="4">
+      </div>
+      <div class="svc2__list" id="svcList">
+        <article class="svc2__item is-on" data-k="0" data-reveal>
+          <img class="svc2__img" src="images/svc-coupe.jpg" alt="" loading="lazy" decoding="async">
+          <div class="svc2__text">
+            <h3 class="svc2__name">Coupe homme</h3>
+            <p class="svc2__meta"><span>18 €</span><i></i>30 min</p>
+            <a class="btn btn--gold" href="#reserver" data-pick-service="coupe">Réserver</a>
+          </div>
+        </article>
+        <article class="svc2__item" data-k="1" data-reveal>
+          <img class="svc2__img" src="images/svc-coupe-barbe.jpg" alt="" loading="lazy" decoding="async">
+          <div class="svc2__text">
+            <h3 class="svc2__name">Coupe &amp; barbe</h3>
+            <p class="svc2__meta"><span>28 €</span><i></i>30 min</p>
+            <a class="btn btn--gold" href="#reserver" data-pick-service="coupe-barbe">Réserver</a>
+          </div>
+        </article>
+        <article class="svc2__item" data-k="2" data-reveal>
+          <img class="svc2__img" src="images/svc-barbe.jpg" alt="" loading="lazy" decoding="async">
+          <div class="svc2__text">
+            <h3 class="svc2__name">Taillage barbe</h3>
+            <p class="svc2__meta"><span>12 €</span><i></i>15 min</p>
+            <a class="btn btn--gold" href="#reserver" data-pick-service="barbe">Réserver</a>
+          </div>
+        </article>
+        <article class="svc2__item" data-k="3" data-reveal>
+          <img class="svc2__img" src="images/svc-soin.jpg" alt="" loading="lazy" decoding="async">
+          <div class="svc2__text">
+            <h3 class="svc2__name">Soin du visage</h3>
+            <p class="svc2__meta"><span>25 €</span><i></i>30 min</p>
+            <a class="btn btn--gold" href="#reserver" data-pick-service="soin">Réserver</a>
+          </div>
+        </article>
+        <article class="svc2__item" data-k="4" data-reveal>
+          <img class="svc2__img" src="images/svc-coloration.jpg" alt="" loading="lazy" decoding="async">
+          <div class="svc2__text">
+            <h3 class="svc2__name">Coloration</h3>
+            <p class="svc2__meta"><span>15 €</span><i></i>sur rendez-vous par téléphone</p>
+            <a class="btn btn--line" href="tel:+33388977468">Appeler le salon</a>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 
   <!-- ================= L'ÉQUIPE ================= -->
 
   <!-- ================= LE TRAVAIL ================= -->
-  <section class="show" id="realisations" data-rail="Réalisations">
-    <div class="wrap show__inner">
-      <div class="show__text">
-        <h2 class="t-big show__head">Nos réalisations</h2>
-        <div class="show__titles" aria-live="polite">
-          <div class="show__item is-on"><h3 class="show__title">Tresses et dégradé</h3></div>
-          <div class="show__item"><h3 class="show__title">Contours au rasoir</h3></div>
-          <div class="show__item"><h3 class="show__title">Crop platine</h3></div>
-          <div class="show__item"><h3 class="show__title">Finitions</h3></div>
-        </div>
-        <ol class="show__chapters" aria-label="Choisir une vidéo">
-          <li><button type="button" class="show__chap is-on" data-k="0"><span class="show__chap-n">01</span><span class="show__chap-t">Tresses <i>&amp;</i> dégradé</span><span class="show__chap-bar" aria-hidden="true"><i></i></span></button></li>
-          <li><button type="button" class="show__chap" data-k="1"><span class="show__chap-n">02</span><span class="show__chap-t">Contours au rasoir</span><span class="show__chap-bar" aria-hidden="true"><i></i></span></button></li>
-          <li><button type="button" class="show__chap" data-k="2"><span class="show__chap-n">03</span><span class="show__chap-t">Crop platine</span><span class="show__chap-bar" aria-hidden="true"><i></i></span></button></li>
-          <li><button type="button" class="show__chap" data-k="3"><span class="show__chap-n">04</span><span class="show__chap-t">Les finitions</span><span class="show__chap-bar" aria-hidden="true"><i></i></span></button></li>
-        </ol>
+  <section class="cfs" id="realisations" data-rail="Réalisations">
+    <div class="wrap">
+      <h2 class="t-big cfs__head" data-reveal>Nos réalisations</h2>
+    </div>
+    <div class="cf" id="cf">
+      <button type="button" class="cf__item" data-k="0" aria-label="Tresses et dégradé">
+        <video src="videos/travail-tresses.mp4" poster="videos/travail-tresses.jpg" muted loop playsinline preload="metadata" data-managed></video>
+      </button>
+      <button type="button" class="cf__item" data-k="1" aria-label="Contours au rasoir">
+        <video src="videos/travail-rasoir.mp4" poster="videos/travail-rasoir.jpg" muted loop playsinline preload="none" data-managed></video>
+      </button>
+      <button type="button" class="cf__item" data-k="2" aria-label="Crop platine">
+        <video src="videos/travail-platine.mp4" poster="videos/travail-platine.jpg" muted loop playsinline preload="none" data-managed></video>
+      </button>
+      <button type="button" class="cf__item" data-k="3" aria-label="Finitions">
+        <video src="videos/travail-nuque.mp4" poster="videos/travail-nuque.jpg" muted loop playsinline preload="none" data-managed></video>
+      </button>
+    </div>
+    <div class="cf__caption">
+      <div class="cf__titles" aria-live="polite">
+        <p class="cf__title is-on">Tresses et dégradé</p>
+        <p class="cf__title">Contours au rasoir</p>
+        <p class="cf__title">Crop platine</p>
+        <p class="cf__title">Finitions</p>
       </div>
-      <div class="show__stage">
-        <div class="show__main" data-reveal>
-          <video src="videos/travail-tresses.mp4" poster="videos/travail-tresses.jpg" muted loop playsinline preload="metadata" data-managed class="is-on" aria-label="Vidéo : dégradé autour de tresses"></video>
-          <video src="videos/travail-rasoir.mp4" poster="videos/travail-rasoir.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : contour au rasoir"></video>
-          <video src="videos/travail-platine.mp4" poster="videos/travail-platine.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : crop platine"></video>
-          <video src="videos/travail-nuque.mp4" poster="videos/travail-nuque.jpg" muted loop playsinline preload="none" data-managed aria-label="Vidéo : finitions de la nuque"></video>
-        </div>
+      <div class="cf__nav">
+        <button type="button" class="cf__arrow" data-dir="-1" aria-label="Vidéo précédente">←</button>
+        <div class="cf__dots" id="cfDots"></div>
+        <button type="button" class="cf__arrow" data-dir="1" aria-label="Vidéo suivante">→</button>
       </div>
     </div>
   </section>
@@ -318,7 +311,7 @@
         <iframe title="Plan d’accès : Elegance Strasbourg, 162 route de Bischwiller, Schiltigheim" src="https://www.google.com/maps?q=162+Route+de+Bischwiller,+67300+Schiltigheim&amp;z=16&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
       <div class="salon__actions" data-reveal>
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--gold" target="_blank" rel="noopener">Itinéraire <span aria-hidden="true">↗</span></a>
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Elegance+Strasbourg%2C+162+Route+de+Bischwiller%2C+67300+Schiltigheim" class="btn btn--gold" target="_blank" rel="noopener">Itinéraire <span aria-hidden="true">↗</span></a>
         <a href="tel:+33388977468" class="btn btn--line">Appeler</a>
       </div>
     </div>
@@ -345,9 +338,9 @@
   </div>
 </footer>
 
-<script src="config.js?v=20261116d"></script>
+<script src="config.js?v=20261116e"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=20261116d"></script>
+<script src="script.js?v=20261116e"></script>
 </body>
 </html>
