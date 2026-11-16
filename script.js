@@ -172,8 +172,22 @@ function keepPanelInView() {
 function show(step) {
   el.pick.hidden = step !== "pick"; el.form.hidden = step !== "form"; el.done.hidden = step !== "done";
   el.status.classList.toggle("is-ok", step === "done");
+  const bar = document.getElementById("wzBar"); if (bar) bar.hidden = step === "done";
   if (step !== "done") el.statusText.textContent = step === "form" ? "Plus qu’une étape" : "Réservez en moins d’une minute";
 }
+
+// Assistant de réservation : une question à la fois (4 étapes)
+let wz = 0;
+function wzGo(k, focus = true) {
+  wz = k;
+  $$(".wz", el.pick).forEach((w) => { w.hidden = Number(w.dataset.wz) !== k; });
+  const n = el.form.hidden ? k + 1 : 4;
+  $("#wzCount").textContent = `Étape ${n} sur 4`;
+  $("#wzFill").style.width = `${n * 25}%`;
+  $("#wzBack").hidden = n === 1;
+  if (focus) keepPanelInView();
+}
+$("#wzBack").addEventListener("click", () => { if (!el.form.hidden) { show("pick"); wzGo(2); } else wzGo(Math.max(0, wz - 1)); });
 
 el.pick.addEventListener("click", (e) => {
   const c = e.target.closest(".chip"), sl = e.target.closest(".slot");
@@ -181,7 +195,9 @@ el.pick.addEventListener("click", (e) => {
     const box = c.parentElement, left = box.scrollLeft;
     book[c.dataset.g] = c.dataset.v;
     renderPick(); $("#" + box.id).scrollLeft = left;
-  } else if (sl && !sl.disabled) { book.time = sl.dataset.t; renderPick(); }
+    if (c.dataset.g === "service") setTimeout(() => wzGo(1), 180);
+    if (c.dataset.g === "barber") setTimeout(() => wzGo(2), 180);
+  } else if (sl && !sl.disabled) { book.time = sl.dataset.t; renderPick(); setTimeout(() => el.next.click(), 180); }
 });
 
 el.next.addEventListener("click", () => {
@@ -189,10 +205,10 @@ el.next.addEventListener("click", () => {
   const s = SERVICES.find((x) => x.id === book.service);
   $("#pRecap").innerHTML = `<b>${s.name}</b> · ${s.price} €<br>${fmtLong(book.date)} à ${book.time}<br>${book.barber === "any" ? "Premier coiffeur disponible" : "Avec " + barberName(book.barber)}`;
   el.error.textContent = "";
-  show("form"); keepPanelInView();
+  show("form"); wzGo(wz, false); keepPanelInView();
   $("#fName").focus({ preventScroll: true });
 });
-$("#pBack").addEventListener("click", () => show("pick"));
+$("#pBack").addEventListener("click", () => { show("pick"); wzGo(2); });
 
 function validate() {
   const name = $("#fName").value.trim(), phone = $("#fPhone").value.trim(), email = $("#fEmail").value.trim();
@@ -241,7 +257,7 @@ el.form.addEventListener("submit", async (e) => {
   }
 });
 
-$("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); show("pick"); });
+$("#pAgain").addEventListener("click", () => { book.time = null; renderPick(); show("pick"); wzGo(0, false); });
 
 (async () => {
   book.date = days[0];
@@ -268,7 +284,7 @@ document.addEventListener("click", (e) => {
   const a = e.target.closest("[data-pick-barber], [data-pick-service]"); if (!a) return;
   if (a.dataset.pickBarber) book.barber = a.dataset.pickBarber;
   if (a.dataset.pickService) book.service = a.dataset.pickService;
-  book.time = null; show("pick"); renderPick();
+  book.time = null; show("pick"); renderPick(); wzGo(a.dataset.pickService ? 1 : a.dataset.pickBarber ? 2 : 0, false);
 });
 
 // ===================== Prestations : bandes qui s'ouvrent =====================

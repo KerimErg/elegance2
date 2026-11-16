@@ -35,7 +35,7 @@
     "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261116a">
+  <link rel="stylesheet" href="styles.css?v=20261116b">
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
@@ -180,7 +180,7 @@
           <div class="show__item"><h3 class="show__title">Crop platine</h3></div>
           <div class="show__item"><h3 class="show__title">Finitions</h3></div>
         </div>
-        <ol class="show__chapters">
+        <ol class="show__chapters" aria-label="Choisir une vidéo">
           <li><button type="button" class="show__chap is-on" data-k="0"><span class="show__chap-n">01</span><span class="show__chap-t">Tresses <i>&amp;</i> dégradé</span><span class="show__chap-bar" aria-hidden="true"><i></i></span></button></li>
           <li><button type="button" class="show__chap" data-k="1"><span class="show__chap-n">02</span><span class="show__chap-t">Contours au rasoir</span><span class="show__chap-bar" aria-hidden="true"><i></i></span></button></li>
           <li><button type="button" class="show__chap" data-k="2"><span class="show__chap-n">03</span><span class="show__chap-t">Crop platine</span><span class="show__chap-bar" aria-hidden="true"><i></i></span></button></li>
@@ -251,25 +251,37 @@
               <span id="phoneStatusText">Réservez en moins d’une minute</span>
             </div>
 
+            <div class="wz__bar" id="wzBar">
+              <button type="button" class="wz__back" id="wzBack" hidden>← Retour</button>
+              <span class="wz__count" id="wzCount">Étape 1 sur 4</span>
+              <span class="wz__track"><i id="wzFill"></i></span>
+            </div>
             <div class="phone__step" id="stepPick">
-              <p class="phone__label"><b>1</b> Prestation</p>
-              <div class="chips" id="pService"></div>
-              <p class="phone__label"><b>2</b> Barbier</p>
-              <div class="chips" id="pBarber"></div>
-              <p class="phone__label"><b>3</b> Date</p>
-              <div class="chips" id="pDate"></div>
-              <p class="phone__label"><b>4</b> Heure <span class="phone__loading" id="pLoading" hidden>· mise à jour…</span></p>
-              <div class="slots" id="pSlots"></div>
-              <button class="phone__confirm" id="pNext" type="button" disabled>Choisissez un créneau</button>
+              <div class="wz" data-wz="0">
+                <p class="wz__title">Quelle prestation ?</p>
+                <div class="chips" id="pService"></div>
+              </div>
+              <div class="wz" data-wz="1" hidden>
+                <p class="wz__title">Avec quel barbier ?</p>
+                <div class="chips" id="pBarber"></div>
+              </div>
+              <div class="wz" data-wz="2" hidden>
+                <p class="wz__title">Quel jour ?</p>
+                <div class="chips" id="pDate"></div>
+                <p class="wz__sub">Heure <span class="phone__loading" id="pLoading" hidden>· mise à jour…</span></p>
+                <div class="slots" id="pSlots"></div>
+              </div>
+              <button class="phone__confirm" id="pNext" type="button" disabled hidden>Choisissez un créneau</button>
             </div>
 
             <form class="phone__step" id="stepForm" hidden novalidate>
-              <button type="button" class="phone__back" id="pBack">← Modifier le créneau</button>
+              <p class="wz__title">Vos coordonnées</p>
               <p class="phone__recap" id="pRecap"></p>
+              <button type="button" class="phone__back" id="pBack" hidden>← Modifier le créneau</button>
               <label class="field"><span>Nom et prénom</span><input id="fName" name="name" autocomplete="name" required minlength="2" maxlength="80"></label>
               <label class="field"><span>Téléphone</span><input id="fPhone" name="tel" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20"></label>
               <label class="field"><span>E-mail <small>facultatif</small></span><input id="fEmail" name="email" type="email" autocomplete="email" maxlength="120"></label>
-              <p class="phone__legal">Vos coordonnées servent uniquement à gérer ce rendez-vous. <a href="legal.html#confidentialite" target="_blank" rel="noopener">Confidentialité</a></p>
+              <p class="phone__legal"><a href="legal.html#confidentialite" target="_blank" rel="noopener">Confidentialité</a></p>
               <p class="phone__error" id="pError" role="alert"></p>
               <button class="phone__confirm" id="pSubmit" type="submit">Confirmer le rendez-vous</button>
             </form>
@@ -307,7 +319,7 @@
       </div>
       <div class="salon__actions" data-reveal>
         <a href="https://www.google.com/maps/search/?api=1&amp;query=Elegance+Strasbourg+162+Route+de+Bischwiller+67300+Schiltigheim" class="btn btn--gold" target="_blank" rel="noopener">Itinéraire <span aria-hidden="true">↗</span></a>
-        <a href="#reserver" class="btn btn--line">Prendre rendez-vous</a>
+        <a href="tel:+33388977468" class="btn btn--line">Appeler</a>
       </div>
     </div>
   </section>
@@ -333,9 +345,9 @@
   </div>
 </footer>
 
-<script src="config.js?v=20261116a"></script>
+<script src="config.js?v=20261116b"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=20261116a"></script>
+<script src="script.js?v=20261116b"></script>
 </body>
 </html>

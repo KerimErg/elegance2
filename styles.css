@@ -731,3 +731,50 @@ button { background: none; border: 0; cursor: pointer; }
   .strip__body .eyebrow { color: #fff; background: var(--accent-soft); border-color: rgba(167, 125, 255, .5); }
   .strip__link { background: var(--accent); color: #fff; }
 }
+
+/* =====================================================================
+   Parcours client simplifié (réalisations → réservation → adresse)
+   ===================================================================== */
+/* Réalisations : la vidéo et son titre, des points pour changer */
+.show__chapters { display: flex; gap: .55rem; margin-top: 1.6rem; border: 0; max-width: none; }
+.show__chapters li { display: block; }
+.show__chap { width: 34px; height: 34px; padding: 0; border: 0; display: grid; place-items: center; }
+.show__chap-n, .show__chap-t { display: none; }
+.show__chap::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--line-2); transition: background .3s, transform .3s; }
+.show__chap.is-on::before { background: var(--accent); transform: scale(1.25); }
+.show__chap-bar { display: none; }
+@media (max-width: 720px) { .show__chapters { display: flex; justify-content: center; margin-top: .6rem; } }
+
+/* Avis : courts, trois lignes chacun */
+.avis__item blockquote { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.avis__item { gap: 1rem; }
+
+/* Réservation : une question à la fois */
+.recap { display: none; }
+.wz__bar[hidden] { display: none; }
+.wz__bar { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .4rem 1rem; margin-bottom: 1.6rem; }
+.wz__count { grid-column: 2; justify-self: end; font-size: 13px; letter-spacing: .08em; color: var(--muted); }
+.wz__back { grid-column: 1; grid-row: 1; justify-self: start; font-size: .95rem; color: var(--cream); padding: .5rem 0; }
+.wz__back[hidden] { display: block; visibility: hidden; }
+.wz__track { grid-column: 1 / -1; height: 3px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.wz__track i { display: block; height: 100%; width: 25%; background: var(--accent); transition: width .5s var(--ease); }
+.wz[hidden] { display: none; }
+.wz { animation: wzIn .45s var(--ease) both; }
+@keyframes wzIn { from { opacity: 0; transform: translateX(16px); } }
+.wz__title { font-size: 1.35rem; font-weight: 500; margin-bottom: 1.1rem; letter-spacing: -.01em; }
+.wz__sub { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 1.6rem 0 .8rem; }
+.phone__label { display: none; }
+#pService { grid-template-columns: 1fr; gap: 0; }
+#pService .chip { font-size: 1.05rem; padding: 1.15rem 0; }
+#pBarber { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.4rem .5rem; }
+#pDate { flex-wrap: nowrap; }
+.phone__back[hidden] { display: none; }
+.book__intro .t-big { margin-bottom: .4rem; }
+
+/* Adresse : l'essentiel */
+.salon__facts .salon__extra, .salon__map { display: none; }
+
+/* Pied de page : une ligne */
+.footer__grid > div:not(.footer__brand) { display: none; }
+.footer__grid { grid-template-columns: 1fr; padding-bottom: 1.6rem; }
+.footer { padding-top: 48px; }
