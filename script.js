@@ -399,20 +399,3 @@ scrollWork.push(toggleMbar);
 
 // ===================== Avis : étoiles une à une =====================
 $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map((c, k) => `<span class="st" style="--s:${k}">${c}</span>`).join(""); });
-
-// ===================== Le salon : la photo s'agrandit au défilement =====================
-(() => {
-  const xp = document.getElementById("xp"); if (!xp) return;
-  if (reduced) { xp.style.setProperty("--e", 1); xp.style.setProperty("--t", 1); return; }
-  const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  let raf = 0;
-  const upd = () => {
-    raf = 0;
-    const r = xp.getBoundingClientRect(), span = r.height - innerHeight;
-    const p = Math.min(1, Math.max(0, -r.top / Math.max(1, span)));
-    const e = ease(Math.min(1, p / .7)), t = ease(Math.min(1, Math.max(0, (p - .55) / .35)));
-    xp.style.setProperty("--e", e.toFixed(4)); xp.style.setProperty("--t", t.toFixed(4));
-  };
-  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
-  addEventListener("resize", upd); upd();
-})();

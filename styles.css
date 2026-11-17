@@ -1098,25 +1098,3 @@ body { background: var(--bg); color: var(--cream); }
   .marquee__track, .planity__steps b { animation: none; }
   .salon__photo img { transform: none; }
 }
-
-/* =====================================================================
-   Le salon : la photo s'agrandit jusqu'au plein écran
-   ===================================================================== */
-.xp { position: relative; height: 230vh; height: 230svh; background: var(--night); --p: 0; }
-.xp__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center; }
-.xp__img { position: absolute; inset: 0; clip-path: inset(calc((1 - var(--e, 0)) * 24%) calc((1 - var(--e, 0)) * 32%) round calc((1 - var(--e, 0)) * 18px)); will-change: clip-path; }
-.xp__img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; transform: scale(calc(1.3 - var(--e, 0) * .3)); will-change: transform; }
-.xp__img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(23, 26, 38, .2), rgba(23, 26, 38, .55)); opacity: var(--e, 0); }
-.xp__title { position: relative; z-index: 1; color: #fff; font-weight: 300; text-transform: uppercase; font-size: clamp(2.2rem, 7vw, 6rem); letter-spacing: calc(.9em - var(--t, 0) * .55em); margin-right: calc(-.9em + var(--t, 0) * .55em); opacity: var(--t, 0); text-shadow: 0 10px 40px rgba(0, 0, 0, .4); }
-.salon { grid-template-columns: minmax(0, 1fr); min-height: 0; }
-.salon__text { max-width: 980px; margin-inline: auto; width: 100%; padding: var(--section) var(--gutter-r) var(--section) var(--gutter); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem 4rem; align-items: start; }
-.salon__text > .t-big { grid-column: 1 / -1; text-align: center; }
-.salon__text > .t-big::after { margin-left: auto; }
-.salon .salon__map { grid-column: 2; grid-row: 2 / span 2; height: 100%; min-height: 260px; }
-.salon__actions { grid-column: 1; }
-@media (max-width: 720px) {
-  .xp { height: 190vh; height: 190svh; }
-  .salon__text { grid-template-columns: 1fr; padding-top: 64px; }
-  .salon .salon__map { grid-column: 1; grid-row: auto; min-height: 200px; }
-}
-@media (prefers-reduced-motion: reduce) { .xp { height: auto; } .xp__stage { position: relative; } .xp { --e: 1; --t: 1; } .xp__img, .xp__title { --e: 1; --t: 1; } }
