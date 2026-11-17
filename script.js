@@ -96,7 +96,28 @@ if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
   strips.forEach((st, k) => st.style.setProperty("--k", k));
   if (!sec || !strips.length) return;
   // transition réservée aux ordinateurs : sur téléphone, défilement simple et fiable
-  if (reduced || !matchMedia("(min-width: 961px) and (hover: hover)").matches) { sec.classList.add("is-in", "is-head"); return; }
+  if (reduced) { sec.classList.add("is-in", "is-head"); return; }
+  if (!matchMedia("(min-width: 961px) and (hover: hover)").matches) {
+    // Téléphone et tablette : la vidéo reste fixe, devient une carte inclinée, les prestations montent par-dessus
+    sec.classList.add("is-in", "is-head"); root.classList.add("cardfx");
+    const media = $(".hero__media"), center = $(".hero__center"), cue = $(".hero__scroll"), shade = $("#heroShade");
+    const clamp = (v) => Math.min(1, Math.max(0, v)), ease = (t) => 1 - Math.pow(1 - t, 3);
+    let raf = 0, last = -1;
+    const upd = () => {
+      raf = 0;
+      const p = clamp(scrollY / (innerHeight * .6)); if (Math.abs(p - last) < .002) return; last = p;
+      const e = ease(p);
+      media.style.transform = `translate3d(0, ${(-e * 3).toFixed(2)}%, 0) scale(${(1 - e * .22).toFixed(4)}) rotateX(${(e * 10).toFixed(2)}deg)`;
+      media.style.borderRadius = `${(e * 28).toFixed(1)}px`;
+      center.style.opacity = Math.max(0, 1 - p * 2.2).toFixed(3);
+      center.style.transform = `translate3d(0, ${(-p * 90).toFixed(1)}px, 0)`;
+      if (cue) cue.style.opacity = Math.max(0, 1 - p * 5).toFixed(3);
+      if (shade) shade.style.opacity = (e * .55).toFixed(3);
+    };
+    addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+    upd();
+    return;
+  }
   const slidesBox = $(".hero__slides"), media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), first = document.getElementById("svcMedia");
   root.classList.add("flying");
   const clamp = (v) => Math.min(1, Math.max(0, v));
