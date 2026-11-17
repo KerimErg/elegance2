@@ -1130,3 +1130,21 @@ body { background: var(--bg); color: var(--cream); }
   .t-big.rv.in .ch { transform: none; transition: transform .55s cubic-bezier(.77, 0, .18, 1); transition-delay: calc(var(--c) * 16ms); }
   .t-big.rv.in::after { transition: transform .6s cubic-bezier(.77, 0, .18, 1) .35s; }
 }
+
+/* =====================================================================
+   Maison : noir, ivoire, et le violet seulement en touche
+   (boutons ivoire à angles nets, plus de grands aplats violets)
+   ===================================================================== */
+:root { --ivory: #f1ede6; --ink: #0c0b0f; }
+.btn, .mbar a, .nav .nav__cta, .phone__confirm { border-radius: 2px; }
+.btn--gold, .mbar .btn--gold, .nav .nav__cta, .header__cta { background: var(--ivory); color: var(--ink); border: 1px solid var(--ivory); box-shadow: none; }
+.btn--gold:hover, .nav .nav__cta:hover { background: transparent; color: var(--ivory); border-color: var(--ivory); }
+.btn--gold::after { display: none; }
+.mbar .mbar__book { background: var(--ivory); color: var(--ink); border: 1px solid var(--ivory); }
+.mbar .mbar__call { border: 1px solid rgba(241, 237, 230, .35); background: transparent; color: var(--ivory); }
+.planity__steps b { background: transparent; color: var(--ivory); border: 1px solid rgba(241, 237, 230, .4); animation: none; font-weight: 300; }
+.cfs { background: var(--night); }
+.planity { background: var(--night-2); }
+.btn--ghost { border-radius: 2px; }
+.svc2__list .svc2__item, .svc2__list .svc2__item:last-child, .cf__item, .avis__item, .salon__photo, .salon__map { border-radius: 3px; }
+:root { --gold: #a996dc; }
