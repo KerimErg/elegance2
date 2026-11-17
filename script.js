@@ -411,3 +411,48 @@ $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map(
   const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { list.classList.add("in"); io.disconnect(); } }, { threshold: .2 });
   io.observe(list);
 })();
+
+// ===================== Téléphone : la caméra tourne au rythme du doigt =====================
+(() => {
+  const sec = document.getElementById("resultat"), cv = document.getElementById("orbitCv");
+  if (!sec || !cv || reduced || !matchMedia("(max-width: 720px)").matches) return;
+  const N = 78, imgs = [], ctx = cv.getContext("2d"), pin = sec.firstElementChild;
+  const lines = [...sec.querySelectorAll(".orbit__line")];
+  let loaded = false, cur = -1, raf = 0, shown = -1;
+  const load = () => {
+    if (loaded) return; loaded = true;
+    for (let k = 1; k <= N; k++) { const im = new Image(); im.decoding = "async"; im.src = (window.ORBIT_FRAMES || [])[k - 1] || `images/orbit/f${String(k).padStart(3, "0")}.webp`; im.onload = () => { if (shown < 0 || Math.abs(k - 1 - shown) < 2) paint(true); }; imgs.push(im); }
+  };
+  new IntersectionObserver(([en]) => { if (en.isIntersecting) load(); }, { rootMargin: "150% 0px" }).observe(sec);
+  const size = () => { const d = Math.min(devicePixelRatio || 1, 2); cv.width = Math.round(pin.clientWidth * d); cv.height = Math.round(pin.clientHeight * d); shown = -1; };
+  const draw = (k) => {
+    let im = imgs[k]; for (let j = k; (!im || !im.complete || !im.naturalWidth) && j >= 0; j--) im = imgs[j];
+    if (!im || !im.naturalWidth) return;
+    const W = cv.width, H = cv.height, s = Math.max(W / im.naturalWidth, H / im.naturalHeight);
+    const w = im.naturalWidth * s, h = im.naturalHeight * s;
+    ctx.drawImage(im, (W - w) / 2, (H - h) / 2, w, h);
+  };
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
+  const goal = () => { const r = sec.getBoundingClientRect(), run = r.height - pin.clientHeight; return clamp(-r.top / run); };
+  const paint = (force) => {
+    const k = Math.round(cur * (N - 1));
+    if (force || k !== shown) { draw(k); shown = k; }
+    lines.forEach((l) => {
+      const a = +l.dataset.a, b = +l.dataset.b;
+      const i = ease(clamp((cur - a) / .07)), o = clamp((cur - (b - .06)) / .06);
+      l.firstElementChild.style.setProperty("--y", `${((1 - i) * 110 - o * 110).toFixed(1)}%`);
+    });
+    pin.style.setProperty("--op", cur.toFixed(3));
+  };
+  const tick = () => {
+    const g = goal();
+    cur = cur < 0 ? g : cur + (g - cur) * .12;
+    if (Math.abs(g - cur) < .0005) cur = g;
+    paint(false);
+    raf = cur === g ? 0 : requestAnimationFrame(tick);
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+  addEventListener("resize", () => { size(); tick(); });
+  size(); tick();
+})();
