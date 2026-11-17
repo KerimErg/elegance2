@@ -34,7 +34,7 @@
     "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261116m">
+  <link rel="stylesheet" href="styles.css?v=20261117a">
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
@@ -98,7 +98,7 @@
   <!-- ================= PRESTATIONS ================= -->
   <section class="strips-sec svc2" id="prestations" data-rail="Prestations">
     <div class="wrap strips-sec__head">
-      <h2 class="strips-sec__title t-big">Prestations et tarifs</h2>
+      <h2 class="strips-sec__title t-big" data-reveal>Prestations et tarifs</h2>
     </div>
     <div class="wrap svc2__inner">
       <div class="svc2__media" id="svcMedia" aria-hidden="true" data-reveal>
@@ -156,6 +156,8 @@
   <!-- ================= L'ÉQUIPE ================= -->
 
   <!-- ================= LE TRAVAIL ================= -->
+  <div class="marquee" aria-hidden="true"><div class="marquee__track"><div class="marquee__row"><span>Coupe</span><i>✦</i><span>Barbe</span><i>✦</i><span>Soin du visage</span><i>✦</i><span>Coloration</span><i>✦</i><span>Dégradé</span><i>✦</i><span>Contours au rasoir</span><i>✦</i></div><div class="marquee__row"><span>Coupe</span><i>✦</i><span>Barbe</span><i>✦</i><span>Soin du visage</span><i>✦</i><span>Coloration</span><i>✦</i><span>Dégradé</span><i>✦</i><span>Contours au rasoir</span><i>✦</i></div></div></div>
+
   <section class="cfs" id="realisations" data-rail="Réalisations">
     <div class="wrap">
       <h2 class="t-big cfs__head" data-reveal>Nos réalisations</h2>
@@ -224,10 +226,10 @@
     <div class="wrap planity__inner">
       <h2 class="t-big" data-reveal>Réserver</h2>
       <p class="planity__lead" data-reveal>Choisissez votre prestation, votre barbier et votre créneau en ligne, en moins d’une minute.</p>
-      <ol class="planity__steps" data-reveal>
-        <li><b>1</b>Prestation</li>
-        <li><b>2</b>Barbier</li>
-        <li><b>3</b>Jour et heure</li>
+      <ol class="planity__steps">
+        <li data-reveal><b>1</b>Prestation</li>
+        <li data-reveal><b>2</b>Barbier</li>
+        <li data-reveal><b>3</b>Jour et heure</li>
       </ol>
       <a class="btn btn--gold planity__btn" href="https://www.planity.com/elegance-strasbourg-67300-schiltigheim" target="_blank" rel="noopener" data-reveal>Réserver sur Planity <span aria-hidden="true">↗</span></a>
       <p class="planity__alt" data-reveal>Ou par téléphone : <a href="tel:+33388977468">03 88 97 74 68</a></p>
@@ -279,8 +281,8 @@
   </div>
 </footer>
 
-<script src="config.js?v=20261116m"></script>
+<script src="config.js?v=20261117a"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=20261116m"></script>
+<script src="script.js?v=20261117a"></script>
 </body>
 </html>

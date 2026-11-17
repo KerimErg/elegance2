@@ -254,8 +254,11 @@ if (!reduced && "IntersectionObserver" in window) {
   const io = new IntersectionObserver((entries) => entries.forEach((en) => {
     if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
   }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
+  // titres : une lettre après l'autre
   $$(".t-big[data-reveal]").forEach((t) => {
-    t.innerHTML = t.innerHTML.split(/<br\s*\/?>/i).map((l, k) => `<span class="ln"><span style="--li:${k}">${l}</span></span>`).join("");
+    const txt = t.textContent; t.setAttribute("aria-label", txt);
+    let k = 0;
+    t.innerHTML = txt.split(" ").map((w) => `<span class="wd" aria-hidden="true">${[...w].map((c) => `<span class="ch" style="--c:${k++}">${c}</span>`).join("")}</span>`).join(" ");
   });
   const groups = new Map();
   $$("[data-reveal]").forEach((el) => {
@@ -376,3 +379,23 @@ scrollWork.push(toggleMbar);
   box.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
   addEventListener("resize", update); update();
 })();
+
+// ===================== Profondeur : la photo du salon glisse dans son cadre =====================
+(() => {
+  if (reduced) return;
+  const els = $$(".salon__photo"); if (!els.length) return;
+  let raf = 0;
+  const upd = () => {
+    raf = 0;
+    els.forEach((el) => {
+      const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;   // -1 … 1
+      el.style.setProperty("--py", `${(p * -40).toFixed(1)}px`);
+    });
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+  upd();
+})();
+
+// ===================== Avis : étoiles une à une =====================
+$$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map((c, k) => `<span class="st" style="--s:${k}">${c}</span>`).join(""); });

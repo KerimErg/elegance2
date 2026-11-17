@@ -1054,3 +1054,47 @@ body { background: var(--bg); color: var(--cream); }
 .btn--line { border-color: rgba(240, 237, 232, .45); }
 .salon .salon__map { background: var(--night-2); }
 .salon .salon__map iframe { filter: invert(.9) hue-rotate(180deg) saturate(.6) brightness(.95); }
+
+/* =====================================================================
+   Animations : titres lettre par lettre, bandeau défilant, profondeur
+   ===================================================================== */
+/* titres */
+.t-big .wd { display: inline-block; white-space: nowrap; }
+.t-big .ch { display: inline-block; }
+.t-big.rv { opacity: 1; transform: none; }
+.t-big.rv .ch { opacity: 0; transform: translateY(.55em); filter: blur(6px); }
+.t-big.rv.in .ch { opacity: 1; transform: none; filter: blur(0); transition: opacity .9s ease, transform 1.1s cubic-bezier(.16, 1, .3, 1), filter .9s ease; transition-delay: calc(var(--c) * 32ms); }
+.t-big.rv::after { transform: scaleX(0); }
+.t-big.rv.in::after { transform: scaleX(1); transition: transform 1.2s cubic-bezier(.7, 0, .2, 1) .5s; }
+
+/* bandeau défilant */
+.marquee { overflow: hidden; background: var(--accent); color: #fff; padding: 1.1rem 0; }
+.marquee__track { display: flex; width: max-content; animation: marquee 38s linear infinite; }
+.marquee__row { display: flex; align-items: center; flex-shrink: 0; }
+.marquee span { font-weight: 300; text-transform: uppercase; letter-spacing: .3em; font-size: clamp(.95rem, 1.6vw, 1.25rem); padding: 0 2.2rem; white-space: nowrap; }
+.marquee i { font-style: normal; font-size: .8rem; opacity: .7; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+
+/* profondeur : les grandes photos glissent dans leur cadre */
+.svc2__media img, .salon__photo img { will-change: transform; }
+.salon__photo { overflow: hidden; }
+.salon__photo img { transform: translate3d(0, var(--py, 0px), 0) scale(1.12); }
+
+/* prestation en cours : trait qui se dessine sous le nom */
+.svc2__name { position: relative; padding-bottom: .5rem; }
+.svc2__name::after { content: ""; position: absolute; left: 0; bottom: 0; width: 64px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .9s cubic-bezier(.7, 0, .2, 1) .15s; }
+.svc2__item.is-on .svc2__name::after { transform: scaleX(1); }
+
+/* avis : étoiles qui s'allument une à une */
+.avis__stars .st { display: inline-block; opacity: .2; transform: scale(.6); transition: opacity .4s ease, transform .5s cubic-bezier(.2, 1.6, .4, 1); }
+.avis__item.is-on .avis__stars .st { opacity: 1; transform: none; transition-delay: calc(.35s + var(--s) * 110ms); }
+
+/* étapes de réservation : pastille qui pulse doucement */
+.planity__steps b { animation: stepPulse 3.6s ease-in-out infinite; animation-delay: calc(var(--rd, 0s) * 6); }
+@keyframes stepPulse { 0%, 70%, 100% { box-shadow: 0 0 0 0 rgba(122, 69, 240, 0); } 80% { box-shadow: 0 0 0 8px rgba(122, 69, 240, .25); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track, .planity__steps b { animation: none; }
+  .salon__photo img { transform: none; }
+}
