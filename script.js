@@ -97,27 +97,7 @@ if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
   if (!sec || !strips.length) return;
   // transition réservée aux ordinateurs : sur téléphone, défilement simple et fiable
   if (reduced) { sec.classList.add("is-in", "is-head"); return; }
-  if (!matchMedia("(min-width: 961px) and (hover: hover)").matches) {
-    // Téléphone et tablette : effet de profondeur sobre, la vidéo défile moins vite que la page
-    sec.classList.add("is-in", "is-head"); root.classList.add("cardfx");
-    const media = $(".hero__media"), center = $(".hero__center"), cue = $(".hero__scroll"), shade = $("#heroShade");
-    const clamp = (v) => Math.min(1, Math.max(0, v));
-    let raf = 0, last = -1;
-    const upd = () => {
-      raf = 0;
-      const y = Math.max(0, scrollY); if (y > innerHeight * 1.2) return;
-      const p = clamp(y / innerHeight); if (Math.abs(p - last) < .002) return; last = p;
-      media.style.transform = `translate3d(0, ${(y * .45).toFixed(1)}px, 0)`;   // la vidéo défile moins vite que la page
-      center.style.opacity = Math.max(0, 1 - p * 1.8).toFixed(3);
-      center.style.transform = `translate3d(0, ${(y * .2).toFixed(1)}px, 0)`;
-      if (cue) cue.style.opacity = Math.max(0, 1 - p * 5).toFixed(3);
-      if (shade) shade.style.opacity = (p * .5).toFixed(3);
-    };
-    addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
-    upd();
-    return;
-  }
-  const slidesBox = $(".hero__slides"), media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), first = document.getElementById("svcMedia");
+  const slidesBox = $(".hero__slides"), media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), mobile = !matchMedia("(min-width: 961px)").matches, first = mobile ? strips[0] : document.getElementById("svcMedia"), RAD = mobile ? 14 : 2;
   root.classList.add("flying");
   const clamp = (v) => Math.min(1, Math.max(0, v));
   const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -152,6 +132,7 @@ if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
     // tout en transformations (calculées par la carte graphique) : le cadre se déforme,
     // la vidéo à l'intérieur compense pour garder ses proportions
     media.style.transform = `translate3d(${L.toFixed(2)}px,${T.toFixed(2)}px,0) scale(${sx.toFixed(5)},${sy.toFixed(5)})`;
+    media.style.borderRadius = `${(e * RAD / sx).toFixed(2)}px / ${(e * RAD / sy).toFixed(2)}px`;
     video.style.transform = `scale(${(s / sx).toFixed(5)},${(s / sy).toFixed(5)})`;
     if (slidesBox) slidesBox.style.transform = video.style.transform;
     media.style.setProperty("--grad", (1 - e).toFixed(3));
@@ -183,13 +164,13 @@ if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
   scrollWork.push(() => {
     const y = scrollY;
     if (y !== prevY) dir = y > prevY ? 1 : -1;
-    if (!snapping && dir > 0 && prevY < end - 2 && y > end + 2) {
+    if (!mobile && !snapping && dir > 0 && prevY < end - 2 && y > end + 2) {
       // on a dépassé l'arrêt sur sa lancée : retour sur les prestations, puis courte pause
       goTo(end); hold();
     }
     prevY = y;
     clearTimeout(idle);
-    if (!snapping && y > 2 && y < end - 2) {
+    if (!mobile && !snapping && y > 2 && y < end - 2) {
       idle = setTimeout(() => {
         const p = scrollY / end;
         if (p <= 0 || p >= 1) return;

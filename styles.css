@@ -1101,3 +1101,10 @@ body { background: var(--bg); color: var(--cream); }
 
 /* Téléphone : défilement en profondeur, sobre */
 .cardfx .hero__media { will-change: transform; }
+
+/* Téléphone : la vidéo se pose sur la première carte, les autres arrivent de la droite */
+@media (max-width: 960px) {
+  .flying .svc2__item:not(:first-child) { transition: opacity .8s ease calc(var(--k, 0) * 110ms), transform 1s cubic-bezier(.16, 1, .3, 1) calc(var(--k, 0) * 110ms), clip-path 1.3s cubic-bezier(.7, 0, .2, 1); }
+  .flying .strips-sec:not(.is-in) .svc2__item:not(:first-child) { opacity: 0; transform: translateX(70px); }
+  .flying .hero__media { overflow: hidden; }
+}
