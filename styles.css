@@ -1144,7 +1144,7 @@ body { background: var(--bg); color: var(--cream); }
    ===================================================================== */
 .hero__beam { display: none; }
 @media (max-width: 720px) {
-  .hero-stage.shut { height: calc(100svh + 44vh); }
+  .hero-stage.shut { height: calc(100svh + 130vh); }
   .hero-stage.shut + #prestations { padding-top: 18px; }
   .hero-stage.shut + #prestations .t-big::after { display: none; }
   .hero-stage.shut + #prestations .strips-sec__head, .hero-stage.shut + #prestations .t-big { text-align: center; margin-inline: auto; }
@@ -1152,6 +1152,6 @@ body { background: var(--bg); color: var(--cream); }
   .hero-stage.shut .hero__media { clip-path: inset(var(--it, 0px) var(--ix, 0px) var(--ib, 0px) var(--ix, 0px)); will-change: clip-path; }
   .hero-stage.shut .hero__media > * { transform: scale(var(--hz, 1)); transform-origin: 50% 50%; }
   .hero-stage.shut .hero__beam { display: block; position: absolute; inset: 0; z-index: 3; background: var(--accent); opacity: var(--hb, 0); pointer-events: none; }
-  .hero-stage.shut .hero__center { opacity: var(--ho, 1); transform: translateY(var(--hy, 0px)) scale(var(--hs, 1)); will-change: opacity, transform; }
+  .hero-stage.shut .hero__center { opacity: var(--ho, 1); transform: translateY(var(--hy, 0px)); will-change: opacity, transform; }
   .hero-stage.shut .hero__scroll { opacity: var(--ho, 1); }
 }

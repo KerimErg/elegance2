@@ -412,32 +412,44 @@ $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map(
   io.observe(list);
 })();
 
-// ===================== Téléphone : l'accueil se referme en un trait =====================
+// ===================== Téléphone : l'accueil se referme comme au cinéma =====================
+// 1. le texte s'efface  2. l'image se resserre en bande cinémascope et s'y arrête
+// 3. la bande se ferme en un trait de lumière  4. le trait devient le filet du titre des prestations
+// Le mouvement est lissé : il glisse même si le doigt va vite.
 (() => {
   const stage = document.getElementById("heroStage"), hero = document.getElementById("accueil");
   const media = hero && hero.querySelector(".hero__media");
   if (!stage || !media || reduced || !matchMedia("(max-width: 720px)").matches) return;
   const beam = document.createElement("div"); beam.className = "hero__beam"; media.appendChild(beam);
   stage.classList.add("shut");
-  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const clamp = (v) => Math.min(1, Math.max(0, v)), seg = (p, a, b) => clamp((p - a) / (b - a));
   const io = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  const st = hero.style; let raf = 0;
-  const upd = () => {
-    raf = 0;
-    const r = stage.getBoundingClientRect(), H = hero.offsetHeight, run = r.height - H;
-    if (run <= 0) return;
-    const p = clamp(-r.top / run);
-    const a = io(clamp(p / .58)), b = io(clamp((p - .5) / .4)), t = clamp(p / .28);
-    const c = H / 2 + io(clamp((p - .45) / .45)) * H * .43;
-    st.setProperty("--it", `${(a * (c - 1)).toFixed(1)}px`);
-    st.setProperty("--ib", `${(a * (H - c - 1)).toFixed(1)}px`);
-    st.setProperty("--ix", `${(b * (innerWidth / 2 - 22)).toFixed(1)}px`);
-    st.setProperty("--hz", (1 + a * .14).toFixed(4));
-    st.setProperty("--hb", clamp((p - .42) / .16).toFixed(3));
+  const out = (t) => 1 - Math.pow(1 - t, 3);
+  const st = hero.style; let cur = -1, raf = 0;
+  const target = () => { const r = stage.getBoundingClientRect(), run = r.height - hero.offsetHeight; return run > 0 ? clamp(-r.top / run) : 0; };
+  const draw = (p) => {
+    const H = hero.offsetHeight, W = innerWidth;
+    const band = Math.min(H * .32, W / 1.6);                   // hauteur de la bande cinémascope
+    const t = out(seg(p, 0, .22));                              // texte
+    const a = io(seg(p, .08, .4)), c = io(seg(p, .56, .74));    // bande, puis trait
+    const d = io(seg(p, .74, 1));                               // le trait rejoint le titre
+    const h = H - a * (H - band) - c * (band - 2);              // hauteur visible
+    const y = H / 2 + d * H * .43;                              // centre de l'ouverture
+    st.setProperty("--it", `${(y - h / 2).toFixed(1)}px`);
+    st.setProperty("--ib", `${(H - y - h / 2).toFixed(1)}px`);
+    st.setProperty("--ix", `${(io(seg(p, .7, .92)) * (W / 2 - 22)).toFixed(1)}px`);
+    st.setProperty("--hz", (1 + p * .12).toFixed(4));
+    st.setProperty("--hb", io(seg(p, .62, .74)).toFixed(3));
     st.setProperty("--ho", (1 - t).toFixed(3));
-    st.setProperty("--hy", `${(-t * 36).toFixed(1)}px`);
-    st.setProperty("--hs", (1 - t * .04).toFixed(4));
+    st.setProperty("--hy", `${(-t * 18).toFixed(1)}px`);
   };
-  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
-  addEventListener("resize", upd); upd();
+  const tick = () => {
+    const goal = target();
+    cur = cur < 0 ? goal : cur + (goal - cur) * .085;
+    if (Math.abs(goal - cur) < .0004) cur = goal;
+    draw(cur);
+    raf = cur === goal ? 0 : requestAnimationFrame(tick);
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+  addEventListener("resize", () => { cur = -1; tick(); }); tick();
 })();
