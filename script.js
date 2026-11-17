@@ -402,8 +402,8 @@ scrollWork.push(toggleMbar);
 // ===================== Avis : étoiles une à une =====================
 $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map((c, k) => `<span class="st" style="--s:${k}">${c}</span>`).join(""); });
 
-// ===================== Téléphone : les photos des prestations s'ouvrent au rythme du doigt =====================
-// En descendant, chaque photo s'agrandit depuis un médaillon, se dézoome et s'éclaire ; en remontant, l'inverse.
+// ===================== Téléphone : les photos des prestations au rythme du doigt =====================
+// En descendant, chaque photo se dézoome et s'éclaire ; en remontant, l'inverse.
 (() => {
   const list = document.getElementById("svcList");
   if (!list || reduced || !matchMedia("(max-width: 720px)").matches) return;

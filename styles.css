@@ -1129,8 +1129,7 @@ body { background: var(--bg); color: var(--cream); }
   .t-big.rv .ch { opacity: 1; filter: none; transform: translateY(105%); }
   .t-big.rv.in .ch { transform: none; transition: transform .55s cubic-bezier(.77, 0, .18, 1); transition-delay: calc(var(--c) * 16ms); }
   .t-big.rv.in::after { transition: transform .6s cubic-bezier(.77, 0, .18, 1) .35s; }
-  /* cartes : la photo s'ouvre depuis un médaillon au rythme du défilement */
-  .svc2__list.sx .svc2__item { clip-path: inset(calc((1 - var(--e, 1)) * 24%) calc((1 - var(--e, 1)) * 20%) round calc(14px + (1 - var(--e, 1)) * 160px)); }
+  /* cartes : la photo se dézoome et s'éclaire au rythme du défilement */
   .svc2__list.sx .svc2__img { transform: scale(calc(1 + (1 - var(--e, 1)) * .5)); filter: brightness(calc(.5 + var(--e, 1) * .5)); transition: none; }
   .svc2__list.sx .svc2__item .svc2__text { opacity: clamp(0, calc((var(--e, 1) - .7) * 3.4), 1); transform: translateY(calc((1 - var(--e, 1)) * 40px)); transition: none; }
 }
