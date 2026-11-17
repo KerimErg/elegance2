@@ -401,3 +401,13 @@ scrollWork.push(toggleMbar);
 
 // ===================== Avis : étoiles une à une =====================
 $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map((c, k) => `<span class="st" style="--s:${k}">${c}</span>`).join(""); });
+
+// ===================== Téléphone : entrée des prestations =====================
+(() => {
+  const list = document.getElementById("svcList");
+  if (!list || reduced || !matchMedia("(max-width: 720px)").matches || !("IntersectionObserver" in window)) return;
+  if (list.getBoundingClientRect().top < innerHeight * .85) return;
+  list.classList.add("sw");
+  const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { list.classList.add("in"); io.disconnect(); } }, { threshold: .2 });
+  io.observe(list);
+})();
