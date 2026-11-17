@@ -1099,12 +1099,5 @@ body { background: var(--bg); color: var(--cream); }
   .salon__photo img { transform: none; }
 }
 
-/* =====================================================================
-   Téléphone : la vidéo d'accueil devient une carte inclinée,
-   les prestations montent par-dessus
-   ===================================================================== */
-.cardfx .hero-stage { height: 205vh; height: 205svh; }
-.cardfx .hero-stage .hero { position: sticky; top: 0; perspective: 1100px; }
-.cardfx .hero__media { transform-origin: 50% 35%; overflow: hidden; will-change: transform; backface-visibility: hidden; }
-.cardfx .hero__shade { z-index: 0; }
-.cardfx .hero-stage + .strips-sec { position: relative; z-index: 2; margin-top: -65vh; margin-top: -65svh; border-radius: 26px 26px 0 0; box-shadow: 0 -30px 70px rgba(0, 0, 0, .45); }
+/* Téléphone : défilement en profondeur, sobre */
+.cardfx .hero__media { will-change: transform; }
