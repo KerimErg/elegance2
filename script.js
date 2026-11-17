@@ -402,12 +402,29 @@ scrollWork.push(toggleMbar);
 // ===================== Avis : étoiles une à une =====================
 $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map((c, k) => `<span class="st" style="--s:${k}">${c}</span>`).join(""); });
 
-// ===================== Téléphone : entrée des prestations =====================
+// ===================== Téléphone : les photos des prestations s'ouvrent au rythme du doigt =====================
+// En descendant, chaque photo s'agrandit depuis un médaillon, se dézoome et s'éclaire ; en remontant, l'inverse.
 (() => {
   const list = document.getElementById("svcList");
-  if (!list || reduced || !matchMedia("(max-width: 720px)").matches || !("IntersectionObserver" in window)) return;
-  if (list.getBoundingClientRect().top < innerHeight * .85) return;
-  list.classList.add("sw");
-  const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { list.classList.add("in"); io.disconnect(); } }, { threshold: .2 });
-  io.observe(list);
+  if (!list || reduced || !matchMedia("(max-width: 720px)").matches) return;
+  const items = [...list.children];
+  list.classList.add("sx");
+  const clamp = (v) => Math.min(1, Math.max(0, v)), ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  let cur = -1, raf = 0;
+  const goal = () => { const r = list.getBoundingClientRect(); return clamp((innerHeight * .95 - r.top) / (innerHeight * .6)); };
+  const draw = (p) => {
+    items.forEach((it, k) => {
+      const e = ease(clamp((p - k * .06) / .8));
+      it.style.setProperty("--e", e.toFixed(4));
+    });
+  };
+  const tick = () => {
+    const g = goal();
+    cur = cur < 0 ? g : cur + (g - cur) * .14;
+    if (Math.abs(g - cur) < .0008) cur = g;
+    draw(cur);
+    raf = cur === g ? 0 : requestAnimationFrame(tick);
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+  addEventListener("resize", tick); tick();
 })();
