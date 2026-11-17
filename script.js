@@ -96,7 +96,8 @@ if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
   strips.forEach((st, k) => st.style.setProperty("--k", k));
   if (!sec || !strips.length) return;
   // transition réservée aux ordinateurs : sur téléphone, défilement simple et fiable
-  if (reduced) { sec.classList.add("is-in", "is-head"); return; }
+  // animation de passage retirée : défilement simple
+  sec.classList.add("is-in", "is-head"); return;
   const slidesBox = $(".hero__slides"), media = $(".hero__media"), video = $("#heroVideo"), center = $(".hero__center"), cue = $(".hero__scroll"), mobile = !matchMedia("(min-width: 961px)").matches, first = mobile ? strips[0] : document.getElementById("svcMedia"), RAD = mobile ? 14 : 2;
   root.classList.add("flying");
   const clamp = (v) => Math.min(1, Math.max(0, v));
