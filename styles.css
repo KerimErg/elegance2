@@ -1139,27 +1139,18 @@ body { background: var(--bg); color: var(--cream); }
 }
 
 /* =====================================================================
-   Téléphone : « Le résultat » — la caméra tourne autour de la coupe
-   au rythme du doigt, trois mots s'inscrivent l'un après l'autre
+   Téléphone : la vidéo de l'accueil se pose sur la photo de la première
+   prestation en descendant, et en ressort en remontant
    ===================================================================== */
-.orbit { display: none; }
+.hero__land { display: none; }
 @media (max-width: 720px) {
-  .orbit { display: block; position: relative; height: 300vh; background: var(--bg); }
-  .orbit__pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #0e1018 url("images/orbit/f001.webp") center / cover no-repeat; }
-  .orbit__cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .orbit__shade { position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(180deg, var(--bg) 0%, rgba(30, 34, 50, 0) 22%, rgba(30, 34, 50, 0) 48%, rgba(14, 16, 24, .82) 80%, var(--bg) 100%); }
-  .orbit__line { position: absolute; left: 0; right: 0; bottom: 21vh; margin: 0; text-align: center; overflow: hidden; padding-bottom: .1em;
-    font-weight: 300; font-size: 2.1rem; line-height: 1.1; letter-spacing: .32em; margin-right: -.32em; text-transform: uppercase; color: #fff; }
-  .orbit__line span { display: inline-block; transform: translateY(var(--y, 110%)); }
-  .orbit__line--sig span { font-family: var(--script); text-transform: none; letter-spacing: 0; font-size: 3.1rem; color: var(--accent-2, #a98bff); }
-  .orbit__line--sig { letter-spacing: 0; margin-right: 0; }
-  .orbit__bar { position: absolute; left: 50%; bottom: 17vh; width: 64px; height: 1px; margin-left: -32px; background: rgba(255, 255, 255, .2); }
-  .orbit__bar i { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(var(--op, 0)); }
-}
-@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
-  .orbit { height: auto; }
-  .orbit__pin { position: relative; }
-  .orbit__line span { transform: none; }
-  .orbit__line:not(.orbit__line--sig) { display: none; }
+  .morph .hero { z-index: 30; isolation: auto; overflow: visible; }
+  .morph .hero__media { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: 30; transform-origin: 0 0; overflow: hidden; will-change: transform, clip-path;
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(var(--s, 1)); clip-path: inset(var(--ct, 0px) var(--cr, 0px) var(--cb, 0px) var(--cl, 0px) round var(--cr2, 0px)); }
+  .morph .hero__land { display: block; position: absolute; object-fit: cover; opacity: var(--lo, 0); z-index: 2; pointer-events: none; }
+  .morph .hero__center, .morph .hero__scroll { opacity: var(--ho, 1); transform: translateY(var(--hy, 0px)); }
+  .morph.morph-done .hero__media { visibility: hidden; }
+  .morph:not(.morph-done) #svcList > .svc2__item:first-child { visibility: hidden; }
+  .morph .svc2__list.sw .svc2__item:first-child { clip-path: none; }
+  .morph .svc2__list.sw .svc2__item:first-child .svc2__img { transform: none; }
 }
