@@ -401,3 +401,28 @@ scrollWork.push(toggleMbar);
 
 // ===================== Avis : étoiles une à une =====================
 $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map((c, k) => `<span class="st" style="--s:${k}">${c}</span>`).join(""); });
+
+// ===================== Téléphone : sections empilées comme des cartes =====================
+(() => {
+  const mq = matchMedia("(max-width: 720px)");
+  if (reduced || !mq.matches || !("IntersectionObserver" in window)) return;
+  const secs = ["heroStage", "prestations", "realisations", "avis", "reserver", "salon"].map((id) => document.getElementById(id)).filter(Boolean);
+  if (secs.length < 2) return;
+  secs.forEach((s, i) => { s.classList.add(i === secs.length - 1 ? "stack-last" : "stack"); s.style.zIndex = 10 + i; });
+  const stack = secs.slice(0, -1);
+  const measure = () => stack.forEach((s) => { s.style.top = `${Math.min(0, innerHeight - s.offsetHeight)}px`; });
+  let raf = 0;
+  const upd = () => {
+    raf = 0;
+    stack.forEach((s, i) => {
+      const next = secs[i + 1], t = next.getBoundingClientRect().top;
+      const p = Math.min(1, Math.max(0, 1 - t / innerHeight));            // 0 : la suivante arrive en bas, 1 : elle recouvre tout
+      s.style.transform = p > 0 ? `scale(${(1 - p * .07).toFixed(4)})` : "";
+      s.style.setProperty("--cover", (p * .6).toFixed(3));
+    });
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+  addEventListener("resize", () => { measure(); upd(); });
+  addEventListener("load", () => { measure(); upd(); });
+  measure(); upd();
+})();
