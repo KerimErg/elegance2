@@ -1164,3 +1164,18 @@ body { background: var(--bg); color: var(--cream); }
   .svc2__list.lt.in .svc2__item { opacity: 1; transform: none; }
   .svc2__list.lt.in .svc2__img { transform: none; }
 }
+
+/* =====================================================================
+   Accueil : bouton « Prendre rendez-vous » plus fin, façon maison de luxe
+   ===================================================================== */
+.hero__cta .btn--gold { position: relative; width: auto; min-height: 0; padding: 1.05rem 2.6rem; border-radius: 0;
+  background: rgba(12, 11, 15, .18); color: var(--ivory); border: 1px solid rgba(241, 237, 230, .75);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  font-size: .74rem; font-weight: 400; letter-spacing: .32em; margin-right: 0; text-transform: uppercase; transition: background .5s, color .5s, border-color .5s; }
+.hero__cta .btn--gold:hover, .hero__cta .btn--gold:active { background: var(--ivory); color: var(--ink); }
+.hero__cta .btn--gold::before { content: ""; position: absolute; left: 50%; bottom: -1px; width: 28px; height: 1px; margin-left: -14px; background: var(--gold); }
+.hero__rating { font-size: .78rem; letter-spacing: .08em; opacity: .85; }
+@media (max-width: 720px) {
+  .hero__cta .btn { width: auto; min-height: 0; font-size: .72rem; padding: 1.05rem 2.2rem; }
+  .hero__cta { width: auto; margin-top: 2.2rem; gap: 1.4rem; }
+}
