@@ -1137,3 +1137,20 @@ body { background: var(--bg); color: var(--cream); }
   .svc2__list.sw .svc2__item .svc2__text { opacity: 0; transform: translateY(14px); transition: opacity .4s ease, transform .5s cubic-bezier(.16, 1, .3, 1); transition-delay: calc(.4s + var(--k, 0) * 90ms); }
   .svc2__list.sw.in .svc2__item .svc2__text { opacity: 1; transform: none; }
 }
+
+/* =====================================================================
+   Téléphone : l'accueil se referme comme un obturateur
+   (l'image se resserre en un trait de lumière, qui devient le filet violet)
+   ===================================================================== */
+.hero__beam { display: none; }
+@media (max-width: 720px) {
+  .hero-stage.shut { height: calc(100svh + 44vh); }
+  .hero-stage.shut + #prestations { padding-top: 18px; }
+  .hero-stage.shut + #prestations .t-big::after { display: none; }
+  .hero-stage.shut .hero { position: sticky; top: 0; height: 100svh; min-height: 0; }
+  .hero-stage.shut .hero__media { clip-path: inset(var(--it, 0px) var(--ix, 0px) var(--ib, 0px) var(--ix, 0px)); will-change: clip-path; }
+  .hero-stage.shut .hero__media > * { transform: scale(var(--hz, 1)); transform-origin: 50% 50%; }
+  .hero-stage.shut .hero__beam { display: block; position: absolute; inset: 0; z-index: 3; background: var(--accent); opacity: var(--hb, 0); pointer-events: none; }
+  .hero-stage.shut .hero__center { opacity: var(--ho, 1); transform: translateY(var(--hy, 0px)) scale(var(--hs, 1)); will-change: opacity, transform; }
+  .hero-stage.shut .hero__scroll { opacity: var(--ho, 1); }
+}

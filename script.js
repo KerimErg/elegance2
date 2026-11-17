@@ -411,3 +411,33 @@ $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map(
   const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { list.classList.add("in"); io.disconnect(); } }, { threshold: .2 });
   io.observe(list);
 })();
+
+// ===================== Téléphone : l'accueil se referme en un trait =====================
+(() => {
+  const stage = document.getElementById("heroStage"), hero = document.getElementById("accueil");
+  const media = hero && hero.querySelector(".hero__media");
+  if (!stage || !media || reduced || !matchMedia("(max-width: 720px)").matches) return;
+  const beam = document.createElement("div"); beam.className = "hero__beam"; media.appendChild(beam);
+  stage.classList.add("shut");
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const io = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const st = hero.style; let raf = 0;
+  const upd = () => {
+    raf = 0;
+    const r = stage.getBoundingClientRect(), H = hero.offsetHeight, run = r.height - H;
+    if (run <= 0) return;
+    const p = clamp(-r.top / run);
+    const a = io(clamp(p / .58)), b = io(clamp((p - .5) / .4)), t = clamp(p / .28);
+    const c = H / 2 + io(clamp((p - .45) / .45)) * H * .43;
+    st.setProperty("--it", `${(a * (c - 1)).toFixed(1)}px`);
+    st.setProperty("--ib", `${(a * (H - c - 1)).toFixed(1)}px`);
+    st.setProperty("--ix", `${(b * (innerWidth / 2 - 22)).toFixed(1)}px`);
+    st.setProperty("--hz", (1 + a * .14).toFixed(4));
+    st.setProperty("--hb", clamp((p - .42) / .16).toFixed(3));
+    st.setProperty("--ho", (1 - t).toFixed(3));
+    st.setProperty("--hy", `${(-t * 36).toFixed(1)}px`);
+    st.setProperty("--hs", (1 - t * .04).toFixed(4));
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+  addEventListener("resize", upd); upd();
+})();
