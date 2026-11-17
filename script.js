@@ -401,25 +401,3 @@ scrollWork.push(toggleMbar);
 
 // ===================== Avis : étoiles une à une =====================
 $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map((c, k) => `<span class="st" style="--s:${k}">${c}</span>`).join(""); });
-
-// ===================== Téléphone : génériques de chapitre =====================
-(() => {
-  const chaps = $$(".chap"); if (!chaps.length || !matchMedia("(max-width: 720px)").matches) return;
-  if (reduced) { chaps.forEach((c) => { c.style.setProperty("--o", 1); c.style.setProperty("--ty", "0px"); c.style.setProperty("--ls", ".3em"); c.style.setProperty("--z", 1); }); return; }
-  const clamp = (v) => Math.min(1, Math.max(0, v)), ease = (t) => 1 - Math.pow(1 - t, 3);
-  let raf = 0;
-  const upd = () => {
-    raf = 0;
-    chaps.forEach((c) => {
-      const r = c.getBoundingClientRect(); if (r.bottom < -50 || r.top > innerHeight + 50) return;
-      const p = clamp((innerHeight - r.top) / (innerHeight + r.height));
-      c.style.setProperty("--z", (1.18 - p * .18).toFixed(4));
-      const t = ease(clamp((p - .18) / .3)), out = clamp((p - .72) / .2);
-      c.style.setProperty("--o", (t * (1 - out)).toFixed(3));
-      c.style.setProperty("--ty", `${((1 - t) * 24 - out * 30).toFixed(1)}px`);
-      c.style.setProperty("--ls", `${(.7 - t * .4).toFixed(3)}em`);
-    });
-  };
-  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
-  addEventListener("resize", upd); upd();
-})();
