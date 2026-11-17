@@ -1191,3 +1191,17 @@ body { background: var(--bg); color: var(--cream); }
 .cf__item[data-d="1"]::after, .cf__item[data-d="-1"]::after { opacity: .42; }
 .cf.is-drag .cf__item { transition: transform .9s cubic-bezier(.22, 1, .36, 1), opacity .7s ease, translate 0s; }
 @media (max-width: 720px) { .cf__item { box-shadow: 0 18px 40px rgba(0, 0, 0, .45); } }
+
+/* =====================================================================
+   Boutons harmonisés : même écriture fine partout
+   contour ivoire pour les boutons courants, ivoire plein pour l'action finale
+   ===================================================================== */
+.btn, .mbar a, .nav .nav__cta { border-radius: 0; font-size: .72rem; font-weight: 400; letter-spacing: .3em; text-transform: uppercase; }
+.btn--gold, .btn--line, .header__cta { background: transparent; color: var(--ivory); border: 1px solid rgba(241, 237, 230, .7); box-shadow: none; transition: background .5s, color .5s, border-color .5s; }
+.btn--gold:hover, .btn--line:hover, .header__cta:hover { background: var(--ivory); color: var(--ink); border-color: var(--ivory); }
+.svc2__item .btn--gold { min-height: 0; padding: .85rem 1.5rem; background: rgba(12, 11, 15, .25); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.planity__btn, .mbar .mbar__book, .nav .nav__cta { position: relative; background: var(--ivory); color: var(--ink); border: 1px solid var(--ivory); }
+.planity__btn { padding: 1.15rem 2.6rem; }
+.planity__btn:hover { background: transparent; color: var(--ivory); }
+.mbar .mbar__call { border: 1px solid rgba(241, 237, 230, .4); }
+.mbar a { font-size: .7rem; letter-spacing: .26em; }
