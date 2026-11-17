@@ -1147,6 +1147,7 @@ body { background: var(--bg); color: var(--cream); }
   .hero-stage.shut { height: calc(100svh + 44vh); }
   .hero-stage.shut + #prestations { padding-top: 18px; }
   .hero-stage.shut + #prestations .t-big::after { display: none; }
+  .hero-stage.shut + #prestations .strips-sec__head, .hero-stage.shut + #prestations .t-big { text-align: center; margin-inline: auto; }
   .hero-stage.shut .hero { position: sticky; top: 0; height: 100svh; min-height: 0; }
   .hero-stage.shut .hero__media { clip-path: inset(var(--it, 0px) var(--ix, 0px) var(--ib, 0px) var(--ix, 0px)); will-change: clip-path; }
   .hero-stage.shut .hero__media > * { transform: scale(var(--hz, 1)); transform-origin: 50% 50%; }
