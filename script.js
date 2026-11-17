@@ -401,3 +401,14 @@ scrollWork.push(toggleMbar);
 
 // ===================== Avis : étoiles une à une =====================
 $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map((c, k) => `<span class="st" style="--s:${k}">${c}</span>`).join(""); });
+
+// ===================== Téléphone : les cartes des prestations apparaissent en douceur =====================
+(() => {
+  const list = document.getElementById("svcList");
+  if (!list || reduced || !matchMedia("(max-width: 720px)").matches || !("IntersectionObserver" in window)) return;
+  if (list.getBoundingClientRect().top < innerHeight * .9) return;
+  [...list.children].forEach((it, k) => it.style.setProperty("--k", k));
+  list.classList.add("lt");
+  const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { list.classList.add("in"); io.disconnect(); } }, { threshold: .15 });
+  io.observe(list);
+})();
