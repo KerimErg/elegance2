@@ -445,9 +445,9 @@ $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map(
     els.forEach((el) => {
       const r = el.getBoundingClientRect(), top = r.top - (parseFloat(el.style.getPropertyValue("--sy")) || 0);
       if (top > H * 1.2 || r.bottom < -H * .2) return;
-      const e = ease(clamp((H - top) / (H * .45)));
-      el.style.setProperty("--sy", `${((1 - e) * 70).toFixed(1)}px`);
-      el.style.setProperty("--ss", (.94 + e * .06).toFixed(4));
+      const e = ease(clamp((H - top) / (H * .6)));
+      el.style.setProperty("--sy", `${((1 - e) * 120).toFixed(1)}px`);
+      el.style.setProperty("--ss", (.88 + e * .12).toFixed(4));
       el.style.setProperty("--so", Math.min(1, e * 1.15).toFixed(3));
     });
   };
