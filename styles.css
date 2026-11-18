@@ -1269,3 +1269,8 @@ body { background: var(--bg); color: var(--cream); }
 .cf.is-js .cf__item, .cf.is-js .cf__item[data-d] { transition: none; translate: none; will-change: transform, opacity; }
 .cf.is-js .cf__item::after { opacity: var(--dim, 0); transition: none; }
 .cf.is-js .cf__item[data-d="0"] { cursor: default; }
+
+/* Accueil : quand la vidéo tourne, le diaporama de secours s'arrête (moins de travail pour le téléphone) */
+.hero__media:has(.hero__video.is-playing) .hero__slides { visibility: hidden; }
+.hero__media:has(.hero__video.is-playing) .hero__slides picture { animation-play-state: paused; }
+.hero__video { will-change: opacity; transform: translateZ(0); }
