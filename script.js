@@ -454,3 +454,20 @@ $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map(
   addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
   addEventListener("resize", upd); upd();
 })();
+
+// ===================== Carte Google : chargée seulement si le visiteur le demande =====================
+// Google Maps dépose des cookies : on attend l'accord du visiteur (gardé sur cet appareil).
+(() => {
+  const box = document.querySelector(".salon__map"), btn = document.getElementById("mapShow"); if (!box || !btn) return;
+  const KEY = "elegance-carte-ok";
+  const show = () => {
+    if (box.classList.contains("is-live")) return;
+    const f = document.createElement("iframe");
+    f.title = "Plan d’accès : Elegance Strasbourg, 162 route de Bischwiller, Schiltigheim";
+    f.src = "https://www.google.com/maps?q=Elegance+Strasbourg,+162+Route+de+Bischwiller,+67300+Schiltigheim&z=16&output=embed";
+    f.referrerPolicy = "no-referrer-when-downgrade";
+    box.appendChild(f); box.classList.add("is-live");
+  };
+  btn.addEventListener("click", () => { try { localStorage.setItem(KEY, "1"); } catch (e) {} show(); });
+  try { if (localStorage.getItem(KEY) === "1") show(); } catch (e) {}
+})();
