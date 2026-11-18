@@ -241,11 +241,17 @@ if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
   };
   const playActive = () => {
     vids.forEach((v, j) => {
-      if (j === i && visible && !reduced) { v.preload = "auto"; if (v.paused) { try { v.currentTime = 0; } catch (e) {} const pr = v.play(); if (pr) pr.catch(() => {}); } }
+      if (j === i && visible && (!reduced || userPlay)) { v.preload = "auto"; if (v.paused) { if (v.readyState > 0) { try { v.currentTime = 0; } catch (e) {} } else v.load(); tryPlay(v); } }
       else v.pause();
     });
     vids[(i + 1) % n].preload = "auto";
   };
+  // iPhone (économie d'énergie, etc.) : si la lecture automatique est refusée, on relance au premier contact
+  let userPlay = false, blocked = false;
+  const tryPlay = (v) => { const pr = v.play(); if (pr) pr.then(() => { blocked = false; }).catch(() => { blocked = true; }); };
+  const unlock = () => { userPlay = true; if (visible) { const v = vids[i]; if (v.paused) { v.preload = "auto"; tryPlay(v); } } };
+  ["touchend", "click"].forEach((ev) => document.addEventListener(ev, () => { if (blocked || reduced) unlock(); }, { passive: true }));
+  vids.forEach((v) => v.addEventListener("error", () => { if (v.error) { v.load(); } }, { once: true }));
   const schedule = () => { clearTimeout(timer); if (visible && !reduced && !drag) timer = setTimeout(() => go(target + 1), 4600); };
   const step = () => {
     raf = 0;
