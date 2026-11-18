@@ -427,3 +427,30 @@ $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map(
   const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { list.classList.add("in"); io.disconnect(); } }, { threshold: .15 });
   io.observe(list);
 })();
+
+// ===================== Téléphone : les blocs montent au rythme du doigt =====================
+// Remplace les apparitions ponctuelles : on voit l'effet à chaque défilement, dans les deux sens.
+(() => {
+  if (reduced || !matchMedia("(max-width: 720px)").matches) return;
+  const sel = "#svcList, .cf, .cf__titles, .cf__nav, .avis__score, .avis__grid, .avis__dots, .planity__lead, .planity__steps, .planity__btn, .planity__alt, .salon__photo, .salon__facts, .salon__map, .salon__actions, .footer__inner";
+  const els = $$(sel);
+  if (!els.length) return;
+  const off = (el) => el.classList.toggle("rv", false);
+  const list = document.getElementById("svcList"); if (list) list.classList.toggle("lt", false);
+  els.forEach((el) => { off(el); $$(".rv", el).forEach((c) => { if (!c.classList.contains("t-big")) off(c); }); el.classList.add("sl"); });
+  const clamp = (v) => Math.min(1, Math.max(0, v)), ease = (t) => 1 - Math.pow(1 - t, 3);
+  let raf = 0;
+  const upd = () => {
+    raf = 0; const H = innerHeight;
+    els.forEach((el) => {
+      const r = el.getBoundingClientRect(), top = r.top - (parseFloat(el.style.getPropertyValue("--sy")) || 0);
+      if (top > H * 1.2 || r.bottom < -H * .2) return;
+      const e = ease(clamp((H - top) / (H * .45)));
+      el.style.setProperty("--sy", `${((1 - e) * 70).toFixed(1)}px`);
+      el.style.setProperty("--ss", (.94 + e * .06).toFixed(4));
+      el.style.setProperty("--so", Math.min(1, e * 1.15).toFixed(3));
+    });
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+  addEventListener("resize", upd); upd();
+})();

@@ -1205,3 +1205,10 @@ body { background: var(--bg); color: var(--cream); }
 .planity__btn:hover { background: transparent; color: var(--ivory); }
 .mbar .mbar__call { border: 1px solid rgba(241, 237, 230, .4); }
 .mbar a { font-size: .7rem; letter-spacing: .26em; }
+
+/* =====================================================================
+   Téléphone : chaque bloc monte et se pose au rythme du doigt
+   ===================================================================== */
+@media (max-width: 720px) {
+  .sl { opacity: var(--so, 1); transform: translate3d(0, var(--sy, 0px), 0) scale(var(--ss, 1)); transform-origin: 50% 0; will-change: transform, opacity; transition: none; }
+}
