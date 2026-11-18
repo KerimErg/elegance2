@@ -10,7 +10,7 @@ const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ===================== Défilement adouci =====================
 // Molette et pavé tactile glissent en douceur ; le toucher reste natif sur téléphone.
-const lenis = (!reduced && window.Lenis) ? new window.Lenis({ lerp: .085, wheelMultiplier: .9 }) : null;
+const lenis = (!reduced && window.Lenis && !matchMedia("(pointer: coarse)").matches) ? new window.Lenis({ lerp: .085, wheelMultiplier: .9 }) : null;
 if (lenis) {
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
@@ -457,17 +457,19 @@ scrollWork.push(toggleMbar);
 (() => {
   if (reduced) return;
   const els = $$(".salon__photo"); if (!els.length) return;
-  let raf = 0;
+  let raf = 0, geo = [];
+  const measure = () => { geo = els.map((el) => { const r = el.getBoundingClientRect(); return { top: r.top + scrollY, h: r.height, img: el.querySelector("img") }; }); upd(); };
   const upd = () => {
-    raf = 0;
-    els.forEach((el) => {
-      const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
-      const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;   // -1 … 1
-      el.style.setProperty("--py", `${(p * -40).toFixed(1)}px`);
+    raf = 0; const y = scrollY, H = innerHeight;
+    geo.forEach((g) => {
+      const top = g.top - y; if (top + g.h < 0 || top > H || !g.img) return;
+      const p = (top + g.h / 2 - H / 2) / H;   // -1 … 1
+      g.img.style.transform = `translate3d(0,${(p * -40).toFixed(1)}px,0) scale(1.12)`;
     });
   };
   addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
-  upd();
+  addEventListener("resize", measure); addEventListener("load", measure);
+  measure();
 })();
 
 // ===================== Avis : étoiles une à une =====================
@@ -495,20 +497,35 @@ $$(".avis__stars").forEach((s) => { s.innerHTML = [...s.textContent.trim()].map(
   const list = document.getElementById("svcList"); if (list) list.classList.toggle("lt", false);
   els.forEach((el) => { off(el); $$(".rv", el).forEach((c) => { if (!c.classList.contains("t-big")) off(c); }); el.classList.add("sl"); });
   const clamp = (v) => Math.min(1, Math.max(0, v)), ease = (t) => 1 - Math.pow(1 - t, 3);
-  let raf = 0;
+  // Positions mesurées une seule fois (et au redimensionnement) : pendant le défilement, aucun calcul de mise en page,
+  // seulement transform/opacity (traités par la carte graphique), écrits uniquement s'ils changent.
+  let tops = [], H = innerHeight, raf = 0;
+  const last = els.map(() => "");
+  const measure = () => {
+    H = innerHeight;
+    els.forEach((el) => { el.style.transform = "none"; });
+    tops = els.map((el) => el.getBoundingClientRect().top + scrollY);
+    last.fill("");
+    upd();
+  };
   const upd = () => {
-    raf = 0; const H = innerHeight;
-    els.forEach((el) => {
-      const r = el.getBoundingClientRect(), top = r.top - (parseFloat(el.style.getPropertyValue("--sy")) || 0);
-      if (top > H * 1.2 || r.bottom < -H * .2) return;
-      const e = ease(clamp((H - top) / (H * .6)));
-      el.style.setProperty("--sy", `${((1 - e) * 120).toFixed(1)}px`);
-      el.style.setProperty("--ss", (.88 + e * .12).toFixed(4));
-      el.style.setProperty("--so", Math.min(1, e * 1.15).toFixed(3));
+    raf = 0; const y = scrollY;
+    els.forEach((el, k) => {
+      const top = tops[k] - y;
+      const e = top > H * 1.2 ? 0 : ease(clamp((H - top) / (H * .6)));
+      const key = e >= 1 ? "1" : (e * 400 | 0) + "";
+      if (key === last[k]) return; last[k] = key;
+      if (e >= 1) { el.style.transform = ""; el.style.opacity = ""; el.style.willChange = ""; return; }
+      el.style.willChange = "transform, opacity";
+      el.style.transform = `translate3d(0,${((1 - e) * 120).toFixed(1)}px,0) scale(${(.88 + e * .12).toFixed(4)})`;
+      el.style.opacity = Math.min(1, e * 1.15).toFixed(3);
     });
   };
   addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
-  addEventListener("resize", upd); upd();
+  let rt = 0; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(measure, 150); });
+  addEventListener("load", measure);
+  if (window.ResizeObserver) { let first = true; new ResizeObserver(() => { if (first) { first = false; return; } clearTimeout(rt); rt = setTimeout(measure, 150); }).observe(document.body); }
+  measure();
 })();
 
 // ===================== Carte Google : chargée seulement si le visiteur le demande =====================
