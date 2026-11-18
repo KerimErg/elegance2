@@ -35,7 +35,7 @@
     "openingHoursSpecification": [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:00" }]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261118i">
+  <link rel="stylesheet" href="styles.css?v=20261118j">
   <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro");</script>
 </head>
 <body>
@@ -250,7 +250,12 @@
         <div class="salon__extra"><dt>Instagram</dt><dd><a href="https://www.instagram.com/elegance_strasbourg/" target="_blank" rel="noopener">@elegance_strasbourg</a></dd></div>
       </dl>
       <div class="salon__map" data-reveal>
-        <iframe title="Plan d’accès : Elegance Strasbourg, 162 route de Bischwiller, Schiltigheim" src="https://www.google.com/maps?q=162+Route+de+Bischwiller,+67300+Schiltigheim&amp;z=16&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <a class="map__fallback" href="https://www.google.com/maps/dir/?api=1&amp;destination=Elegance+Strasbourg%2C+162+Route+de+Bischwiller%2C+67300+Schiltigheim" target="_blank" rel="noopener" aria-label="Ouvrir le plan d’accès dans Google Maps">
+          <span class="map__pin" aria-hidden="true"></span>
+          <span class="map__addr">162 route de Bischwiller<br>67300 Schiltigheim</span>
+          <span class="map__open">Ouvrir le plan ↗</span>
+        </a>
+        <iframe title="Plan d’accès : Elegance Strasbourg, 162 route de Bischwiller, Schiltigheim" src="https://www.google.com/maps?q=Elegance+Strasbourg,+162+Route+de+Bischwiller,+67300+Schiltigheim&amp;z=16&amp;output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
       <div class="salon__actions" data-reveal>
         <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Elegance+Strasbourg%2C+162+Route+de+Bischwiller%2C+67300+Schiltigheim" class="btn btn--gold" target="_blank" rel="noopener">Itinéraire <span aria-hidden="true">↗</span></a>
@@ -280,8 +285,8 @@
   </div>
 </footer>
 
-<script src="config.js?v=20261118i"></script>
+<script src="config.js?v=20261118j"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.js?v=20261118i"></script>
+<script src="script.js?v=20261118j"></script>
 </body>
 </html>

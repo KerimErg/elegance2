@@ -1234,3 +1234,19 @@ body { background: var(--bg); color: var(--cream); }
   .logo__word { font-size: .78rem; }
   .logo__script { font-size: .85rem; }
 }
+
+/* =====================================================================
+   Adresse : carte Google, avec un plan de secours aux couleurs du site
+   (visible si Google ne s'affiche pas, par exemple dans Instagram)
+   ===================================================================== */
+.salon .salon__map { position: relative; display: block; height: 260px; background: #121116; }
+@media (max-width: 720px) { .salon .salon__map { height: 240px; } }
+.salon__map iframe { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; }
+.map__fallback { position: absolute; inset: 0; z-index: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .9rem; text-align: center; color: var(--ivory, #f1ede6);
+  background:
+    linear-gradient(rgba(241, 237, 230, .05) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgba(241, 237, 230, .05) 1px, transparent 1px) 0 0 / 28px 28px,
+    radial-gradient(circle at 50% 42%, rgba(169, 150, 220, .16), transparent 60%), #121116; }
+.map__pin { width: 14px; height: 14px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 7px rgba(169, 150, 220, .18), 0 0 0 16px rgba(169, 150, 220, .07); }
+.map__addr { font-size: .95rem; line-height: 1.5; letter-spacing: .04em; }
+.map__open { font-size: .68rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); border-bottom: 1px solid rgba(169, 150, 220, .5); padding-bottom: .2rem; }
