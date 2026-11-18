@@ -1262,3 +1262,10 @@ body { background: var(--bg); color: var(--cream); }
 .map__consent a { color: var(--muted); text-decoration: underline; }
 .map__show { padding: .7rem 1.4rem; border: 1px solid rgba(241, 237, 230, .6); background: transparent; color: var(--ivory, #f1ede6); font: inherit; font-size: .68rem; letter-spacing: .28em; text-transform: uppercase; cursor: pointer; }
 .salon__map.is-live .map__consent, .salon__map.is-live .map__fallback { display: none; }
+
+/* =====================================================================
+   Réalisations : positions calculées en continu par le script
+   ===================================================================== */
+.cf.is-js .cf__item, .cf.is-js .cf__item[data-d] { transition: none; translate: none; will-change: transform, opacity; }
+.cf.is-js .cf__item::after { opacity: var(--dim, 0); transition: none; }
+.cf.is-js .cf__item[data-d="0"] { cursor: default; }

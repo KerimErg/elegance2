@@ -204,49 +204,94 @@ if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
   scrollWork.push(update);
 })();
 
-// ===================== Réalisations : carrousel en profondeur =====================
+// ===================== Réalisations : carrousel en profondeur, continu =====================
+// Chaque vidéo a une position continue (0 = au centre, ±1 = sur les côtés) : sous le doigt, tout glisse
+// en douceur entre les états ; au lâcher, un ressort amorti ramène la vidéo la plus proche au centre.
 (() => {
   const sec = document.getElementById("realisations"), cf = document.getElementById("cf"); if (!sec || !cf) return;
   const items = $$(".cf__item", cf), vids = items.map((it) => $("video", it)), titles = $$(".cf__title", sec), dotsBox = document.getElementById("cfDots"), n = items.length;
   items.forEach((it, k) => { it.style.backgroundImage = `url("${vids[k].poster}")`; });
   dotsBox.innerHTML = items.map((_, k) => `<button type="button" aria-label="Vidéo ${k + 1}"></button>`).join("");
   const dots = $$("button", dotsBox);
-  let i = 0, visible = false, timer = 0;
-  const go = (k) => {
-    i = (k + n) % n;
-    items.forEach((it, j) => { let d = (j - i + n) % n; if (d > n / 2) d -= n; it.dataset.d = d; });
+  cf.classList.add("is-js");
+  const mobile = matchMedia("(max-width: 720px)").matches;
+  const SIDE = mobile ? .84 : .78, SCALE = mobile ? .7 : .74, ROT = mobile ? 14 : 16;
+  let pos = 0, vel = 0, target = 0, i = 0, visible = false, timer = 0, raf = 0, drag = null, settled = true;
+  const wrap = (p) => { p = ((p % n) + n) % n; return p >= n / 2 ? p - n : p; };
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const draw = () => {
+    const w = items[0].offsetWidth;
+    items.forEach((it, k) => {
+      const p = wrap(k - pos), q = Math.abs(p), c = Math.min(q, 1), far = clamp(q - 1, 0, 1);
+      const x = Math.sign(p) * (c * SIDE + far * .35) * w;
+      const s = 1 - c * (1 - SCALE) - far * .14;
+      const r = -clamp(p, -1, 1) * ROT;
+      it.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), 0, 0) scale(${s.toFixed(4)}) rotateY(${r.toFixed(2)}deg)`;
+      it.style.opacity = (1 - c * .38 - far * .62).toFixed(3);
+      it.style.setProperty("--dim", (c * .45).toFixed(3));
+      it.style.zIndex = String(10 - Math.round(q * 3));
+    });
+  };
+  const setActive = (k) => {
+    if (k === i && !settled) return;
+    i = k;
     titles.forEach((t, j) => t.classList.toggle("is-on", j === i));
     dots.forEach((b, j) => b.classList.toggle("is-on", j === i));
+    items.forEach((it, j) => it.dataset.d = String(Math.round(wrap(j - i))));
+  };
+  const playActive = () => {
     vids.forEach((v, j) => {
-      if (j === i && visible && !reduced) { v.preload = "auto"; clearTimeout(v._t); v._t = setTimeout(() => { if (i !== j) return; try { v.currentTime = 0; } catch (e) {} const p = v.play(); if (p) p.catch(() => {}); }, 420); }
-      else { clearTimeout(v._t); v.pause(); }
+      if (j === i && visible && !reduced) { v.preload = "auto"; if (v.paused) { try { v.currentTime = 0; } catch (e) {} const pr = v.play(); if (pr) pr.catch(() => {}); } }
+      else v.pause();
     });
     vids[(i + 1) % n].preload = "auto";
-    clearTimeout(timer); if (visible && !reduced) timer = setTimeout(() => go(i + 1), 4200);
   };
-  items.forEach((it, k) => it.addEventListener("click", () => { if (k !== i) go(k); }));
-  dots.forEach((b, k) => b.addEventListener("click", () => go(k)));
-  $$(".cf__arrow", sec).forEach((b) => b.addEventListener("click", () => go(i + Number(b.dataset.dir))));
-  // glisser : les vidéos suivent le doigt, puis se calent en douceur
-  let x0 = null, y0 = 0, dx = 0, lock = 0, raf = 0;
-  const setDrag = () => { raf = 0; cf.style.setProperty("--drag", `${(dx * .55).toFixed(1)}px`); };
-  cf.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; lock = 0; clearTimeout(timer); }, { passive: true });
+  const schedule = () => { clearTimeout(timer); if (visible && !reduced && !drag) timer = setTimeout(() => go(target + 1), 4600); };
+  const step = () => {
+    raf = 0;
+    if (!drag) {
+      // ressort amorti : arrivée douce, sans rebond
+      const k = 120, d = 2 * Math.sqrt(k) * .92, dt = 1 / 60;
+      vel += (-(pos - target) * k - vel * d) * dt; pos += vel * dt;
+      if (Math.abs(pos - target) < .0005 && Math.abs(vel) < .002) { pos = target; vel = 0; }
+    }
+    draw();
+    const k = ((Math.round(pos) % n) + n) % n; if (k !== i) setActive(k);
+    if (drag || pos !== target) { settled = false; raf = requestAnimationFrame(step); }
+    else if (!settled) { settled = true; playActive(); schedule(); }
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(step); };
+  const go = (t) => { target = t; settled = false; vids.forEach((v, j) => { if (j !== ((t % n) + n) % n) v.pause(); }); kick(); };
+  const goIndex = (k) => { go(target + wrap(k - target)); };
+  if (reduced) { items.forEach((it, k) => it.addEventListener("click", () => { pos = target = k; draw(); setActive(k); })); }
+  items.forEach((it, k) => it.addEventListener("click", () => { if (Math.abs(wrap(k - pos)) > .5) goIndex(k); }));
+  dots.forEach((b, k) => b.addEventListener("click", () => goIndex(k)));
+  $$(".cf__arrow", sec).forEach((b) => b.addEventListener("click", () => go(target + Number(b.dataset.dir))));
+  // glisser au doigt
+  cf.addEventListener("touchstart", (e) => {
+    const t = e.touches[0]; drag = { x: t.clientX, y: t.clientY, p: pos, lock: 0, lx: t.clientX, lt: performance.now(), v: 0 }; vel = 0; clearTimeout(timer);
+  }, { passive: true });
   cf.addEventListener("touchmove", (e) => {
-    if (x0 === null) return;
-    const mx = e.touches[0].clientX - x0, my = e.touches[0].clientY - y0;
-    if (!lock) { if (Math.abs(mx) < 6 && Math.abs(my) < 6) return; lock = Math.abs(mx) > Math.abs(my) ? 1 : -1; if (lock > 0) cf.classList.add("is-drag"); }
-    if (lock < 0) return;
-    dx = mx; if (!raf) raf = requestAnimationFrame(setDrag);
+    if (!drag) return; const t = e.touches[0], dx = t.clientX - drag.x, dy = t.clientY - drag.y;
+    if (!drag.lock) { if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return; drag.lock = Math.abs(dx) > Math.abs(dy) ? 1 : -1; }
+    if (drag.lock < 0) return;
+    const w = items[0].offsetWidth * SIDE, now = performance.now();
+    drag.v = .8 * drag.v + .2 * ((t.clientX - drag.lx) / Math.max(1, now - drag.lt)); drag.lx = t.clientX; drag.lt = now;
+    pos = drag.p - dx / w; kick();
   }, { passive: true });
   const end = () => {
-    if (x0 === null) return;
-    cf.classList.remove("is-drag"); cf.style.setProperty("--drag", "0px");
-    if (lock > 0 && Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1)); else go(i);
-    x0 = null; dx = 0;
+    if (!drag) return; const d = drag; drag = null;
+    if (d.lock > 0) {
+      const w = items[0].offsetWidth * SIDE, flick = -d.v * 1000 / w * .18;   // un geste rapide fait avancer d'une vidéo
+      target = Math.round(pos + clamp(flick, -1, 1)); if (target === Math.round(d.p) && Math.abs(pos - d.p) > .12) target = Math.round(d.p) + (pos > d.p ? 1 : -1);
+      target = clamp(target, Math.round(d.p) - 1, Math.round(d.p) + 1); vel = -d.v * 1000 / w * .5;
+    }
+    settled = false; kick();
   };
   cf.addEventListener("touchend", end); cf.addEventListener("touchcancel", end);
-  new IntersectionObserver(([en]) => { visible = en.isIntersecting; go(i); }, { threshold: .3 }).observe(cf);
-  go(0);
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) { playActive(); schedule(); } else { clearTimeout(timer); vids.forEach((v) => v.pause()); } }, { threshold: .3 }).observe(cf);
+  addEventListener("resize", draw);
+  setActive(0); draw();
 })();
 
 // ===================== Prestations : la grande photo suit la prestation au centre de l'écran =====================
