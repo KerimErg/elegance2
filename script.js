@@ -248,7 +248,12 @@ if ($("#team")) $("#team").innerHTML = BARBERS.map((b) => `
   };
   // iPhone (économie d'énergie, etc.) : si la lecture automatique est refusée, on relance au premier contact
   let userPlay = false, blocked = false;
-  const tryPlay = (v) => { const pr = v.play(); if (pr) pr.then(() => { blocked = false; }).catch(() => { blocked = true; }); };
+  const playBtn = document.createElement("button");
+  playBtn.type = "button"; playBtn.className = "cf__play"; playBtn.setAttribute("aria-label", "Lire la vidéo");
+  playBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>';
+  cf.appendChild(playBtn);
+  const setBlocked = (b) => { blocked = b; cf.classList.toggle("is-blocked", b); };
+  const tryPlay = (v) => { const pr = v.play(); if (pr) pr.then(() => setBlocked(false)).catch(() => { if (v === vids[i]) setBlocked(true); }); };
   const unlock = () => { userPlay = true; if (visible) { const v = vids[i]; if (v.paused) { v.preload = "auto"; tryPlay(v); } } };
   ["touchend", "click"].forEach((ev) => document.addEventListener(ev, () => { if (blocked || reduced) unlock(); }, { passive: true }));
   vids.forEach((v) => v.addEventListener("error", () => { if (v.error) { v.load(); } }, { once: true }));
